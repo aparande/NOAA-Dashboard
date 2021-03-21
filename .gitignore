@@ -1,3 +1,7 @@
+serviceAccountKey.json
+data/
+*.swp
+
 # Logs
 logs
 *.log
