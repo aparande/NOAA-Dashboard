@@ -53,6 +53,7 @@ with open(args.file, 'r') as f:
       if args.limit != -1 and i >= args.limit:
         break
 
-      db.collection("buoy_gps").document(str(timestamp)).set(row_dict)
+      doc_name = "-".join([str(timestamp), str(row_dict["drift_num"])])
+      db.collection("buoy_gps").document(doc_name).set(row_dict)
       i += 1
 
