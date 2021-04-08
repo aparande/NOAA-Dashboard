@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import {get_all_traces} from '../queries';
-import {binary_search, to_geojson_point} from '../utils';
+import { get_all_traces } from '../queries';
+import { binary_search, to_geojson_point, to_geojson_line} from '../utils';
 
 // This is the API Key from MapBox documentation. Might as well just use it for now
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
@@ -30,6 +30,7 @@ const Map = () => {
   const [map, setMap] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [currTime, setCurrTime] = useState(1532508419);
+  const [lineLayerInit, setLineLayerInit] = useState(false);
 
   // Effect to load the data when the app first loads
   useEffect(() => {
@@ -61,41 +62,18 @@ const Map = () => {
 
     // Set up layers once the map is loaded
     mapbox.on('load', () => {
-      mapbox.loadImage( 'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png', function (error, image) {
+      mapbox.loadImage('https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png', function (error, image) {
         if (error) throw error;
         mapbox.addImage('custom-marker', image);
-
-        mapbox.addSource('buoys', {
-          type: 'geojson',
-          data: {
-            type: "FeatureCollection",
-            features: []
-          }
-        });
-
-        mapbox.addLayer({
-          'id': 'buoys',
-          'type': 'symbol',
-          'source': 'buoys',
-          'layout': {
-            'icon-image': 'custom-marker',
-            // get the title name from the source's "title" property
-            // 'text-field': ['get', 'title'],
-            // 'text-font': [
-            //   'Open Sans Semibold',
-            //   'Arial Unicode MS Bold'
-            // ],
-            // 'text-offset': [0, 1.25],
-            // 'text-anchor': 'top'
-          }
-        });
+        mapbox.addSource('buoys', { type: 'geojson', data: { type: "FeatureCollection", features: [] } });
+        mapbox.addLayer({ 'id': 'buoys', 'type': 'symbol', 'source': 'buoys', 'layout': { 'icon-image': 'custom-marker' } });
 
         setMapLoaded(true);
       });
     });
 
     setMap(mapbox);
-    
+
     // Clean up on unmount
     return () => {
       mapbox.remove();
@@ -103,6 +81,40 @@ const Map = () => {
       setMapLoaded(false);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!mapLoaded) return;
+
+    Object.keys(traces).forEach((drift_num) => {
+      let points = to_geojson_line(traces[drift_num]);
+      if (lineLayerInit) {
+        if (map == null || map === undefined) return;
+        const source = map.getSource(`buoy_route_${drift_num}`);
+        if (source === undefined) return;
+
+        source.setData(points);
+      } else {
+        if (map == null || map === undefined) return;
+
+        map.addSource(`buoy_route_${drift_num}`, { type: 'geojson', data: points });
+        map.addLayer({
+          'id': `buoy_route_${drift_num}`,
+          'type': 'line',
+          'source': `buoy_route_${drift_num}`,
+          'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          'paint': {
+            'line-color': '#F00',
+            'line-width': 8
+          }
+        });
+
+        setLineLayerInit(true);
+      }
+    });
+  }, [traces, mapLoaded])
 
   // Effect to put the points on the map which are at most 2 minutes after the current time
   // Reloads every time mapLoaded, traces, or currTime changes value
@@ -124,7 +136,7 @@ const Map = () => {
     })
 
     let geojson = points.map(to_geojson_point);
-    
+
     if (map == null || map === undefined) return;
     const source = map.getSource("buoys");
     if (source === undefined) return;
