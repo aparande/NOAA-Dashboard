@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import db from '../firebase.config';
+import {get_all_traces} from '../queries';
+import {binary_search, to_geojson_point} from '../utils';
 
 // This is the API Key from MapBox documentation. Might as well just use it for now
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
-const BUOYS = [4, 7, 10, 12, 13, 14, 16, 18, 19, 20, 21, 22, 23];
 
 // var dummy_geojson = {
 //   type: "FeatureCollection",
@@ -21,43 +21,6 @@ const BUOYS = [4, 7, 10, 12, 13, 14, 16, 18, 19, 20, 21, 22, 23];
 //   }]
 // };
 
-/**
- * Get buoy GPS data as a trace
- * @param {*} buoy_num the Drift to retrieve
- * @param {*} start_date seconds since epoch
- * @param {*} end_date seconds since epoch
- * @param {*} limit how many rows to get
- */
-const get_buoy_trace = async (buoy_num, start_date, end_date = undefined , limit = 10) => {
-  let basic_query = db.collection("buoy_gps").where("drift_num", "==", buoy_num).where("timestamp", ">=", start_date);
-  if (end_date !== undefined) basic_query = basic_query.where("timestamp", '<=', end_date);
-
-  const snapshot = await basic_query.orderBy('timestamp', 'asc').limit(limit).get();
-  console.log(`Retrieved ${snapshot.size} rows from ${buoy_num} GPS`);
-  return snapshot.docs.map((doc) => {
-    const obj = {type: "Feature"};
-    const point_data = doc.data();
-    obj["properties"] = point_data;
-    obj["geometry"] = {
-      type: "Point",
-      coordinates: [point_data.longitude, point_data.latitude]
-    }
-
-    return obj;
-  });
-}
-
-const get_all_traces = async (start_date, end_date = undefined) => {
-  var traces = {};
-  for (let i = 0; i < BUOYS.length; i++) {
-    const buoy_num = BUOYS[i];
-    const data = await get_buoy_trace(buoy_num, start_date, end_date);
-    if (data.length > 0) traces[buoy_num] = data;
-  }
-  console.log(traces);
-  return traces
-}
-
 const Map = () => {
   const mapContainer = useRef(null);
   const [lng, setLng] = useState(-119.4179);
@@ -66,34 +29,20 @@ const Map = () => {
   const [traces, setTraces] = useState({});
   const [map, setMap] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [currTime, setCurrTime] = useState(1532508419);
 
-  // Initialize map when component mounts
+  // Effect to load the data when the app first loads
   useEffect(() => {
     async function fetchData() {
-      const initial_trace = await get_all_traces(1532508419);
+      const initial_trace = await get_all_traces(currTime);
       setTraces(initial_trace);
     }
     fetchData();
-  }, [])
+  }, []);
 
+  // Effect to set up the map
   useEffect(() => {
-    const start_json = Object.keys(traces).map((drift_num) => {
-      return traces[drift_num][0]
-    });
-    console.log(start_json);
-    
-
-    if (map == null || map === undefined) return;
-    const source = map.getSource("buoys");
-    if (source === undefined) return;
-
-    source.setData({
-      type: "FeatureCollection",
-      features: start_json
-    })
-  }, [traces, mapLoaded]);
-
-  useEffect(() => {
+    // Set up the map
     const mapbox = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -101,6 +50,7 @@ const Map = () => {
       zoom: zoom
     });
 
+    // Update the state for map center and zoom on map move
     mapbox.on('move', () => {
       setLng(mapbox.getCenter().lng.toFixed(4));
       setLat(mapbox.getCenter().lat.toFixed(4));
@@ -109,6 +59,7 @@ const Map = () => {
 
     mapbox.addControl(new mapboxgl.NavigationControl(), "top-right")
 
+    // Set up layers once the map is loaded
     mapbox.on('load', () => {
       mapbox.loadImage( 'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png', function (error, image) {
         if (error) throw error;
@@ -149,8 +100,40 @@ const Map = () => {
     return () => {
       mapbox.remove();
       setMap(null);
+      setMapLoaded(false);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Effect to put the points on the map which are at most 2 minutes after the current time
+  // Reloads every time mapLoaded, traces, or currTime changes value
+  useEffect(() => {
+    // Search for the closest timestamp point in the traces using binary search
+    let points = Object.keys(traces).map((drift_num) => {
+      return binary_search(traces[drift_num], (elem) => {
+        if (elem.timestamp === currTime) return 0;
+        else if (elem.timestamp < currTime) return 1;
+        else if (elem.timestamp > currTime) return -1;
+      });
+    });
+    console.log(points);
+
+    // Filter to points which are up to 2 minutes after the current time
+    points = points.filter((elem) => {
+      let diff = elem.timestamp - currTime;
+      return diff >= 0 && elem.timestamp < currTime + 120;
+    })
+
+    let geojson = points.map(to_geojson_point);
+    
+    if (map == null || map === undefined) return;
+    const source = map.getSource("buoys");
+    if (source === undefined) return;
+
+    source.setData({
+      type: "FeatureCollection",
+      features: geojson
+    })
+  }, [traces, mapLoaded, currTime]);
 
   return (
     <div className='map-container' ref={mapContainer} />
