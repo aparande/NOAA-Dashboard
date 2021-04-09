@@ -1,5 +1,6 @@
 import db from './firebase.config';
-import {BUOYS} from './constants';
+import { BUOYS } from './constants';
+import axios from 'axios';  
 
 /**
  * Get buoy GPS data as a trace
@@ -35,3 +36,16 @@ export const get_all_traces = async (start_date, end_date = undefined, limit=100
   console.log(traces);
   return traces
 }
+
+// https://hifld-geoplatform.opendata.arcgis.com/datasets/geoplatform::oil-and-natural-gas-platforms/geoservice?geometry=-135.504%2C23.571%2C-72.882%2C36.815
+export const get_oil_gas_platforms = async () => {
+  const URL = "https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Oil_and_Natural_Gas_Platforms/FeatureServer/0/query?where=REGION%20%3D%20'PACIFIC'&outFields=*&outSR=4326&f=json"
+  const res = await axios.get(URL,
+    { 
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+  console.log(res)
+  return res.data.features.map((feat) => feat.attributes);
+} 

@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { get_all_traces } from '../queries';
+import { get_all_traces, get_oil_gas_platforms } from '../queries';
 import { binary_search, to_geojson_point, to_geojson_line} from '../utils';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import Buoy from './buoys';
+import Buoy from './buoy';
+import OilPlatform from './oil_platform';
 
 // This is the API Key from MapBox documentation. Might as well just use it for now
 // mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
@@ -14,6 +15,7 @@ const Map = () => {
   const [traces, setTraces] = useState({});
   const [currTime, setCurrTime] = useState(1535623127);
   const [buoyLocs, setbuoyLocs] = useState([]);
+  const [platformLocs, setPlatformLocs] = useState([]);
 
   // Effect to load the data when the app first loads
   useEffect(() => {
@@ -24,7 +26,14 @@ const Map = () => {
     fetchData();
   }, []);
 
-
+  useEffect(() => {
+    async function fetchData() {
+      const data = await get_oil_gas_platforms();
+      console.log(data);
+      setPlatformLocs(data);
+    }
+    fetchData();
+  }, [])
 
   // useEffect(() => {
   //   if (!mapLoaded) return;
@@ -86,21 +95,13 @@ const Map = () => {
   }, [traces, currTime]);
 
   return (
-    <MapContainer 
-        center={[lat, lng]} 
-        zoom={zoom} 
-        style={{ width: '100%', height: '100vh'}}
-      >
+    <MapContainer center={[lat, lng]} zoom={zoom} style={{ width: '100%', height: '100vh'}} >
       <TileLayer
         attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {
-        buoyLocs.map((b, idx) => {
-          return(
-            <Buoy position={b.loc} drift_num={b.drift_num} key={idx}></Buoy>
-          )})
-      }
+      { buoyLocs.map((b, idx) => <Buoy position={b.loc} drift_num={b.drift_num} key={idx} />) }
+      { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
       </MapContainer>
   )};
 
