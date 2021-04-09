@@ -1,5 +1,5 @@
 import db from './firebase.config';
-const BUOYS = [4, 7, 10, 12, 13, 14, 16, 18, 19, 20, 21, 22, 23];
+import {BUOYS} from '.constants';
 
 /**
  * Get buoy GPS data as a trace
