@@ -18,7 +18,7 @@ const Map = () => {
   // Effect to load the data when the app first loads
   useEffect(() => {
     async function fetchData() {
-      const initial_trace = await get_all_traces(currTime);
+      const initial_trace = await get_all_traces(currTime, null, 100);
       setTraces(initial_trace);
     }
     fetchData();

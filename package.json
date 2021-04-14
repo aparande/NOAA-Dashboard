@@ -19,9 +19,10 @@
   "dependencies": {
     "create-react-app": "^4.0.3",
     "express": "^4.17.1",
+    "firebase-admin": "^9.6.0",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"
-  }
+  } 
 }
