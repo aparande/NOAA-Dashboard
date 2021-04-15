@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { get_all_traces, get_oil_gas_platforms } from '../queries';
-import { MapContainer, TileLayer} from 'react-leaflet';
+import { MapContainer, TileLayer, ImageOverlay} from 'react-leaflet';
 import Buoy from './buoy';
 import OilPlatform from './oil_platform';
 
@@ -39,6 +39,8 @@ const Map = () => {
         attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      {/* Can tweak the coordinates to make it overlap better */}
+      <ImageOverlay bounds={[[26.346 - 1, -141.904], [50.828 - 0.66, -107.279]]} url="/sea-lion-data.png"/>
       { 
         Object.keys(traces).map((key, idx) => 
         <Buoy currTime={ currTime } drift_num={ key } 
