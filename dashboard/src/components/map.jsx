@@ -40,7 +40,7 @@ const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {/* Can tweak the coordinates to make it overlap better */}
-      <ImageOverlay bounds={[[26.346 - 1, -141.904], [50.828 - 0.66, -107.279]]} url="/sea-lion-data.png"/>
+      <ImageOverlay bounds={[[29.75, -141.540], [47.75, -108.610]]} url="/sea-lion-data.png"/>
       { 
         Object.keys(traces).map((key, idx) => 
         <Buoy currTime={ currTime } drift_num={ key } 
