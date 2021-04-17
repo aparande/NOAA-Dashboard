@@ -13,3 +13,38 @@
   left: 0;
   bottom: 0;
 }
+
+/* .leaflet-control-layers-list{
+  height: 200px;
+}
+.leaflet-control-layers-base label{
+	height:60px;
+	width: 60px;
+	border-radius: 30px;
+}
+.leaflet-control-layers-base label span{
+	display: none;
+} */
+.leaflet-control-layers-base label:hover,
+.leaflet-control-layers-base label:checked,
+.leaflet-control-layers-base label:focus{
+	background-color: #aaa;
+  cursor: pointer;
+}
+
+.leaflet-control-layers-overlays label:hover,
+.leaflet-control-layers-overlays label:checked,
+.leaflet-control-layers-overlays label:focus{
+	background-color: #aaa;
+  cursor: pointer;
+}
+
+.leaflet-control-layers-selector {
+	background-color: rgba(0, 0, 16, 0.8);
+	padding: 0.4rem 0.4rem 0.1rem 0.4rem;
+	border-radius: 2.2rem;
+}
+/* input[type="radio"] {
+	position: absolute;
+	opacity: 0;
+} */

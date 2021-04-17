@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { get_all_traces, get_oil_gas_platforms } from '../queries';
-import { MapContainer, TileLayer} from 'react-leaflet';
+import { MapContainer, TileLayer, LayersControl, FeatureGroup, LayerGroup} from 'react-leaflet';
 import Buoy from './buoy';
 import OilPlatform from './oil_platform';
 
@@ -35,18 +35,30 @@ const Map = () => {
 
   return (
     <MapContainer center={[lat, lng]} zoom={zoom} style={{ width: '100%', height: '100vh'}} >
-      <TileLayer
-        attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      { 
-        Object.keys(traces).map((key, idx) => 
-        <Buoy currTime={ currTime } drift_num={ key } 
-              positions={ traces[key] } key={ idx } 
-              setCurrTime = { setCurrTime } />)
-      }
-      { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
-      </MapContainer>
+      <LayersControl position="topright">
+        <LayersControl.BaseLayer checked name="Normal">
+          <TileLayer
+            attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        </LayersControl.BaseLayer>
+        <LayersControl.Overlay name = "Buoy Location">
+          <FeatureGroup>
+            { 
+              Object.keys(traces).map((key, idx) => 
+              <Buoy currTime={ currTime } drift_num={ key } 
+                    positions={ traces[key] } key={ idx } 
+                    setCurrTime = { setCurrTime } />)
+            }
+          </FeatureGroup>
+        </LayersControl.Overlay>
+        <LayersControl.Overlay name="Oil">
+          <FeatureGroup>
+          { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
+          </FeatureGroup>
+        </LayersControl.Overlay>
+      </LayersControl>
+    </MapContainer>
   )};
 
 export default Map;
