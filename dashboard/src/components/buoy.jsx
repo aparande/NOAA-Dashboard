@@ -1,19 +1,45 @@
 import { Marker, Popup, Polyline } from 'react-leaflet';
-import { binary_search, dist} from '../utils';
+import { interval_search, dist} from '../utils';
+import React, { useEffect, useState } from 'react';
 
 const Buoy = (props) => {
-  let point = binary_search(props.positions, (elem) => {
-    if (elem.timestamp === props.currTime) return 0;
-    else if (elem.timestamp < props.currTime) return 1;
-    else if (elem.timestamp > props.currTime) return -1;
-  });
+  const [position, setPosition] = useState([ 0, 0 ]);
+  const [renderMarker, setRenderMarker] = useState(false);
+  
+  useEffect(() => {
+    let interval = interval_search(props.positions, (elem) => {
+      if (elem.timestamp === props.currTime) return 0;
+      else if (elem.timestamp < props.currTime) return 1;
+      else if (elem.timestamp > props.currTime) return -1;
+    });
 
-  const diff = point.timestamp - props.currTime;
+    // TODO: this is still a little buggy (when you click the line) 
+    const diff = interval[0].timestamp - props.currTime;
+  
+    let inter_len = 0;
+    if (interval[1]) {
+      inter_len = interval[1].timestamp - interval[0].timestamp;
+      if (diff <= 0) {
+        // Start of the interval is before the current time.
+        setPosition([interval[0].latitude + (interval[1].latitude - interval[0].latitude) * (-1 * diff) / inter_len, 
+                        interval[0].longitude + (interval[1].longitude - interval[0].longitude) * (-1 * diff) / inter_len]);
+      } else {
+        // Start of the interval is after the current time. 
+        setPosition([interval[0].latitude + (interval[1].latitude - interval[0].latitude) * diff / inter_len, 
+                        interval[0].longitude + (interval[1].longitude - interval[0].longitude) * diff / inter_len]);
+      }
+      setRenderMarker(diff <= inter_len);
+    } else {
+      setPosition([interval[0].latitude, interval[0].longitude])
+      setRenderMarker(diff <=0 && interval[0].timestamp < props.currTime + props.step);
+    }
+    
+  }, [props.positions, props.currTime, props.step])
 
   return(
     <div>
-      { (diff <= 0 && point.timestamp < props.currTime + 120 ) && (
-        <Marker position={ [point.latitude, point.longitude] }>
+      { renderMarker && (
+        <Marker position={ position }>
           <Popup>Drift Number: {props.drift_num}</Popup>
         </Marker>)
       }

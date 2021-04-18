@@ -5,11 +5,11 @@ import { useMap} from 'react-leaflet';
 
 const HeatLayer = (props) => {
   const map = useMap();
-  console.log(props.data);
-  console.log(Math.min(...props.data.map(x => x[2])));
+  // console.log(props.data);
+  // console.log(Math.min(...props.data.map(x => x[2])));
 
   const maxHeat = Math.max(...props.data.map(x => x[2]));
-  console.log(maxHeat);
+  /// console.log(maxHeat);
 
   useEffect(() => {
     L.heatLayer(props.data, {
