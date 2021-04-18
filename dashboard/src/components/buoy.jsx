@@ -1,5 +1,6 @@
 import { Marker, Popup, Polyline } from 'react-leaflet';
 import { interval_search, dist} from '../utils';
+import BuoyPopup from './buoy_popup'
 import React, { useEffect, useState } from 'react';
 
 const Buoy = (props) => {
@@ -40,7 +41,7 @@ const Buoy = (props) => {
     <div>
       { renderMarker && (
         <Marker position={ position }>
-          <Popup>Drift Number: {props.drift_num}</Popup>
+          <Popup>Drift Number: {props.drift_num}<BuoyPopup/></Popup>
         </Marker>)
       }
       <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}
