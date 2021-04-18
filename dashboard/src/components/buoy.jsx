@@ -15,7 +15,7 @@ const Buoy = (props) => {
     <div>
       { (diff <= 0 && point.timestamp < props.currTime + 120 ) && (
         <Marker position={ [point.latitude, point.longitude] }>
-          <Popup><BuoyPopup/>Drift Number: {props.drift_num}</Popup>
+          <Popup>Drift Number: {props.drift_num}<BuoyPopup/></Popup>
         </Marker>)
       }
       <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}
