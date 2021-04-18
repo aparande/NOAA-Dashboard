@@ -19,6 +19,8 @@ const Map = () => {
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(365);
 
+  const minTime  = 0;
+  const maxTime = 100;
   // Effect to load the data when the app first loads
   useEffect(() => {
     async function fetchData() {
