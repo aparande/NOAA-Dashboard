@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { get_all_traces, get_oil_gas_platforms } from '../queries';
-import { MapContainer, TileLayer, ImageOverlay} from 'react-leaflet';
+import { MapContainer, TileLayer, ImageOverlay, useMap} from 'react-leaflet';
 import Buoy from './buoy';
 import Labeled from './Labeled';
 import OilPlatform from './oil_platform';
+import sea_lion_habitat from '../data/sea-lion-habitat.json'
+import HeatLayer from './heat_layer';
 
 // This is the API Key from MapBox documentation. Might as well just use it for now
 // mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
@@ -43,7 +45,7 @@ const Map = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {/* Can tweak the coordinates to make it overlap better */}
-        <ImageOverlay bounds={[[29.75, -141.540], [47.75, -108.610]]} url="/sea-lion-data.png"/>
+        <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } />
         {
           Object.keys(traces).map((key, idx) =>
           <Buoy currTime={ currTime } drift_num={ key }
