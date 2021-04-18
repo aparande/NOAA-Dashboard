@@ -10,5 +10,3 @@ export const SPECIES = {
   "PM": "Sperm Whale",
   "NBHF": "Narrow Band High Frequency"
 }
-
-export const BUOYS = [4, 7, 10, 12, 13, 14, 16, 18, 19, 20, 21, 22, 23];

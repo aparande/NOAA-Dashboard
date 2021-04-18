@@ -1,12 +1,40 @@
+const express = require('express');
+const bodyParser = require('body-parser')
+const path = require('path');
 
-const express = require("express");
-const path = require("path");
 const app = express();
 
-app.use(express.static(path.join(__dirname, "www")));
+const fb = require('./fire_api');
 
-const server = app.listen(8000, () => {
-    console.log(`Express running → PORT ${server.address().port}`);
-  });
+app.use(express.static(path.join(__dirname, 'build')));
+
+// TODO: Replace this with Redis or something
+let traces = null;
+
+// Middleware to take traces from the cache if applicable, else to load them from the database
+const loadTracesMiddleware = async (req, res, next) => {
+  if (req.query.start === undefined || req.query.start === null) {
+    return res.status(400).send({
+      message: "Need to supply a start date"
+    });
+  }
+
+  if (traces == null || Object.keys(traces).length === 0) {
+    console.log(`Attempting to load traces: ${req.query.start}`);
+    traces = await fb.get_all_traces(req.query.start, req.query.end, parseInt(req.query.limit || 100));
+  }
+  
+  next();
+}
+
+app.get('/api/get_traces', loadTracesMiddleware, (req, res, next) => {
+  res.send(traces);
+})
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.listen(process.env.PORT || 8080);
 
 

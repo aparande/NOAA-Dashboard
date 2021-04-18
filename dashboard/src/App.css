@@ -1,3 +1,6 @@
+body{
+  margin: 0px;
+}
 .mapboxgl-marker {
   width: 25px;
   height: 25px;
@@ -28,14 +31,14 @@
 .leaflet-control-layers-base label:hover,
 .leaflet-control-layers-base label:checked,
 .leaflet-control-layers-base label:focus{
-	background-color: #aaa;
+	background-color: rgb(1, 199, 199);
   cursor: pointer;
 }
 
 .leaflet-control-layers-overlays label:hover,
 .leaflet-control-layers-overlays label:checked,
 .leaflet-control-layers-overlays label:focus{
-	background-color: #aaa;
+	background-color: rgb(1, 199, 199);
   cursor: pointer;
 }
 
@@ -48,3 +51,15 @@
 	position: absolute;
 	opacity: 0;
 } */
+
+#time-slider{
+  z-index: 400;
+  position: fixed;
+}
+.button{
+  cursor: pointer;
+}
+.button:hover,
+.button:focus{
+  background-color: rgb(1, 199, 199);
+}
