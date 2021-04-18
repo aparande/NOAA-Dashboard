@@ -38,8 +38,18 @@
   z-index: 1;
   margin-left: 2.5%;
   display: flex;
+  justify-content: space-between;
+}
+
+.date {
+  padding-left: 2.5%;
+  font-size: 15px;
+  white-space: nowrap;
+  font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+  display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  align-content: center;
+  flex-direction: column
 }
 
 .slider-inner {

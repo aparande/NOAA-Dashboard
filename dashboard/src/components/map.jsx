@@ -17,10 +17,11 @@ const Map = () => {
   const [traces, setTraces] = useState({});
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
-  const [step, setStep] = useState(365);
+  const [step, setStep] = useState(1*60*60);
 
-  const minTime  = 0;
-  const maxTime = 100;
+  const minTime = 1532508419;
+  const maxTime = 1541367925;
+
   // Effect to load the data when the app first loads
   useEffect(() => {
     async function fetchData() {
@@ -55,10 +56,10 @@ const Map = () => {
         </LayersControl.Overlay>
         <LayersControl.Overlay name = "Buoy Location">
           <FeatureGroup>
-            { 
-              Object.keys(traces).map((key, idx) => 
-              <Buoy currTime={ currTime } drift_num={ key } 
-                    positions={ traces[key] } key={ idx } 
+            {
+              Object.keys(traces).map((key, idx) =>
+              <Buoy currTime={ currTime } drift_num={ key }
+                    positions={ traces[key] } key={ idx }
                     setCurrTime = { setCurrTime } />)
             }
           </FeatureGroup>
@@ -75,9 +76,10 @@ const Map = () => {
         <Labeled className="slider" step={ step } minTime={ minTime } maxTime={ maxTime } currTime={ currTime } setCurrTime = { setCurrTime } />
       </div>
       <div className="buttons">
-        <button className="button" onClick={() => setStep(1)}>Day</button>
-        <button className="button" onClick={() => setStep(7)}>Week</button>
-        <button className="button" onClick={() => setStep(30)}>Month</button>
+        <button className="button" style={{ backgroundColor: (step == 1*60*60) ? '#229FAD' : '#FFF' }} onClick={() => setStep(1*60*60)}>Hour</button>
+        <button className="button" style={{ backgroundColor: (step == 1*60*60*24) ? '#229FAD' : '#FFF' }} onClick={() => setStep(1*60*60*24)}>Day</button>
+        <button className="button" style={{ backgroundColor: (step == 1*60*60*24*7) ? '#229FAD' : '#FFF' }} onClick={() => setStep(1*60*60*24*7)}>Week</button>
+        <button className="button" style={{ backgroundColor: (step == 1*60*60*24*30) ? '#229FAD' : '#FFF' }} onClick={() => setStep(1*60*60*24*30)}>Month</button>
       </div>
     </div>
     </>
