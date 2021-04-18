@@ -20,6 +20,7 @@
     "create-react-app": "^4.0.3",
     "express": "^4.17.1",
     "firebase-admin": "^9.6.0",
+    "leaflet.heat": "^0.2.0",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {

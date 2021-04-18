@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { get_all_traces, get_oil_gas_platforms } from '../queries';
-import { MapContainer, TileLayer, ImageOverlay, LayersControl, FeatureGroup, LayerGroup} from 'react-leaflet';
+import { MapContainer, TileLayer, ImageOverlay, LayersControl, FeatureGroup, LayerGroup, useMap} from 'react-leaflet';
 import Buoy from './buoy';
 import Labeled from './Labeled';
 import OilPlatform from './oil_platform';
+import sea_lion_habitat from '../data/sea-lion-habitat.json'
+import HeatLayer from './heat_layer';
 
 // This is the API Key from MapBox documentation. Might as well just use it for now
 // mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
@@ -17,7 +19,6 @@ const Map = () => {
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(365);
 
-  
   const minTime  = 0;
   const maxTime = 100;
   // Effect to load the data when the app first loads
@@ -48,6 +49,10 @@ const Map = () => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
         </LayersControl.BaseLayer>
+        <LayersControl.Overlay name = "Sea Lion Heatmap">
+            {/* Can tweak the coordinates to make it overlap better */}
+          <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } />
+        </LayersControl.Overlay>
         <LayersControl.Overlay name = "Buoy Location">
           <FeatureGroup>
             { 
