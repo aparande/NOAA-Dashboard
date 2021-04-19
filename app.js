@@ -31,6 +31,17 @@ app.get('/api/get_traces', loadTracesMiddleware, (req, res, next) => {
   res.send(traces);
 })
 
+app.get('/api/get_tol', async (req, res, next) => {
+  if (req.query.start === undefined || req.query.start === null || req.query.end === undefined || req.query.end === null) {
+    return res.status(400).send({
+      message: "Need to supply dates"
+    });
+  }
+
+  tol = await fb.get_tol(req.query.start, req.query.end, req.query.buoy_num);
+  res.send(tol);
+});
+
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });

@@ -29,3 +29,13 @@ export const interval_search = (arr, cmp) => {
 export const dist = (x, y) => {
   return Math.sqrt(x * x + y * y);
 }
+
+export const mean = (data) => {
+  let out = data.reduce((accum, curr) => {
+    let vals = {...accum};
+    Object.keys(curr).forEach(key => vals[key] += curr[key]);
+    return vals;
+  })
+  Object.keys(out).forEach(key => out[key] /= data.length);
+  return out;
+}

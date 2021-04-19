@@ -1,10 +1,12 @@
 import { Marker, Popup, Polyline } from 'react-leaflet';
-import { interval_search, dist} from '../utils';
+import { interval_search, dist, mean} from '../utils';
 import BuoyPopup from './buoy_popup'
 import React, { useEffect, useState } from 'react';
+import { get_tol } from '../queries';
 
 const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
+  const [tolData, setTOLData] = useState(null);
   const [renderMarker, setRenderMarker] = useState(false);
 
   useEffect(() => {
@@ -37,11 +39,27 @@ const Buoy = (props) => {
 
   }, [props.positions, props.currTime, props.step])
 
+  const loadData = async () => {
+    console.log("Loading TOL data")
+    let data = await get_tol(props.currTime, props.step, props.drift_num);
+    if (Object.keys(data).length > 0) {
+      data = mean(data);
+      delete data.timestamp;
+      data = Object.keys(data).map(key => {return { x: parseInt(key), y: data[key] }});
+      setTOLData(data);
+    } else {
+      setTOLData(null);
+    }
+  }
+
   return(
     <div>
       { renderMarker && (
         <Marker position={ position }>
-          <Popup>Drift Number: {props.drift_num}<BuoyPopup/></Popup>
+          <Popup onOpen = {loadData} >
+            Drift Number: {props.drift_num}
+            <BuoyPopup data={ tolData }/>
+          </Popup>
         </Marker>)
       }
       <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}

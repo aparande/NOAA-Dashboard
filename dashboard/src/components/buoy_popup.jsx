@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Component } from 'react';
-import '../../../node_modules/react-vis/dist/style.css';
+import 'react-vis/dist/style.css';
 import {XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines, HorizontalGridLines} from 'react-vis';
 
 const BuoyPopup = (props) => {
@@ -25,7 +25,7 @@ const BuoyPopup = (props) => {
         <HorizontalGridLines />
         <XAxis />
         <YAxis />
-        <LineSeries data={data} />
+        <LineSeries data={props.data} />
       </XYPlot>
     )
   }
@@ -37,15 +37,15 @@ const BuoyPopup = (props) => {
         <HorizontalGridLines />
         <XAxis />
         <YAxis />
-        <VerticalBarSeries data={data} />
+        <VerticalBarSeries data={props.data} />
       </XYPlot>
     )
   }
 
   return (
     <div>
-      { (chartType === "line" ) && (lineSeries()) }
-      { (chartType === "bar" ) && (barchart()) }
+      { (chartType === "line" && data.length !== 0) && (lineSeries()) }
+      { (chartType === "bar"  && data.length !== 0) && (barchart()) }
       <select name="chart" onChange={(event) => setChartType(event.target.value)}>
         <option value="line">Line Chart</option>
         <option value="bar">Bar Chart</option>
