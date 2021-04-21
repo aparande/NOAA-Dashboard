@@ -33,7 +33,7 @@ export const dist = (x, y) => {
 export const mean = (data) => {
   let out = data.reduce((accum, curr) => {
     let vals = {...accum};
-    Object.keys(curr).forEach(key => vals[key] += curr[key]);
+    Object.keys(curr).forEach(key => vals[key] = parseFloat(vals[key]) + parseFloat(curr[key]));
     return vals;
   })
   Object.keys(out).forEach(key => out[key] /= data.length);

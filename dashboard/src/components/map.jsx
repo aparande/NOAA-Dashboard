@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { get_oil_gas_platforms } from '../queries';
+import { get_oil_gas_platforms, get_visible_buoys } from '../queries';
 
 import { MapContainer, TileLayer, LayersControl, FeatureGroup, LayerGroup, useMap} from 'react-leaflet';
 import Buoy from './buoy';
 import Labeled from './Labeled';
 import OilPlatform from './oil_platform';
 import HeatLayer from './heat_layer';
+import Detection from './detection';
 
 import sea_lion_habitat from '../data/sea-lion-habitat.json';
 import traces from '../data/traces.json';
+import detections from '../data/detections.json';
 
 const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
 const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
+
+console.log(minTime, maxTime);
 
 const HOUR = 1 * 60 * 60;
 const DAY = HOUR * 24;
@@ -28,6 +32,8 @@ const Map = () => {
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1*60*60);
+  const [buoyNums, setBuoyNums] = useState([4]);
+  const [visibleDetections, setVisibleDetections] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -37,6 +43,22 @@ const Map = () => {
     }
     fetchData();
   }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await get_visible_buoys(minTime);
+      setBuoyNums(data);
+    }
+    fetchData();
+  }, [])
+
+  useEffect(() => {
+    const visible = detections.filter((detection) => {
+      if (!buoyNums.includes(detection.drift_num)) return false;
+      return detection.timestamp >= currTime && detection.timestamp <= currTime + step;
+    })
+    setVisibleDetections(visible);
+  }, [currTime, step, buoyNums])
 
   return (
     <div>
@@ -55,7 +77,7 @@ const Map = () => {
           <LayersControl.Overlay name = "Buoy Location">
             <FeatureGroup>
               { 
-                Object.keys(traces).map((key, idx) => 
+                buoyNums.map((key, idx) => 
                   <Buoy currTime={ currTime } drift_num={ key } 
                     positions={ traces[key] } key={ idx } setCurrTime = { setCurrTime } 
                     step={step}
@@ -66,6 +88,11 @@ const Map = () => {
           <LayersControl.Overlay name="Oil">
             <FeatureGroup>
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
+            </FeatureGroup>
+          </LayersControl.Overlay>
+          <LayersControl.Overlay name="Detections">
+            <FeatureGroup>
+            { visibleDetections.map((b, idx) => <Detection detection={b} key={"detection" + idx} />) }
             </FeatureGroup>
           </LayersControl.Overlay>
         </LayersControl>

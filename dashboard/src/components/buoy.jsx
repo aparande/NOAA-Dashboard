@@ -44,8 +44,11 @@ const Buoy = (props) => {
     let data = await get_tol(props.currTime, props.step, props.drift_num);
     if (Object.keys(data).length > 0) {
       data = mean(data);
+      // console.log(data);
       delete data.timestamp;
       data = Object.keys(data).map(key => {return { x: parseInt(key), y: data[key] }});
+      data.sort((a, b) => a.x - b.x);
+      console.log(data);
       setTOLData(data);
     } else {
       setTOLData(null);
