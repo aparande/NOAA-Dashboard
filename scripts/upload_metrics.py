@@ -38,7 +38,7 @@ def parse_header(header):
     return header.split("_")[-1]+ "Hz"
 
 def get_drift_metric(db, drift_name, metric):
-  query = db.collection("metrics").where("drift_name", "==", drift_name).where("metric_name", "==", metric)
+  query = db.collection("metrics").where("drift_name", "==", drift_name).where("metric_name", "==", metric).limit(1)
   return query.get()
 
 def create_drift_metric(db, drift_name, metric):
@@ -49,7 +49,7 @@ def create_drift_metric(db, drift_name, metric):
   })
   return doc_ref
 
-def upload_data(drift_name, metric, stat, data, db, lim = -1):
+def upload_data(drift_name, metric, stat, data, db, start=-1, end=-1):
   metric_doc = get_drift_metric(db, drift_name, metric)
   if len(metric_doc) == 0:
     metric_doc_id = create_drift_metric(db, drift_name, metric).id
@@ -57,7 +57,9 @@ def upload_data(drift_name, metric, stat, data, db, lim = -1):
     metric_doc_id = metric_doc[0].id
 
   for i, row in enumerate(data):
-    if lim != -1 and i >= lim:
+    if i < start:
+      continue
+    if i > end:
       print(f"Finished uploading {metric}-{stat} for {drift_name}")
       return
 
@@ -65,6 +67,10 @@ def upload_data(drift_name, metric, stat, data, db, lim = -1):
     date = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.000Z")
     timestamp = date.timestamp()
     row["timestamp"] = timestamp
+
+    for key in row:
+      if key != "timestamp":
+        row[key] = float(row[key])
 
     db.collection("metrics").document(metric_doc_id).collection(stat).document(str(timestamp)).set(row)
 
@@ -75,7 +81,8 @@ parser.add_argument('directory', type=str, help="Directory to parse")
 parser.add_argument('--creds', type=str, dest="creds", default="serviceAccountKey.json", help="Path to Firebase Credentials")
 parser.add_argument('--skip-stats', type=str, nargs='+', dest="skip_stats", help="Stats to Skip")
 parser.add_argument('--skip-metrics', type=str, nargs='+', dest="skip_metrics", help="Metrics to Skip")
-parser.add_argument('--limit', type=int, default=-1, dest="limit", help="Maximum number of documents per metric to upload")
+parser.add_argument('--start', type=int, default=-1, dest="start", help="Row num to start metric upload")
+parser.add_argument('--end', type=int, default=-1, dest="end", help="Row num to end metric upload")
 
 args = parser.parse_args()
 
@@ -107,5 +114,5 @@ for path in files:
   if metric not in args.skip_metrics and stat not in args.skip_stats:
     print(f"Found metric file: {metric}-{stat}")
     data = parse_csv(path)
-    upload_data(drift_name, metric, stat, data, db, lim=args.limit)
+    upload_data(drift_name, metric, stat, data, db, start=args.start, end=args.end)
 
