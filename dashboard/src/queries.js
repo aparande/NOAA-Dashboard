@@ -10,7 +10,7 @@ export const get_all_traces = async (start_date, end_date=undefined, limit=10) =
         limit: limit
       }
     })
-  console.log(res);
+  // console.log(res);
   return res.data;
 } 
 

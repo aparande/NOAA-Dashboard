@@ -3,8 +3,9 @@ import { get_all_traces, get_oil_gas_platforms } from '../queries';
 import { MapContainer, TileLayer, ImageOverlay, LayersControl, FeatureGroup, LayerGroup, useMap} from 'react-leaflet';
 import Buoy from './buoy';
 import Labeled from './Labeled';
+import Menu from './menu';
 import OilPlatform from './oil_platform';
-import sea_lion_habitat from '../data/sea-lion-habitat.json'
+import sea_lion_habitat from '../data/sea-lion-habitat.json';
 import HeatLayer from './heat_layer';
 
 // This is the API Key from MapBox documentation. Might as well just use it for now
@@ -18,6 +19,28 @@ const Map = () => {
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(365);
+  const [buoyLayer, setBuoyLayer] = useState(true);
+  const [oilLayer, setOilLayer] = useState(true);
+  const [heatmapLayer, setHeatmapLayer] = useState("Seal");
+
+  const setLayers = {
+    "Buoys": {
+      "BuoyPath": setBuoyLayer
+    },
+    "Development": {
+      "OilRigs": setOilLayer
+    },
+    "Detections": {
+    },
+    "Habitats": {
+      "selectedHabitat": setHeatmapLayer
+    }
+  }
+  // handler used to change state
+  const toggleLayer = (menu_item, layer_item, state) => {
+    console.log("Set layers", menu_item, layer_item, state);
+    setLayers[menu_item][layer_item](state);
+  };
 
   const minTime  = 0;
   const maxTime = 100;
@@ -37,38 +60,32 @@ const Map = () => {
       setPlatformLocs(data);
     }
     fetchData();
-  }, [])
-
+  }, []);
+  
   return (
     <>
     <MapContainer center={[lat, lng]} zoom={zoom} style={{ width: '100%', height: '100vh'}} >
-      <LayersControl position="topright">
-        <LayersControl.BaseLayer checked name="Normal">
-          <TileLayer
-            attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-        </LayersControl.BaseLayer>
-        <LayersControl.Overlay name = "Sea Lion Heatmap">
-            {/* Can tweak the coordinates to make it overlap better */}
-          <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } />
-        </LayersControl.Overlay>
-        <LayersControl.Overlay name = "Buoy Location">
-          <FeatureGroup>
-            { 
-              Object.keys(traces).map((key, idx) => 
-              <Buoy currTime={ currTime } drift_num={ key } 
-                    positions={ traces[key] } key={ idx } 
-                    setCurrTime = { setCurrTime } />)
-            }
-          </FeatureGroup>
-        </LayersControl.Overlay>
-        <LayersControl.Overlay name="Oil">
-          <FeatureGroup>
-          { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
-          </FeatureGroup>
-        </LayersControl.Overlay>
-      </LayersControl>
+      <TileLayer
+        attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+      {/* BUOY GROUP */}
+      {buoyLayer && <FeatureGroup name="Buoy Paths" type="Buoys">
+        { 
+          Object.keys(traces).map((key, idx) => 
+          <Buoy currTime={ currTime } drift_num={ key } 
+                positions={ traces[key] } key={ idx } 
+                setCurrTime = { setCurrTime } />)
+        }
+      </FeatureGroup>}
+      {/* DEVELOPMENT GROUP */}
+      {oilLayer && <FeatureGroup>
+            { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
+      </FeatureGroup>}
+      {/* SPECIES GROUP */}
+      {/* HABITAT GROUP */}
+        {/* Can tweak the coordinates to make it overlap better */}
+        {heatmapLayer != "None" && <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } name="Seal" />}
+      <Menu layers={toggleLayer}></Menu>
     </MapContainer>
     <div id="time-slider">
       <div className="sliderwrapper">

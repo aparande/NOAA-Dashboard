@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Alata&display=swap');
 body{
   margin: 0px;
 }
@@ -62,4 +63,46 @@ body{
 .button:hover,
 .button:focus{
   background-color: rgb(1, 199, 199);
+}
+
+.menu{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 400;
+  background-color: #212428;
+  color: white;
+  width: 200px;
+  padding: 10px;
+}
+.icon{
+  font-size: 30px;
+  line-height: 10px;
+}
+.menu-item{
+  padding: 5px;
+}
+.menu-title{
+  cursor:pointer;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+.menu-item-header{
+  font-family: 'Alata', sans-serif;
+  line-height: 0px;
+}
+.layer{
+  cursor:pointer;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+.layer-input{
+  padding: 7px 0px;
+}
+.layer-header{
+  font-family: 'Alata', sans-serif;
+  line-height: 0px;
+  font-size: 12px;
 }
