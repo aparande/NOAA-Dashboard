@@ -13,6 +13,8 @@ import Detection from './detection';
 import traces from '../data/traces.json';
 import detections from '../data/detections.json';
 
+console.log(traces);
+
 const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
 const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
 
@@ -33,7 +35,7 @@ const Map = () => {
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1*60*60);
-  const [buoyNums, setBuoyNums] = useState([4]);
+  const [buoyNums, setBuoyNums] = useState(Object.keys(traces));
   const [visibleDetections, setVisibleDetections] = useState([]);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary

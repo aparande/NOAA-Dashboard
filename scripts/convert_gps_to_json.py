@@ -19,15 +19,19 @@ if not os.path.isfile(args.file):
 with open(args.file, 'r') as f:
   reader = csv.reader(f)
   header = True
-  headers = ["timestamp", "spot_id", "latitude", "longitude", "drift_num"]
+  headers = []
+  header_map = { "dateTime": "timestamp", "lat": "latitude", "long": "longitude", "station": "drift_num" }
 
   data = dict()
   i = 0
   for row in reader: 
     if header:
       header = False
+      headers = row
     else:
       row_dict = {headers[i]: pt for i, pt in enumerate(row)}
+
+      row_dict = { header_map[key] : row_dict[key] for key in header_map }
 
       date = datetime.strptime(row_dict["timestamp"], "%Y-%m-%d %H:%M:%S")
       timestamp = date.timestamp()
