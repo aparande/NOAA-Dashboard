@@ -39,22 +39,22 @@ const Map = () => {
   const [visibleDetections, setVisibleDetections] = useState([]);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
-  const [buoyLayer, setBuoyLayer] = useState(true);
-  const [oilLayer, setOilLayer] = useState(true);
-  const [heatmapLayer, setHeatmapLayer] = useState("None");
+  const [showBuoyLayer, setShowBuoyLayer] = useState(true);
+  const [showOilLayer, setShowOilLayer] = useState(true);
+  const [visibleHabitatName, setVisibileHabitatName] = useState("None");
 
   // layers inside the dictionary should be named how the layer appears in the menu, but without spaces
   const setLayers = {
     "Buoys": {
-      "BuoyPath": setBuoyLayer
+      "BuoyPath": setShowBuoyLayer
     },
     "Development": {
-      "OilRigs": setOilLayer
+      "OilRigs": setShowOilLayer
     },
     "Detections": {
     },
     "Habitats": {
-      "selectedHabitat": setHeatmapLayer
+      "selectedHabitat": setVisibileHabitatName
     }
   }
   // handler used to change state
@@ -95,7 +95,7 @@ const Map = () => {
         attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
       {/* BUOY GROUP */}
-      {buoyLayer && <FeatureGroup>
+      {showBuoyLayer && <FeatureGroup>
               { 
                 buoyNums.map((key, idx) => 
                   <Buoy currTime={ currTime } drift_num={ key } 
@@ -105,7 +105,7 @@ const Map = () => {
               }
       </FeatureGroup>}
       {/* DEVELOPMENT GROUP */}
-      {oilLayer && <FeatureGroup>
+      {showOilLayer && <FeatureGroup>
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
       </FeatureGroup>}
       {/* SPECIES GROUP */}
@@ -114,7 +114,7 @@ const Map = () => {
       </FeatureGroup>
       {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
-        {heatmapLayer && <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } name={heatmapLayer} />}
+        {visibleHabitatName !== "None" && <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } name={visibleHabitatName} />}
       <Menu layers={toggleLayer}></Menu>
     </MapContainer>
     <div id="time-slider">
