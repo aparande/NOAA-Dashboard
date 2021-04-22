@@ -23,6 +23,33 @@ export const get_oil_gas_platforms = async () => {
         "Content-Type": "application/x-www-form-urlencoded"
       }
     })
-  console.log(res)
+  // console.log(res)
   return res.data.features.map((feat) => feat.attributes);
 } 
+
+export const get_tol = async (start_date, step, buoy_num) => {
+  const URL = "/api/get_tol";
+  const end_date = start_date + step;
+  const res = await axios.get(URL,
+    { 
+      params: {
+        start: start_date,
+        end: end_date,
+        buoy_num: buoy_num
+      }
+    })
+  console.log(res);
+  return res.data;
+}
+
+export const get_visible_buoys = async (start_date) => {
+  const URL = "/api/visible_buoys";
+  const res = await axios.get(URL,
+    { 
+      params: {
+        start: start_date,
+      }
+    })
+  console.log(res);
+  return res.data;
+}

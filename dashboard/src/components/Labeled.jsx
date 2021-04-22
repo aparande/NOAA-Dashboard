@@ -2,98 +2,46 @@ import React, { useEffect, useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 
 const Labeled = (props) => {
-  const [values, setValues] = useState([0]);
+  const [values, setValues] = useState([ props.currTime ]);
   const STEP = props.step;
   const MIN = props.minTime;
-  const MAX = props.maxTime+120;
+  const MAX = props.maxTime;
+
+  useEffect(() => {
+    setValues([ props.currTime ]);
+  }, [props.currTime])
 
   return (
-    <div className="slider"
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap'
-      }}
-    >
-      <Range
-        values={values}
-        step={STEP}
-        min={MIN}
-        max={MAX}
-
+    <div className="slider">
+      <Range values={values} step={STEP} min={MIN} max={MAX}
         rtl={props.rtl}
         onChange={(values) => setValues(values)}
         onFinalChange={(values) => props.setCurrTime(values[0])}
         renderTrack={({ props, children }) => (
-          <div
-            onMouseDown={props.onMouseDown}
-            onTouchStart={props.onTouchStart}
-            style={{
-              ...props.style,
-              height: '36px',
-              display: 'flex',
-              width: '100%'
-            }}
-          >
-            <div
-              ref={props.ref}
-              style={{
-                height: '5px',
-                width: '100%',
-                borderRadius: '4px',
-                background: getTrackBackground({
-                  values,
-                  colors: ['#548BF4', '#ccc'],
-                  min: MIN,
-                  max: MAX,
-                }),
-                alignSelf: 'center'
-              }}
-            >
+          <div className="slider-inner" onMouseDown={props.onMouseDown} onTouchStart={props.onTouchStart} style={props.style}>
+            <div className="slider-track" ref={props.ref}
+              style={{ background: getTrackBackground({ values, colors: ['#548BF4', '#ccc'], min: MIN, max: MAX }) }}>
               {children}
             </div>
           </div>
         )}
         renderThumb={({ props, isDragged }) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: '42px',
-              width: '21px',
-              borderRadius: '4px',
-              backgroundColor: '#FFF',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              boxShadow: '0px 2px 6px #AAA'
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                top: '-28px',
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: '14px',
-                fontFamily: 'Arial,Helvetica Neue,Helvetica,sans-serif',
-                padding: '4px',
-                borderRadius: '4px',
-                backgroundColor: '#548BF4'
-              }}
-            >
-              {values[0].toFixed(1)}
-            </div>
-            <div
-              style={{
-                height: '16px',
-                width: '5px',
-                backgroundColor: isDragged ? '#548BF4' : '#CCC'
-              }}
+          <div className="slider-thumb" {...props} style={{ ...props.style }} >
+            {/* 
+            // Can uncomment this if we want somthing to show up above the slider
+              <div className="slider-popup">
+              {Math.round((values[0].toFixed(1) - MIN) / STEP)}
+            </div> */}
+            <div className="slider-marker"
+              style={{ backgroundColor: isDragged ? '#548BF4' : '#CCC' }}
             />
           </div>
         )}
       />
+      <div className="date">
+        { /* TODO: There is a weird flickering effect with the slider */ }
+        { new Date(values[0].toFixed(1) * 1000).toLocaleString() }
+      </div>
     </div>
   );
 };

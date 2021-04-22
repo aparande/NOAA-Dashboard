@@ -47,4 +47,41 @@ const get_all_traces = async (start_date, end_date = undefined, limit=100) => {
   return traces
 }
 
-module.exports = { get_buoy_trace, get_all_traces };
+const get_tol = async (start_date, end_date, buoy_num) => {
+  const drift_name = `Drift ${buoy_num}`;
+  console.log(`Querying TOL for ${drift_name}`);
+  const snapshot = await db.collection("metrics").where("drift_name", "==", drift_name)
+                                                 .where("metric_name", "==", "TOL").limit(1).get();
+  // console.log(snapshot);
+  if (snapshot.empty) {
+    console.log(`No TOL data found ${drift_name}`);
+    return {};
+  } else {
+    console.log(`TOL data found ${drift_name}. Querying for ${start_date} to ${end_date}`);
+    const inner_query = snapshot.docs[0].ref.collection("raw").where("timestamp", '<=', end_date).where("timestamp", ">=", start_date);
+  
+    const inner_snapshot = await inner_query.orderBy('timestamp', 'asc').get();
+    console.log(`Retrieved ${inner_snapshot.size} TOL rows from Drift ${buoy_num}`);
+    return inner_snapshot.docs.map(doc => doc.data());
+  }
+  
+}
+
+const get_visible_buoys = async (start_date) => {
+  const promises = BUOYS.map(async (buoy_num) => {
+    const drift_name = `Drift ${buoy_num}`;
+    let snapshot = await db.collection("metrics").where("drift_name", "==", drift_name)
+                                                   .where("metric_name", "==", "TOL").limit(1).get()
+    if (snapshot.empty) return false;
+    // console.log(`TOL data found ${drift_name}. Querying for ${start_date}`);
+    snapshot = await snapshot.docs[0].ref.collection("raw").where("timestamp", ">=", start_date).limit(1).get();
+    return !snapshot.empty;
+  });
+
+  const results = await Promise.all(promises);
+  // console.log(results);
+
+  return BUOYS.filter((val, idx) => results[idx]);
+}
+
+module.exports = { get_buoy_trace, get_all_traces, get_tol, get_visible_buoys };

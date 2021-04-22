@@ -9,7 +9,7 @@ const HeatLayer = (props) => {
   // console.log(Math.min(...props.data.map(x => x[2])));
 
   const maxHeat = Math.max(...props.data.map(x => x[2]));
-  console.log(maxHeat);
+  /// console.log(maxHeat);
 
   useEffect(() => {
     L.heatLayer(props.data, {
