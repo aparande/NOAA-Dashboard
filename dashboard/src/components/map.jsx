@@ -32,12 +32,14 @@ const Map = () => {
   const [zoom, setZoom] = useState(6);
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
-  const [step, setStep] = useState(365);
+  const [step, setStep] = useState(1*60*60);
+  const [buoyNums, setBuoyNums] = useState([4]);
+  const [visibleDetections, setVisibleDetections] = useState([]);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
   const [buoyLayer, setBuoyLayer] = useState(true);
   const [oilLayer, setOilLayer] = useState(true);
-  const [heatmapLayer, setHeatmapLayer] = useState("Seal");
+  const [heatmapLayer, setHeatmapLayer] = useState("None");
 
   // layers inside the dictionary should be named how the layer appears in the menu, but without spaces
   const setLayers = {
@@ -82,6 +84,7 @@ const Map = () => {
     })
     setVisibleDetections(visible);
   }, [currTime, step, buoyNums])
+
   
   return (
     <>
@@ -90,7 +93,7 @@ const Map = () => {
         attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
       {/* BUOY GROUP */}
-      <FeatureGroup>
+      {buoyLayer && <FeatureGroup>
               { 
                 buoyNums.map((key, idx) => 
                   <Buoy currTime={ currTime } drift_num={ key } 
@@ -98,7 +101,7 @@ const Map = () => {
                     step={step}
                   />)
               }
-      </FeatureGroup>
+      </FeatureGroup>}
       {/* DEVELOPMENT GROUP */}
       {oilLayer && <FeatureGroup>
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
@@ -109,7 +112,7 @@ const Map = () => {
       </FeatureGroup>
       {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
-        {heatmapLayer != "None" && <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } name="Seal" />}
+        {heatmapLayer && <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } name={heatmapLayer} />}
       <Menu layers={toggleLayer}></Menu>
     </MapContainer>
     <div id="time-slider">
