@@ -11,6 +11,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 // TODO: Replace this with Redis or something
 let traces = null;
 let visibleBuoys = null;
+let bbData = {};
 
 // Middleware to take traces from the cache if applicable, else to load them from the database
 const loadTracesMiddleware = async (req, res, next) => {
@@ -43,6 +44,21 @@ const visibleBuoysMiddleware = async (req, res, next) => {
   next();
 }
 
+const getBBMiddleware = async (req, res, next) => {
+  if (req.query.start === undefined || req.query.start === null || req.query.end === undefined || req.query.end === null) {
+    return res.status(400).send({
+      message: "Need to supply a date"
+    });
+  }
+
+  if (bbData[req.query.buoy_num] == null || bbData[req.query.buoy_num] == null) {
+    console.log(`Attempting to load BB: ${req.query.buoy_num}`);
+    bbData[req.query.buoy_num] = await fb.get_bb(parseInt(req.query.start), parseInt(req.query.end), req.query.buoy_num);
+  }
+  
+  next();
+}
+
 app.get('/api/get_traces', loadTracesMiddleware, (req, res, next) => {
   res.send(traces);
 })
@@ -56,6 +72,10 @@ app.get('/api/get_tol', async (req, res, next) => {
 
   tol = await fb.get_tol(parseInt(req.query.start), parseInt(req.query.end), req.query.buoy_num);
   res.send(tol);
+});
+
+app.get('/api/get_bb', getBBMiddleware, async (req, res, next) => {
+  res.send(bbData[req.query.buoy_num]);
 });
 
 app.get('/api/visible_buoys', visibleBuoysMiddleware, async (req, res, next) => {

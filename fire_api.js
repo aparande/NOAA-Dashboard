@@ -84,4 +84,23 @@ const get_visible_buoys = async (start_date) => {
   return BUOYS.filter((val, idx) => results[idx]);
 }
 
-module.exports = { get_buoy_trace, get_all_traces, get_tol, get_visible_buoys };
+const get_bb = async (start_date, end_date, buoy_num) => {
+  const drift_name = `Drift ${buoy_num}`;
+  console.log(`Querying BB for ${drift_name}`);
+  const snapshot = await db.collection("metrics").where("drift_name", "==", drift_name)
+                                                 .where("metric_name", "==", "BB").limit(1).get();
+  // console.log(snapshot);
+  if (snapshot.empty) {
+    console.log(`No BB data found ${drift_name}`);
+    return {};
+  } else {
+    console.log(`BB data found ${drift_name}. Querying for ${start_date} to ${end_date}`);
+    const inner_query = snapshot.docs[0].ref.collection("raw").where("timestamp", '<=', end_date).where("timestamp", ">=", start_date);
+  
+    const inner_snapshot = await inner_query.orderBy('timestamp', 'asc').get();
+    console.log(`Retrieved ${inner_snapshot.size} BB rows from Drift ${buoy_num}`);
+    return inner_snapshot.docs.map(doc => doc.data());
+  }
+}
+
+module.exports = { get_buoy_trace, get_all_traces, get_tol, get_visible_buoys, get_bb };

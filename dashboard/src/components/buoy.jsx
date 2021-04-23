@@ -1,6 +1,7 @@
-import { Marker, Popup, Polyline } from 'react-leaflet';
+import { Marker, Popup, Polyline, Tooltip } from 'react-leaflet';
 import { interval_search, dist, mean} from '../utils';
-import BuoyPopup from './buoy_popup'
+import BuoyPopup from './buoy_popup';
+import TracePopup from './trace_popup';
 import React, { useEffect, useState } from 'react';
 import { get_tol } from '../queries';
 import { buoyIcon } from '../constants'; 
@@ -9,6 +10,7 @@ const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
   const [tolData, setTOLData] = useState(null);
   const [renderMarker, setRenderMarker] = useState(false);
+  const [toolTipOpen, setToolTipOpen] = useState(false);
 
   useEffect(() => {
     let interval = interval_search(props.positions, (elem) => {
@@ -40,7 +42,7 @@ const Buoy = (props) => {
 
   }, [props.positions, props.currTime, props.step])
 
-  const loadData = async () => {
+  const loadTOLData = async () => {
     console.log("Loading TOL data")
     let data = await get_tol(props.currTime, props.step, props.drift_num);
     if (Object.keys(data).length > 0) {
@@ -56,29 +58,38 @@ const Buoy = (props) => {
     }
   }
 
+  const traceEventHandlers = {
+    click: (e) => {
+      const closest = props.positions.reduce((prev, curr) => {
+        return dist([prev.latitude, prev.longitude], e.latlng) < dist([curr.latitude, curr.longitude], e.latlng) ? prev : curr;
+      });
+
+      console.log(closest);
+      props.setCurrTime(closest.timestamp);
+
+      return null
+    }
+  };
+
   return(
     <div>
       { renderMarker && (
         <Marker position={ position } icon={ buoyIcon }>
-          <Popup onOpen = {loadData} >
+          <Popup onOpen = {loadTOLData} >
             Drift Number: {props.drift_num}
             <BuoyPopup data={ tolData }/>
           </Popup>
         </Marker>)
       }
       <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}
-        eventHandlers={{
-          click: (e) => {
-            const closest = props.positions.reduce((prev, curr) => {
-              return dist([prev.latitude, prev.longitude], e.latlng) < dist([curr.latitude, curr.longitude], e.latlng) ? prev : curr;
-            });
-
-            console.log(closest);
-            props.setCurrTime(closest.timestamp);
-
-            return null
-          }
-        }} />
+                eventHandlers={traceEventHandlers}
+                pathOptions={{ weight: 3 }}>
+          <Tooltip onOpen={() => setToolTipOpen(true)} sticky>
+            <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num} 
+                        step={props.step} isOpen={toolTipOpen} />
+          </Tooltip>
+          
+        </Polyline>
     </div>
     );
 }

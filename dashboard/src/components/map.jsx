@@ -112,7 +112,7 @@ const Map = () => {
                 buoyNums.map((key, idx) => 
                   <Buoy currTime={ currTime } drift_num={ key } 
                     positions={ traces[key] } key={ idx } setCurrTime = { setCurrTime } 
-                    step={step}
+                    step={step} minTime={minTime} maxTime={maxTime}
                   />)
               }
       </FeatureGroup>}
