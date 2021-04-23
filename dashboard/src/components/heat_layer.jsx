@@ -14,8 +14,8 @@ const HeatLayer = (props) => {
       minOpacity: 0,
       max: maxHeat,
       maxZoom: 8,
-      blur: 10,
-      radius: 10,
+      blur: 20,
+      radius: 15,
       gradient: props.gradient || {0.1: 'blue', 0.3: 'lime', 0.75: 'red'}
     }).addTo(map);
     setHeatLayer(heat);

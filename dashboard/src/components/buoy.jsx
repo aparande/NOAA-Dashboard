@@ -3,6 +3,7 @@ import { interval_search, dist, mean} from '../utils';
 import BuoyPopup from './buoy_popup'
 import React, { useEffect, useState } from 'react';
 import { get_tol } from '../queries';
+import { buoyIcon } from '../constants'; 
 
 const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
@@ -58,7 +59,7 @@ const Buoy = (props) => {
   return(
     <div>
       { renderMarker && (
-        <Marker position={ position }>
+        <Marker position={ position } icon={ buoyIcon }>
           <Popup onOpen = {loadData} >
             Drift Number: {props.drift_num}
             <BuoyPopup data={ tolData }/>

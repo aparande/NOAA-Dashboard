@@ -84,10 +84,12 @@ const Map = () => {
     fetchData();
   }, []);
   useEffect(() => {
+    console.log(detections);
     const visible = detections.filter((detection) => {
       if (!buoyNums.includes(detection.drift_num)) return false;
       return detection.timestamp >= currTime && detection.timestamp <= currTime + step;
     })
+    console.log(visible);
     setVisibleDetections(visible);
   }, [currTime, step, buoyNums])
 
@@ -119,7 +121,7 @@ const Map = () => {
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
       { showShippingLayer && shippingData && 
         <HeatLayer data={ shippingData.map(x => [x.latitude, x.longitude, Math.log(x.size)]) }
-                   gradient={{ 0.14 : "blue", 0.4: "green", 1: "red" }} />
+                   gradient={{ 0.14 : "#CB94FF", 0.4: "#106DDB", 1: "#490092" }} />
       }
       </FeatureGroup>}
       {/* SPECIES GROUP */}
@@ -130,7 +132,8 @@ const Map = () => {
         {/* Can tweak the coordinates to make it overlap better */}
         {
           visibleHabitatName !== "None" && 
-          <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } />
+          <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) }
+                    gradient={{0.1: '#F4C75E', 0.3: '#FC6EB7', 0.75: '#910100'}} />
         }
       <Menu layers={toggleLayer}></Menu>
     </MapContainer>

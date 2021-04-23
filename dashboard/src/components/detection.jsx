@@ -1,11 +1,11 @@
 import { Marker, Popup } from 'react-leaflet';
-import { SPECIES } from '../constants';
+import { SPECIES, whaleIcon } from '../constants';
 
 const Detection = (props) => {
   const position = [props.detection.latitude, props.detection.longitude];
 
   return(
-      <Marker position={position}>
+      <Marker position={position} icon={ whaleIcon }>
         <Popup>
          <p>Time: {(new Date(props.detection.timestamp * 1000)).toLocaleString()}</p>
          <p>Drift Number: {props.detection.drift_num}</p>
