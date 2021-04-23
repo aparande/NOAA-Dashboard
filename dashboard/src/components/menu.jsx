@@ -36,7 +36,7 @@ const LayerItemRadio = (props) => {
 
 const content = {
     Buoys: ["Buoy Path"],
-    Development: ["Oil Rigs"],
+    Development: ["Oil Rigs", "Ships"],
     Detections: [],
     Habitats: ["None", "Sea Lion"],
 }

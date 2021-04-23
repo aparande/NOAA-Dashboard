@@ -16,7 +16,7 @@ const HeatLayer = (props) => {
       maxZoom: 8,
       blur: 10,
       radius: 10,
-      gradient: {0.1: 'blue', 0.3: 'lime', 0.75: 'red'}
+      gradient: props.gradient || {0.1: 'blue', 0.3: 'lime', 0.75: 'red'}
     }).addTo(map);
     setHeatLayer(heat);
 
@@ -30,7 +30,10 @@ const HeatLayer = (props) => {
 
   // Update heatmap
   useEffect(() => {
+    console.log("Updating heatmap")
     const maxHeat = Math.max(...props.data.map(x => x[2]));
+    console.log(maxHeat);
+    console.log(props.data);
     if (heatLayer !== null && heatLayer !== undefined) {
       heatLayer.setLatLngs(props.data);
       heatLayer.setOptions({ max: maxHeat });

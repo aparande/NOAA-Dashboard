@@ -6,12 +6,13 @@ import Buoy from './buoy';
 import Labeled from './Labeled';
 import Menu from './menu';
 import OilPlatform from './oil_platform';
-import sea_lion_habitat from '../data/sea-lion-habitat.json';
 import HeatLayer from './heat_layer';
 import Detection from './detection';
 
 import traces from '../data/traces.json';
 import detections from '../data/detections.json';
+import sea_lion_habitat from '../data/sea-lion-habitat.json';
+import ship_data from '../data/ship_density_monthly.json';
 
 console.log(traces);
 
@@ -37,10 +38,12 @@ const Map = () => {
   const [step, setStep] = useState(1*60*60);
   const [buoyNums, setBuoyNums] = useState(Object.keys(traces));
   const [visibleDetections, setVisibleDetections] = useState([]);
+  const [shippingData, setShippingData] = useState(null);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
   const [showOilLayer, setShowOilLayer] = useState(true);
+  const [showShippingLayer, setShippingLayer] = useState(true);
   const [visibleHabitatName, setVisibileHabitatName] = useState("None");
 
   // layers inside the dictionary should be named how the layer appears in the menu, but without spaces
@@ -49,7 +52,8 @@ const Map = () => {
       "BuoyPath": setShowBuoyLayer
     },
     "Development": {
-      "OilRigs": setShowOilLayer
+      "OilRigs": setShowOilLayer,
+      "Ships": setShippingLayer
     },
     "Detections": {
     },
@@ -87,7 +91,13 @@ const Map = () => {
     setVisibleDetections(visible);
   }, [currTime, step, buoyNums])
 
-  
+  useEffect(() => {
+    let time = "" + (Math.floor(currTime / MONTH) * MONTH) + ".0";
+    if (ship_data[time] !== undefined && ship_data[time] !== null) {
+      setShippingData(ship_data[time]);
+    }
+  }, [currTime])
+
   return (
     <>
     <MapContainer center={[lat, lng]} zoom={zoom} style={{ width: '100%', height: '100vh'}} >
@@ -107,6 +117,10 @@ const Map = () => {
       {/* DEVELOPMENT GROUP */}
       {showOilLayer && <FeatureGroup>
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
+      { showShippingLayer && shippingData && 
+        <HeatLayer data={ shippingData.map(x => [x.latitude, x.longitude, Math.log(x.size)]) }
+                   gradient={{ 0.14 : "blue", 0.4: "green", 1: "red" }} />
+      }
       </FeatureGroup>}
       {/* SPECIES GROUP */}
       <FeatureGroup>
@@ -114,7 +128,10 @@ const Map = () => {
       </FeatureGroup>
       {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
-        {visibleHabitatName !== "None" && <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } name={visibleHabitatName} />}
+        {
+          visibleHabitatName !== "None" && 
+          <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) } />
+        }
       <Menu layers={toggleLayer}></Menu>
     </MapContainer>
     <div id="time-slider">
