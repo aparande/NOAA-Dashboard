@@ -32,8 +32,8 @@ const HeatLayer = (props) => {
   useEffect(() => {
     console.log("Updating heatmap")
     const maxHeat = Math.max(...props.data.map(x => x[2]));
-    console.log(maxHeat);
-    console.log(props.data);
+    // console.log(maxHeat);
+    // console.log(props.data);
     if (heatLayer !== null && heatLayer !== undefined) {
       heatLayer.setLatLngs(props.data);
       heatLayer.setOptions({ max: maxHeat });
