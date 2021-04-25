@@ -118,7 +118,7 @@ const Map = () => {
       {showOilLayer && <FeatureGroup>
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
       </FeatureGroup>}
-      { showShippingLayer && shippingData && 
+      { showShippingLayer && shippingData &&
         <HeatLayer data={ shippingData.map(x => [x.latitude, x.longitude, Math.log(x.size)]) }
                    gradient={{ 0.14 : "#CB94FF", 0.4: "#106DDB", 1: "#490092" }} />
       }
