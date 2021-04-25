@@ -20,7 +20,7 @@ const LayerItemCheckbox = (props) => {
         <div className="layer" onClick={() => {
             props.toggle(props.category, props.name.replace(/\s/g, ''), !isActive);
             setIsActive(!isActive)}}>
-            <p className="layer-header">{props.name}</p>
+            <div className="layer-header">{props.name}</div>
             <div className="layer-input">{isActive ?  <MdCheckBox />:<MdCheckBoxOutlineBlank />}</div>
         </div>
     )
@@ -28,7 +28,7 @@ const LayerItemCheckbox = (props) => {
 const LayerItemRadio = (props) => {
     return(
         <div className="layer" onClick={() => props.setSelected(props.name)}>
-            <p className="layer-header">{props.name}</p>
+            <div className="layer-header">{props.name}</div>
             <div className="layer-input">{props.checked ?  <MdRadioButtonChecked />:<MdRadioButtonUnchecked />}</div>
         </div>
     )
@@ -57,7 +57,7 @@ const MenuItem = (props) => {
                 onClick={() => setIsActive(!isActive)}
                 >
             {icons[props.title]}
-            <p className="menu-item-header">{props.title}</p>
+            <div className="menu-item-header">{props.title}</div>
             <div style={{lineHeight: '30px'}}>{isActive ? '-' : '+'}</div>
             </div>
             {isActive && <div className="menu-item-content">

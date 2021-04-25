@@ -95,7 +95,8 @@ body{
 }
 .menu-item-header{
   font-family: 'Alata', sans-serif;
-  line-height: 0px;
+  display: flex;
+  align-items: center;
 }
 .layer{
   cursor:pointer;
@@ -108,6 +109,34 @@ body{
 }
 .layer-header{
   font-family: 'Alata', sans-serif;
-  line-height: 0px;
+  display: flex;
+  align-items: center;
   font-size: 12px;
+}
+
+.mr-auto{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+#navbar-buttons{
+  display: flex;
+  justify-content: space-between;
+}
+
+#navbar{
+  background-color: #212428;
+}
+
+.nav-link{
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-family: 'Alata', sans-serif;
+  margin: 8px;
+}
+.navbar-dark .navbar-nav .nav-link{
+  color: rgba(255,255,255,.6);
 }
