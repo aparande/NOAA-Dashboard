@@ -140,3 +140,40 @@ body{
 .navbar-dark .navbar-nav .nav-link{
   color: rgba(255,255,255,.6);
 }
+
+.homepage, .about {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage {
+  background-image: url('images/homepage.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+
+.about {
+  background-image: url('images/about.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+
+.heading {
+  font-family: 'Alata', sans-serif;
+  font-size: 75px;
+  margin-bottom: 25px;
+}
+
+.heading-text {
+  font-family: 'Trebuchet', sans-serif;
+  font-size: 20px;
+  text-align: center;
+  margin: 1.5% 20%;
+}
