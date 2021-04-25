@@ -10,8 +10,11 @@ const BuoyPopup = (props) => {
       <XYPlot height={300} width={300} yType="log">
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis />
-        <YAxis />
+        <XAxis
+          tickFormat={function tickFormat(d){return d.toString().concat(" Hz")}}
+          tickLabelAngle={-15}
+        />
+        <YAxis title="Sound Level (dB)" position="start"/>
         <LineSeries data={props.data} />
       </XYPlot>
     )
@@ -22,8 +25,11 @@ const BuoyPopup = (props) => {
       <XYPlot height={300} width={300}>
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis />
-        <YAxis />
+        <XAxis
+          tickFormat={function tickFormat(d){return d.toString().concat(" Hz")}}
+          tickLabelAngle={-15}
+        />
+        <YAxis title="Sound Level (dB)" position="start"/>
         <VerticalBarSeries data={props.data} />
       </XYPlot>
     )

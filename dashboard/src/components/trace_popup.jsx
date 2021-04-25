@@ -28,7 +28,7 @@ const TracePopup = (props) => {
     return (
       <div>
       <p className="driftPrint">
-      Timeseries Data
+      Soundlevel Timeseries Data (dB)
       </p>
       <XYPlot height={300} width={500} yType="log" margin={{bottom: 60}}>
         <VerticalGridLines />
@@ -37,7 +37,7 @@ const TracePopup = (props) => {
           orientation="bottom"
           tickFormat={function tickFormat(d){return new Date(d * 1000).toLocaleDateString()}}
           tickLabelAngle={-46} />
-        <YAxis />
+        <YAxis/>
         <LineSeries data={bbData} />
       </XYPlot>
       </div>

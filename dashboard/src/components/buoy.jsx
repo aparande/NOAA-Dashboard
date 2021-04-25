@@ -83,7 +83,7 @@ const Buoy = (props) => {
         <Marker position={ position } icon={ buoyIcon }>
           <Popup onOpen = {loadTOLData} >
             <p className="driftPrint" >
-              Drift Number: {props.drift_num}
+              Drift {props.drift_num}
             </p>
             <BuoyPopup data={ tolData }/>
           </Popup>
