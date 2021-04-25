@@ -1,0 +1,42 @@
+.team-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.team-member {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 50px 0px 50px 0px;
+}
+
+.profile-pic {
+  border-radius: 100%;
+  filter: grayscale(100%);
+  margin: 25px auto;
+}
+
+.major-name {
+  margin: auto;
+}
+
+.major, .name {
+  text-align: center;
+}
+
+.major {
+  font-size: 15px;
+  font-style: italic;
+}
+
+.name {
+  font-size: 20px;
+}
