@@ -26,13 +26,21 @@ const TracePopup = (props) => {
     return <p>No Data Found</p>
   } else {
     return (
-      <XYPlot height={300} width={500}>
+      <div>
+      <p className="driftPrint">
+      Timeseries Data
+      </p>
+      <XYPlot height={300} width={500} yType="log" margin={{bottom: 60}}>
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis />
+        <XAxis
+          orientation="bottom"
+          tickFormat={function tickFormat(d){return new Date(d * 1000).toLocaleDateString()}}
+          tickLabelAngle={-46} />
         <YAxis />
         <LineSeries data={bbData} />
       </XYPlot>
+      </div>
     )
   }
 }

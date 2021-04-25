@@ -4,7 +4,7 @@ import BuoyPopup from './buoy_popup';
 import TracePopup from './trace_popup';
 import React, { useEffect, useState } from 'react';
 import { get_tol } from '../queries';
-import { buoyIcon } from '../constants'; 
+import { buoyIcon } from '../constants';
 
 const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
@@ -24,7 +24,7 @@ const Buoy = (props) => {
      * 2. interval_start < curr_time < interval_end: Interpolate
      * 3. interval_start < curr_time: Display if curr_time < interval_start + step
      */
-  
+
      if (interval[1]) {
       const diff = props.currTime - interval[0].timestamp;
       const inter_len = interval[1].timestamp - interval[0].timestamp;
@@ -82,7 +82,9 @@ const Buoy = (props) => {
       { renderMarker && (
         <Marker position={ position } icon={ buoyIcon }>
           <Popup onOpen = {loadTOLData} >
-            Drift Number: {props.drift_num}
+            <p className="driftPrint" >
+              Drift Number: {props.drift_num}
+            </p>
             <BuoyPopup data={ tolData }/>
           </Popup>
         </Marker>)
@@ -91,10 +93,10 @@ const Buoy = (props) => {
               eventHandlers={traceEventHandlers}
               pathOptions={{ weight: 3 }}>
         <Tooltip onOpen={() => setToolTipOpen(true)} sticky>
-          <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num} 
+          <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num}
                       step={props.step} isOpen={toolTipOpen} />
         </Tooltip>
-        
+
       </Polyline>
     </div>
     );

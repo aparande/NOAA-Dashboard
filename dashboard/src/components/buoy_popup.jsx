@@ -7,7 +7,7 @@ const BuoyPopup = (props) => {
 
   function lineSeries() {
     return (
-      <XYPlot height={300} width={300}>
+      <XYPlot height={300} width={300} yType="log">
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis />
@@ -39,10 +39,12 @@ const BuoyPopup = (props) => {
       <div>
         { chartType === "line" && lineSeries() }
         { chartType === "bar"  && barchart() }
-        <select name="chart" onChange={(event) => setChartType(event.target.value)}>
-          <option value="line">Line Chart</option>
-          <option value="bar">Bar Chart</option>
-        </select>
+        <span className="custom-dropdown custom-dropdown--white">
+          <select className="custom-dropdown__select custom-dropdown__select--white" onChange={(event) => setChartType(event.target.value)}>
+            <option value="line">Line Chart</option>
+            <option value="bar">Bar Chart</option>
+          </select>
+        </span>
       </div>
     )
   }
