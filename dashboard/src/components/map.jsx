@@ -51,7 +51,7 @@ const Map = () => {
     },
     "Development": {
       "OilRigs": setShowOilLayer,
-      "Ships": setShippingLayer
+      "ShippingRoutes": setShippingLayer
     },
     "Detections": {
     },
@@ -117,11 +117,15 @@ const Map = () => {
       {/* DEVELOPMENT GROUP */}
       {showOilLayer && <FeatureGroup>
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
+<<<<<<< HEAD
       { showShippingLayer && shippingData &&
+=======
+      </FeatureGroup>}
+      { showShippingLayer && shippingData && 
+>>>>>>> 4024ad24521fb58dc859fc5b9831ae74505733b0
         <HeatLayer data={ shippingData.map(x => [x.latitude, x.longitude, Math.log(x.size)]) }
                    gradient={{ 0.14 : "#CB94FF", 0.4: "#106DDB", 1: "#490092" }} />
       }
-      </FeatureGroup>}
       {/* SPECIES GROUP */}
       <FeatureGroup>
             { visibleDetections.map((b, idx) => <Detection detection={b} key={"detection" + idx} />) }
