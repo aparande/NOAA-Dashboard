@@ -8,8 +8,8 @@ const OilPlatform = (props) => {
   return(
       <Marker position={position} icon={ oilIcon }>
         <Popup>
-         <p>Name: {name}</p>
-         <p>Description: {description}</p>
+         <p className="driftPrint">{name}</p>
+         <p className="oilDescription">{description}</p>
         </Popup>
       </Marker>
     );

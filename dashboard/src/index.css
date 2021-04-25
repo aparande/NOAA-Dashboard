@@ -83,6 +83,12 @@
   color: #212428;
 }
 
+.oilDescription {
+  font-family: 'Alanta', sans-serif;
+  font-size: 12px;
+  color: #212428;
+}
+
 .sliderwrapper {
   width: 70%;
   padding-top: 10px;
