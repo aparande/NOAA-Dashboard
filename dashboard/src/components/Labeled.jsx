@@ -20,20 +20,20 @@ const Labeled = (props) => {
         renderTrack={({ props, children }) => (
           <div className="slider-inner" onMouseDown={props.onMouseDown} onTouchStart={props.onTouchStart} style={props.style}>
             <div className="slider-track" ref={props.ref}
-              style={{ background: getTrackBackground({ values, colors: ['#548BF4', '#ccc'], min: MIN, max: MAX }) }}>
+              style={{ background: getTrackBackground({ values, colors: ['#229FAD', '#ffffff'], min: MIN, max: MAX }) }}>
               {children}
             </div>
           </div>
         )}
         renderThumb={({ props, isDragged }) => (
           <div className="slider-thumb" {...props} style={{ ...props.style }} >
-            {/* 
+            {/*
             // Can uncomment this if we want somthing to show up above the slider
               <div className="slider-popup">
               {Math.round((values[0].toFixed(1) - MIN) / STEP)}
             </div> */}
             <div className="slider-marker"
-              style={{ backgroundColor: isDragged ? '#548BF4' : '#CCC' }}
+              style={{ backgroundColor: isDragged ? '#229FAD' : '#ffffff' }}
             />
           </div>
         )}

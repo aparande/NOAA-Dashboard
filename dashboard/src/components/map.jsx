@@ -106,10 +106,10 @@ const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
       {/* BUOY GROUP */}
       {showBuoyLayer && <FeatureGroup>
-              { 
-                buoyNums.map((key, idx) => 
-                  <Buoy currTime={ currTime } drift_num={ key } 
-                    positions={ traces[key] } key={ idx } setCurrTime = { setCurrTime } 
+              {
+                buoyNums.map((key, idx) =>
+                  <Buoy currTime={ currTime } drift_num={ key }
+                    positions={ traces[key] } key={ idx } setCurrTime = { setCurrTime }
                     step={step} minTime={minTime} maxTime={maxTime}
                   />)
               }
@@ -117,7 +117,7 @@ const Map = () => {
       {/* DEVELOPMENT GROUP */}
       {showOilLayer && <FeatureGroup>
             { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
-      { showShippingLayer && shippingData && 
+      { showShippingLayer && shippingData &&
         <HeatLayer data={ shippingData.map(x => [x.latitude, x.longitude, Math.log(x.size)]) }
                    gradient={{ 0.14 : "#CB94FF", 0.4: "#106DDB", 1: "#490092" }} />
       }
@@ -129,7 +129,7 @@ const Map = () => {
       {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
         {
-          visibleHabitatName !== "None" && 
+          visibleHabitatName !== "None" &&
           <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) }
                     gradient={{0.1: '#F4C75E', 0.3: '#FC6EB7', 0.75: '#910100'}} />
         }
@@ -140,10 +140,10 @@ const Map = () => {
           <Labeled className="slider" step={ step } minTime={ minTime } maxTime={ maxTime } currTime={ currTime } setCurrTime = { setCurrTime } />
         </div>
         <div className="buttons">
-          <button className="button" style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#FFF' }} onClick={() => setStep(HOUR)}>Hour</button>
-          <button className="button" style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#FFF' }} onClick={() => setStep(DAY)}>Day</button>
-          <button className="button" style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#FFF' }} onClick={() => setStep(WEEK)}>Week</button>
-          <button className="button" style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#FFF' }} onClick={() => setStep(MONTH)}>Month</button>
+          <button className="button" style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => setStep(HOUR)}>Hour</button>
+          <button className="button" style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#212428' }} onClick={() => setStep(DAY)}>Day</button>
+          <button className="button" style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => setStep(WEEK)}>Week</button>
+          <button className="button" style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => setStep(MONTH)}>Month</button>
         </div>
     </div>
     </>
