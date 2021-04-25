@@ -11,23 +11,34 @@ export const interval_search = (arr, cmp) => {
 
   const safeInterval = (idx) => [arr[idx], (idx + 1 < arr.length)? arr[idx + 1] : null];
 
+  // If the lowest is greater than the search term (i.e term | arr[low] | ...) 
   if (cmp(arr[low]) < 0) return safeInterval(low);
+
+  // If the highest is less than the search term (i.e ... | arr[high] | term)
   if (cmp(arr[high]) > 0) return safeInterval(high);
 
   while (low < high) {
-    mid = Math.floor((low + high) / 2);
-    let comp = cmp(arr[mid]);
+    // TODO: Replace with binary search
+    // mid = Math.floor((low + high) / 2);
+    // let comp = cmp(arr[mid]);
 
-    if (comp === 0) return safeInterval(mid);
-    if (comp < 0) high = mid;
-    else low = mid + 1;
+    // if (comp === 0) return safeInterval(mid);
+    // if (comp < 0) high = mid;
+    // else low = mid + 1;
+    if (cmp(arr[low]) >= 0 && cmp(arr[low + 1]) <= 0) {
+      return safeInterval(low);
+    }
+    low += 1
   }
 
-  return safeInterval(mid);
+  // return safeInterval(mid);
+  return safeInterval(low);
 }
 
 export const dist = (x, y) => {
-  return Math.sqrt(x * x + y * y);
+  const dx = x[0] - y[0];
+  const dy = x[1] - y[1];
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
 export const mean = (data) => {
@@ -38,4 +49,23 @@ export const mean = (data) => {
   })
   Object.keys(out).forEach(key => out[key] /= data.length);
   return out;
+}
+
+export const group_by = (data, agg) => {
+  let agg_data = {};
+
+  data.forEach((pt) => {
+    let timestamp = Math.floor(pt.timestamp / agg) * agg;
+    if (agg_data[timestamp] === null || agg_data[timestamp] === undefined) {
+      agg_data[timestamp] = [ pt ]
+    } else {
+      agg_data[timestamp].push(pt)
+    }
+  })
+
+  return agg_data;
+}
+
+export const interpolate = (start, end, percent) => {
+  return (1 - percent) * start + percent * end;
 }

@@ -14,8 +14,6 @@ import detections from '../data/detections.json';
 import sea_lion_habitat from '../data/sea-lion-habitat.json';
 import ship_data from '../data/ship_density_monthly.json';
 
-console.log(traces);
-
 const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
 const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
 
@@ -84,12 +82,12 @@ const Map = () => {
     fetchData();
   }, []);
   useEffect(() => {
-    console.log(detections);
+    // console.log(detections);
     const visible = detections.filter((detection) => {
       if (!buoyNums.includes(detection.drift_num)) return false;
       return detection.timestamp >= currTime && detection.timestamp <= currTime + step;
     })
-    console.log(visible);
+    // console.log(visible);
     setVisibleDetections(visible);
   }, [currTime, step, buoyNums])
 
@@ -112,7 +110,7 @@ const Map = () => {
                 buoyNums.map((key, idx) => 
                   <Buoy currTime={ currTime } drift_num={ key } 
                     positions={ traces[key] } key={ idx } setCurrTime = { setCurrTime } 
-                    step={step}
+                    step={step} minTime={minTime} maxTime={maxTime}
                   />)
               }
       </FeatureGroup>}
