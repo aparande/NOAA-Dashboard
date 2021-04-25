@@ -30,12 +30,13 @@ const TracePopup = (props) => {
       <p className="driftPrint">
       Timeseries Data
       </p>
-      <XYPlot height={300} width={500} yType="log">
+      <XYPlot height={300} width={500} yType="log" margin={{bottom: 60}}>
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis tickFormat={d => {
-        return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][new Date(d * 1000).getMonth()].concat(new Date(d * 1000).getYear()-100);
-        }}/>
+        <XAxis
+          orientation="bottom"
+          tickFormat={function tickFormat(d){return new Date(d * 1000).toLocaleDateString()}}
+          tickLabelAngle={-46} />
         <YAxis />
         <LineSeries data={bbData} />
       </XYPlot>
