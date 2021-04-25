@@ -26,13 +26,20 @@ const TracePopup = (props) => {
     return <p>No Data Found</p>
   } else {
     return (
-      <XYPlot height={300} width={500}>
+      <div>
+      <p className="driftPrint">
+      Timeseries Data
+      </p>
+      <XYPlot height={300} width={500} yType="log">
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis />
+        <XAxis tickFormat={d => {
+        return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][new Date(d * 1000).getMonth()].concat(new Date(d * 1000).getYear()-100);
+        }}/>
         <YAxis />
         <LineSeries data={bbData} />
       </XYPlot>
+      </div>
     )
   }
 }

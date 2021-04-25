@@ -7,7 +7,7 @@ const BuoyPopup = (props) => {
 
   function lineSeries() {
     return (
-      <XYPlot height={300} width={300}>
+      <XYPlot height={300} width={300} yType="log">
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis />
