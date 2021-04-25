@@ -1,12 +1,8 @@
 .sliderwrapper {
-  position: fixed;
-  bottom: 0;
   width: 70%;
   padding-top: 10px;
   padding-bottom: 10px;
-
-  margin-bottom: 3%;
-  margin-left: 2.5%;
+  margin-left: 10px;
 
   border-radius: 15px;
   background-color: #212428;
@@ -15,20 +11,18 @@
 }
 
 .buttons {
-  width: 5%;
-  position: fixed;
-  display: inline-block;
+  width: 30%;
+  display: flex;
   white-space: nowrap;
-  bottom: 0.5%;
-
-  margin-bottom: 3.25%;
-  margin-left: 70%;
+  justify-content: space-evenly;
+  align-items: center;
   z-index: 1;
-}
+} 
 
 .button {
-  padding: 5% 7% 5% 7%;
-  margin-left: 10%;
+  padding: 2% 4%;
+  height: 90%;
+  margin-left: 16px;
   border-radius: 10px;
   font-family: 'Alata', sans-serif;
   border: none;

@@ -56,6 +56,11 @@ body{
 #time-slider{
   z-index: 400;
   position: fixed;
+  bottom: 25px;
+  display: flex;
+  justify-content: space-around;
+  width: 100vw;
+  margin: auto;
 }
 .button{
   cursor: pointer;
