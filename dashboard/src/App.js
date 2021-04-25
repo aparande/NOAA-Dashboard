@@ -2,6 +2,7 @@ import './App.css';
 import Map from './components/map';
 import NavBar from './components/navbar'
 import Homepage from './components/pages/homepage'
+import Footer from './components/footer'
 import About from './components/pages/about'
 import {
   BrowserRouter as Router,
@@ -25,6 +26,7 @@ function App() {
               <About />
           </Route>
         </Switch>
+        <Footer/>
       </Router>
     </div>
   );

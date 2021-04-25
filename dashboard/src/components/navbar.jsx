@@ -7,7 +7,7 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-            <Navbar.Brand href="/">
+            <Navbar.Brand href="/pages/homepage">
                 <img src={logo} width="40" height="40" className="d-inline-block align-top"/>
             </Navbar.Brand>
             <div id="navbar-buttons">
