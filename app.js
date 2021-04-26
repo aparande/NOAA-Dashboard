@@ -82,7 +82,7 @@ app.get('/api/visible_buoys', visibleBuoysMiddleware, async (req, res, next) => 
   res.send(visibleBuoys)
 })
 
-app.get('/', function (req, res) {
+app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'dashboard', 'build', 'index.html'));
 });
 
