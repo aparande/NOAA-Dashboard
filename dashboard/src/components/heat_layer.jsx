@@ -40,7 +40,9 @@ const HeatLayer = (props) => {
     }
   }, [props.data, heatLayer]);
 
-  return ( <div></div> )
+  return ( 
+    <div />
+  )
 }
 
 export default HeatLayer

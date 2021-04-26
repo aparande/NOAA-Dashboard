@@ -8,6 +8,7 @@ import Menu from './menu';
 import OilPlatform from './oil_platform';
 import HeatLayer from './heat_layer';
 import Detection from './detection';
+import { Legend, LegendContainer } from './legend';
 
 import traces from '../data/traces.json';
 import detections from '../data/detections.json';
@@ -166,6 +167,12 @@ const Map = () => {
           <button className="button" style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => setStep(MONTH)}>Month</button>
         </div>
     </div>
+    <LegendContainer>
+      { visibleHabitatName !== "None" &&
+        <Legend colors={["#F4C75E", "#FC6EB7", "#910100"]} stops={[10, 30, 75]} maxVal={1.0} /> }
+      { showShippingLayer && shippingData &&
+        <Legend colors={["#CB94FF", "#106DDB", "#490092"]} stops={[14, 40, 100]} maxVal={1.0} /> }
+    </LegendContainer>
     </>
   )};
 
