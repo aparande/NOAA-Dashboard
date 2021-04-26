@@ -4,11 +4,11 @@ const { BUOYS } = require('./constants');
 if (process.env.NODE_ENV === "production") {
   console.log("Loading Firebase from production environment");
   admin.initializeApp({
-    credential: {
+    credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_PROJECT_EMAIL,
       privateKey: process.env.FIREBASE_PROJECT_KEY
-    }
+    })
   });
 } else {
   console.log("Loading Firebase from non-prodution environment");
