@@ -152,7 +152,7 @@ const Map = () => {
         {
           visibleHabitatName !== "None" &&
           <HeatLayer data={ habitatData }
-                    gradient={{0.1: '#F4C75E', 0.3: '#FC6EB7', 0.75: '#910100'}} />
+                    gradient={{0.1: '#4b2991', 0.2: '#782b9d', 0.3: '#A3319f', 0.4: '#ca3c97', 0.5: '#ea4f88', 0.6: '#f66d7a', 0.7: '#f89078', 0.8: '#f3b584', 0.9: '#edd9a3'}} />
         }
       <Menu layers={toggleLayer}></Menu>
     </MapContainer>
@@ -169,7 +169,7 @@ const Map = () => {
     </div>
     <LegendContainer>
       { visibleHabitatName !== "None" &&
-        <Legend colors={["#F4C75E", "#FC6EB7", "#910100"]} stops={[25, 50, 75]} maxVal={1.0} /> }
+        <Legend colors={["#4b2991", "#782b9d", "#A3319f", "#ca3c97", "#ea4f88", "#f66d7a", "#f89078", "#f3b584", "#edd9a3"]} stops={[13, 23, 33, 43, 53, 63, 73, 83, 93]} maxVal={1.0} /> }
       { showShippingLayer && shippingData &&
         <Legend colors={["#CB94FF", "#106DDB", "#490092"]} stops={[14, 40, 100]} maxVal={1.0} /> }
     </LegendContainer>
