@@ -6,7 +6,7 @@ const app = express();
 
 const fb = require('./fire_api');
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'dashboard', 'build')));
 
 // TODO: Replace this with Redis or something
 let traces = null;
