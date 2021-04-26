@@ -9,6 +9,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect
 } from "react-router-dom";
 
 function App() {
@@ -17,14 +18,17 @@ function App() {
       <Router>
         <NavBar/>
         <Switch>
-          <Route path="/pages/homepage">
+          <Route exact path="/">
+            <Redirect to="/homepage" />
+          </Route>
+          <Route path="/homepage">
             <Homepage />
             <Footer/>
           </Route>
           <Route path="/map">
               <Map />
           </Route>
-          <Route path="/pages/about">
+          <Route path="/about">
               <About />
               <Team />
               <Footer/>
