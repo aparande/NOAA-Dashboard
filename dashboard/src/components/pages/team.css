@@ -30,6 +30,7 @@
 
 .major, .name {
   text-align: center;
+  color: rgba(0,0,0,0.6)
 }
 
 .major {
@@ -38,5 +39,6 @@
 }
 
 .name {
+  font-weight: bold;
   font-size: 20px;
 }

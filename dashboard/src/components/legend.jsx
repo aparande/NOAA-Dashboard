@@ -24,13 +24,13 @@ export const Legend = ({ colors, stops }) => {
   return (
     <div style={{display: "flex", marginRight: "3em"}}>
       <div className="legend" style={{
-        width: "10px",
+        width: "20px",
         height: "100%",
         marginRight: "10px",
         backgroundImage: gradient
       }} />
       <div style={{ display:"flex-column" }}>
-        { [...stops].reverse().map((stop) => <div style={{ position: "absolute", top: `${100 - stop }%`}}> {stop / 100} </div> ) }
+        { [...stops].reverse().map((stop) => <div className="nums" style={{ position: "absolute", top: `${100 - stop }%`}}> {stop / 100} </div> ) }
       </div>
     </div>
   )

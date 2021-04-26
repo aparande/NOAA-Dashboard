@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {GiBuoy, GiWhaleTail} from 'react-icons/gi';
+import {GiPositionMarker, GiWhaleTail} from 'react-icons/gi';
 import {RiShipFill} from 'react-icons/ri';
+import {GiCrane} from 'react-icons/gi'
 import {TiTree} from 'react-icons/ti';
 import {MdCheckBoxOutlineBlank, MdCheckBox, MdRadioButtonUnchecked, MdRadioButtonChecked } from 'react-icons/md';
 import { SPECIES_HABITAT_KEYS } from '../constants';
 
 const icons = {
-    Buoys: <GiBuoy className="icon"/>,
+    Buoys: <GiPositionMarker className="icon"/>,
     Development: <RiShipFill className="icon"/>,
     Detections: <GiWhaleTail className="icon"/>,
     Habitats: <TiTree className="icon"/>
@@ -14,9 +15,9 @@ const icons = {
 
 const LayerItemCheckbox = ({ category, toggle, name, checked }) => {
     const [isActive, setIsActive] = useState(checked);
-    
+
     useEffect(() => toggle(isActive), [ category, name, isActive, toggle ])
-    
+
     return(
         <div className="layer" onClick={() => setIsActive(!isActive)}>
             <div className="layer-header">{name}</div>
@@ -47,7 +48,7 @@ const RadioMenuItem = ({ title, onChange, values, defaultValue }) => {
                 <div className="menu-item-header">{title}</div>
                 <div style={{lineHeight: '30px'}}>{isActive ? '-' : '+'}</div>
             </div>
-            {isActive && 
+            {isActive &&
                 <div className="menu-item-content">
                     { values.map((val, i) => <LayerItemRadio value={val} key={i} onSelect={() => setValue(val) } checked={value === val}/>) }
                 </div>
@@ -58,7 +59,7 @@ const RadioMenuItem = ({ title, onChange, values, defaultValue }) => {
 
 const MenuItem = (props) => {
     const [isActive, setIsActive] = useState(false);
-    
+
     return(
         <div className="menu-item">
             <div className="menu-title" onClick={() => setIsActive(!isActive)} >
@@ -66,7 +67,7 @@ const MenuItem = (props) => {
                 <div className="menu-item-header">{props.title}</div>
                 <div style={{lineHeight: '30px'}}>{isActive ? '-' : '+'}</div>
             </div>
-            {isActive && 
+            {isActive &&
                 <div className="menu-item-content">
                     {props.children}
                 </div>
@@ -88,7 +89,7 @@ const Menu = (props) => {
             <MenuItem title="Detections" toggle={props.layers}>
                 <LayerItemCheckbox name="Beaked and Sperm whales" category="Detections" toggle={(value) => props.layers("Detections", "Whales", value)} checked={false}/>
             </MenuItem>
-            <RadioMenuItem title="Habitats" onChange={(value) => props.layers("Habitats", "selectedHabitat", value)} 
+            <RadioMenuItem title="Habitats" onChange={(value) => props.layers("Habitats", "selectedHabitat", value)}
                            values={ ["None", ...SPECIES_HABITAT_KEYS] } defaultValue="None"/>
         </div>
     );

@@ -40,7 +40,7 @@ const HeatLayer = (props) => {
     }
   }, [props.data, heatLayer]);
 
-  return ( 
+  return (
     <div />
   )
 }

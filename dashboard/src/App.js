@@ -2,6 +2,7 @@ import './App.css';
 import Map from './components/map';
 import NavBar from './components/navbar'
 import Homepage from './components/pages/homepage'
+import Info from './components/pages/info'
 import Footer from './components/footer'
 import About from './components/pages/about'
 import Team from './components/pages/team'
@@ -23,6 +24,7 @@ function App() {
           </Route>
           <Route path="/homepage">
             <Homepage />
+            <Info />
             <Footer/>
           </Route>
           <Route path="/map">

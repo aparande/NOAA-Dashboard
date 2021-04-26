@@ -103,7 +103,9 @@ body{
   display: flex;
   justify-content: space-between;
   align-content: center;
+  margin: 3px 0px;
 }
+
 .layer-input{
   padding: 7px 0px;
 }
@@ -150,7 +152,7 @@ body{
 }
 
 .homepage {
-  background-image: url('images/homepage.jpg');
+  background-image: url('images/homepage3.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -169,6 +171,7 @@ body{
   font-family: 'Alata', sans-serif;
   font-size: 75px;
   margin-bottom: 25px;
+  text-align: center;
 }
 
 .heading-text {
@@ -176,4 +179,15 @@ body{
   font-size: 20px;
   text-align: center;
   margin: 1.5% 20%;
+}
+
+.legend-container {
+  margin-left: 10px;
+  font-family: 'Alata', sans-serif;
+  font-size: 13px;
+}
+
+.legend {
+  box-shadow: 0 0 2px 1px #212428;
+  border-radius: 7px;
 }
