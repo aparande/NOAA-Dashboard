@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import {GiBuoy, GiWhaleTail} from 'react-icons/gi';
 import {RiShipFill} from 'react-icons/ri';
 import {TiTree} from 'react-icons/ti';
 import {MdCheckBoxOutlineBlank, MdCheckBox, MdRadioButtonUnchecked, MdRadioButtonChecked } from 'react-icons/md';
-import { useMap} from 'react-leaflet';
+import { SPECIES_HABITAT_KEYS } from '../constants';
 
 const icons = {
     Buoys: <GiBuoy className="icon"/>,
@@ -13,57 +12,65 @@ const icons = {
     Habitats: <TiTree className="icon"/>
   };
 
-
-const LayerItemCheckbox = (props) => {
-    const [isActive, setIsActive] = useState(props.checked);
+const LayerItemCheckbox = ({ category, toggle, name, checked }) => {
+    const [isActive, setIsActive] = useState(checked);
+    
+    useEffect(() => toggle(isActive), [ category, name, isActive, toggle ])
+    
     return(
-        <div className="layer" onClick={() => {
-            props.toggle(props.category, props.name.replace(/\s/g, ''), !isActive);
-            setIsActive(!isActive)}}>
-            <div className="layer-header">{props.name}</div>
+        <div className="layer" onClick={() => setIsActive(!isActive)}>
+            <div className="layer-header">{name}</div>
             <div className="layer-input">{isActive ?  <MdCheckBox />:<MdCheckBoxOutlineBlank />}</div>
         </div>
     )
 }
-const LayerItemRadio = (props) => {
+const LayerItemRadio = ({ value, onSelect, checked }) => {
     return(
-        <div className="layer" onClick={() => props.setSelected(props.name)}>
-            <div className="layer-header">{props.name}</div>
-            <div className="layer-input">{props.checked ?  <MdRadioButtonChecked />:<MdRadioButtonUnchecked />}</div>
+        <div className="layer" onClick={() => onSelect(value)}>
+            <div className="layer-header">{value}</div>
+            <div className="layer-input">{checked ?  <MdRadioButtonChecked />:<MdRadioButtonUnchecked />}</div>
         </div>
     )
 }
 
-const content = {
-    Buoys: ["Buoy Path"],
-    Development: ["Oil Rigs", "Shipping Routes"],
-    Detections: [],
-    Habitats: ["None", "Sea Lion"],
+const RadioMenuItem = ({ title, onChange, values, defaultValue }) => {
+    const [isActive, setIsActive] = useState(false);
+    const [value, setValue] = useState(null);
+
+    useEffect(() => onChange(value), [value, onChange]);
+    useEffect(() => { if (value === null || value === undefined) setValue(defaultValue) }, [ defaultValue, value ] );
+
+    return (
+        <div className="menu-item">
+            <div className="menu-title" onClick={() => setIsActive(!isActive)} >
+                {icons[title]}
+                <div className="menu-item-header">{title}</div>
+                <div style={{lineHeight: '30px'}}>{isActive ? '-' : '+'}</div>
+            </div>
+            {isActive && 
+                <div className="menu-item-content">
+                    { values.map((val, i) => <LayerItemRadio value={val} key={i} onSelect={() => setValue(val) } checked={value === val}/>) }
+                </div>
+            }
+        </div>
+    )
 }
 
 const MenuItem = (props) => {
     const [isActive, setIsActive] = useState(false);
-    const [selectedHabitat, setSelectedHabitat] = useState("None");
     
-    // handler used to change state
-    const setSelected = (layer) => {
-        setSelectedHabitat(layer);
-        props.toggle("Habitats", "selectedHabitat", layer);
-    };
     return(
         <div className="menu-item">
-            <div
-                className="menu-title"
-                onClick={() => setIsActive(!isActive)}
-                >
-            {icons[props.title]}
-            <div className="menu-item-header">{props.title}</div>
-            <div style={{lineHeight: '30px'}}>{isActive ? '-' : '+'}</div>
+            <div className="menu-title" onClick={() => setIsActive(!isActive)} >
+                {icons[props.title]}
+                <div className="menu-item-header">{props.title}</div>
+                <div style={{lineHeight: '30px'}}>{isActive ? '-' : '+'}</div>
             </div>
-            {isActive && <div className="menu-item-content">
-                {props.title == "Habitats" ? content[props.title].map((e, i) => <LayerItemRadio name={e} category={props.title} key={i} setSelected={setSelected} checked={selectedHabitat == e}/>)
-                : content[props.title].map((e, i) => <LayerItemCheckbox name={e} category={props.title} toggle={props.toggle} key={i} checked={true}/>)}
-                </div>}
+            {isActive && 
+                <div className="menu-item-content">
+                    {props.children}
+                </div>
+            }
         </div>
     );
 }
@@ -71,10 +78,18 @@ const MenuItem = (props) => {
 const Menu = (props) => {
     return(
         <div className="menu">
-            <MenuItem title="Buoys" toggle={props.layers}></MenuItem>
-            <MenuItem title="Development" toggle={props.layers}></MenuItem>
-            <MenuItem title="Detections" toggle={props.layers}></MenuItem>
-            <MenuItem title="Habitats" toggle={props.layers}></MenuItem>
+            <MenuItem title="Buoys" toggle={props.layers}>
+                <LayerItemCheckbox name="Buoy Path" toggle={(value) => props.layers("Buoys", "BuoyPath", value)} checked={true}/>
+            </MenuItem>
+            <MenuItem title="Development" toggle={props.layers}>
+                <LayerItemCheckbox name="Oil Rigs" toggle={(value) => props.layers("Development", "OilRigs", value)} checked={false}/>
+                <LayerItemCheckbox name="Shipping Routes" toggle={(value) => props.layers("Development", "ShippingRoutes", value)} checked={false}/>
+            </MenuItem>
+            <MenuItem title="Detections" toggle={props.layers}>
+                <LayerItemCheckbox name="Beaked and Sperm whales" category="Detections" toggle={(value) => props.layers("Detections", "Whales", value)} checked={false}/>
+            </MenuItem>
+            <RadioMenuItem title="Habitats" onChange={(value) => props.layers("Habitats", "selectedHabitat", value)} 
+                           values={ ["None", ...SPECIES_HABITAT_KEYS] } defaultValue="None"/>
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { get_oil_gas_platforms, get_visible_buoys } from '../queries';
 
-import { MapContainer, TileLayer, LayersControl, FeatureGroup, LayerGroup, useMap} from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
 import Buoy from './buoy';
 import Labeled from './Labeled';
 import Menu from './menu';
@@ -11,8 +11,10 @@ import Detection from './detection';
 
 import traces from '../data/traces.json';
 import detections from '../data/detections.json';
-import sea_lion_habitat from '../data/sea-lion-habitat.json';
 import ship_data from '../data/ship_density_monthly.json';
+import { SPECIES_HABITATS } from '../constants';
+
+console.log(SPECIES_HABITATS);
 
 const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
 const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
@@ -28,9 +30,6 @@ const MONTH = DAY * 30;
 // mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
 
 const Map = () => {
-  const [lng, setLng] = useState(-119.4179);
-  const [lat, setLat] = useState(36.7783);
-  const [zoom, setZoom] = useState(6);
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1*60*60);
@@ -40,9 +39,28 @@ const Map = () => {
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
-  const [showOilLayer, setShowOilLayer] = useState(true);
-  const [showShippingLayer, setShippingLayer] = useState(true);
+  const [showOilLayer, setShowOilLayer] = useState(false);
+  const [showShippingLayer, setShippingLayer] = useState(false);
+  const [showDetections, setShowDetections] = useState(false);
   const [visibleHabitatName, setVisibileHabitatName] = useState("None");
+
+  const [habitatData, setHabitatData] = useState([]);
+
+  useEffect(() => {
+    if (visibleHabitatName === "None" || visibleHabitatName === null || visibleHabitatName === undefined) {
+      console.log("Not showing habitats");
+      setHabitatData([]);
+    } else if (visibleHabitatName === "Sea Lion") {
+      console.log("Sea Lion Habitat :)");
+      setHabitatData(SPECIES_HABITATS[visibleHabitatName].map((pt) => [pt.latitude, pt.longitude, pt.val]));
+    } else {
+      console.log(`Showing ${visibleHabitatName}`);
+      setHabitatData(SPECIES_HABITATS[visibleHabitatName].map((pt) => {
+        const [ lat, lon, val ] = pt.map(parseFloat)
+        return [ lat, lon - 360, val];
+      }));
+    }
+  }, [visibleHabitatName])
 
   // layers inside the dictionary should be named how the layer appears in the menu, but without spaces
   const setLayers = {
@@ -54,6 +72,7 @@ const Map = () => {
       "ShippingRoutes": setShippingLayer
     },
     "Detections": {
+      "Whales": setShowDetections
     },
     "Habitats": {
       "selectedHabitat": setVisibileHabitatName
@@ -100,7 +119,7 @@ const Map = () => {
 
   return (
     <>
-    <MapContainer center={[lat, lng]} zoom={zoom} style={{ width: '100%', height: '100vh'}} >
+    <MapContainer center={[36.7783, -119.4179]} zoom={6} style={{ width: '100%', height: '100vh'}} >
       <TileLayer
         attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
@@ -124,13 +143,14 @@ const Map = () => {
       }
       {/* SPECIES GROUP */}
       <FeatureGroup>
-            { visibleDetections.map((b, idx) => <Detection detection={b} key={"detection" + idx} />) }
+        { showDetections &&
+          visibleDetections.map((b, idx) => <Detection detection={b} key={"detection" + idx} />) }
       </FeatureGroup>
       {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
         {
           visibleHabitatName !== "None" &&
-          <HeatLayer data={ sea_lion_habitat.map(x => [x.latitude, x.longitude, x.val]) }
+          <HeatLayer data={ habitatData }
                     gradient={{0.1: '#F4C75E', 0.3: '#FC6EB7', 0.75: '#910100'}} />
         }
       <Menu layers={toggleLayer}></Menu>
