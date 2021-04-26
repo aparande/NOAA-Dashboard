@@ -83,7 +83,7 @@ app.get('/api/visible_buoys', visibleBuoysMiddleware, async (req, res, next) => 
 })
 
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dashboard', 'build', 'index.html'));
 });
 
 app.listen(process.env.PORT || 8080);
