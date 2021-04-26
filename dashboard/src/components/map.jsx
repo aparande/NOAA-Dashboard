@@ -169,7 +169,7 @@ const Map = () => {
     </div>
     <LegendContainer>
       { visibleHabitatName !== "None" &&
-        <Legend colors={["#F4C75E", "#FC6EB7", "#910100"]} stops={[10, 30, 75]} maxVal={1.0} /> }
+        <Legend colors={["#F4C75E", "#FC6EB7", "#910100"]} stops={[25, 50, 75]} maxVal={1.0} /> }
       { showShippingLayer && shippingData &&
         <Legend colors={["#CB94FF", "#106DDB", "#490092"]} stops={[14, 40, 100]} maxVal={1.0} /> }
     </LegendContainer>

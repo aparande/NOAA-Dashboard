@@ -30,7 +30,7 @@ export const Legend = ({ colors, stops }) => {
         backgroundImage: gradient
       }} />
       <div style={{ display:"flex-column" }}>
-        { [...stops].reverse().map((stop) => <div className="nums" style={{ position: "absolute", top: `${100 - stop }%`}}> {stop / 100} </div> ) }
+        { [...stops].reverse().map((stop) => <div className="nums" style={{ position: "absolute", top: `${100 - stop }%`}}> <span>{stop / 100}</span> </div> ) }
       </div>
     </div>
   )
