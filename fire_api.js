@@ -1,14 +1,27 @@
 const admin = require('firebase-admin');
 const { BUOYS } = require('./constants');
 
-const serviceAccount = require('./serviceAccountKey.json');
+if (process.env.NODE_ENV === "production") {
+  console.log("Loading Firebase from production environment");
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_PROJECT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+    })
+  });
+} else {
+  console.log("Loading Firebase from non-prodution environment");
 
-/* Load Firebase Credentials
- Follow the instructions at https://firebase.google.com/docs/firestore/quickstart#python
- DO NOT COMMIT serviceAccountKey.json to git */
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+  /* Load Firebase Credentials
+  Follow the instructions at https://firebase.google.com/docs/firestore/quickstart#python
+  DO NOT COMMIT serviceAccountKey.json to git */
+  const serviceAccount = require('./serviceAccountKey.json');
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+
 
 const db = admin.firestore();
 console.log("Initialized DB");

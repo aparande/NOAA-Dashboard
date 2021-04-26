@@ -6,7 +6,7 @@ const app = express();
 
 const fb = require('./fire_api');
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'dashboard', 'build')));
 
 // TODO: Replace this with Redis or something
 let traces = null;
@@ -82,8 +82,8 @@ app.get('/api/visible_buoys', visibleBuoysMiddleware, async (req, res, next) => 
   res.send(visibleBuoys)
 })
 
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'dashboard', 'build', 'index.html'));
 });
 
 app.listen(process.env.PORT || 8080);

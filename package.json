@@ -4,7 +4,8 @@
   "description": "A N.O.A.A. dashboard meant to visualize soundscape data",
   "main": "app.js",
   "scripts": {
-    "start": "npx nodemon server.js"
+    "start": "npx nodemon server.js",
+    "heroku-postbuild": "cd dashboard && npm install && npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,13 +21,6 @@
     "create-react-app": "^4.0.3",
     "express": "^4.17.1",
     "firebase-admin": "^9.6.0",
-    "leaflet.heat": "^0.2.0",
-    "nodemon": "^2.0.7",
-    "react-charts": "*",
-    "react-router-dom": "^5.2.0",
-    "react-vis": "^1.11.7"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^2.0.7"
   }
 }
