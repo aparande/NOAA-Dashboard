@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === "production") {
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_PROJECT_EMAIL,
-      privateKey: process.env.FIREBASE_PROJECT_KEY
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
     })
   });
 } else {
