@@ -5,6 +5,7 @@ import argparse
 import sys
 import glob
 from datetime import datetime
+import pandas as pd
 
 # Set up command line arguments
 parser = argparse.ArgumentParser(description="Upload data from GPS tracks")
@@ -14,40 +15,15 @@ args = parser.parse_args()
 
 # Check the data directory exists
 if not os.path.isfile(args.file):
-  sys.exit(f"{args.file} is not a directory")
+  sys.exit(f"{args.file} is not a file")
 
-with open(args.file, 'r') as f:
-  reader = csv.reader(f)
-  header = True
-  headers = []
-  header_map = { "dateTime": "timestamp", "lat": "latitude", "long": "longitude", "station": "drift_num" }
+df = pd.read_csv(args.file)
+df[["longitude", "latitude", "drift_num"]] = df[["long", "lat", "station"]]
+df["timestamp"] = (pd.to_datetime(df["dateTime"]) - datetime(1970, 1, 1)).dt.total_seconds()
 
-  data = dict()
-  i = 0
-  for row in reader: 
-    if header:
-      header = False
-      headers = row
-    else:
-      row_dict = {headers[i]: pt for i, pt in enumerate(row)}
+df = df[["timestamp", "longitude", "latitude", "spotID", "readingType", "drift_num"]]
+df.drop_duplicates(inplace=True)
+df = df.set_index("drift_num")
+df = df.apply(dict, axis=1)
+df.groupby(df.index).apply(list).to_json("traces.json")
 
-      row_dict = { header_map[key] : row_dict[key] for key in header_map }
-
-      date = datetime.strptime(row_dict["timestamp"], "%Y-%m-%d %H:%M:%S")
-      timestamp = date.timestamp()
-      row_dict["timestamp"] = timestamp
-      row_dict["longitude"] = float(row_dict["longitude"])
-      row_dict["latitude"] = float(row_dict["latitude"])
-      row_dict["drift_num"] = int(row_dict["drift_num"])
-      drift_num = row_dict["drift_num"]
-
-      if drift_num in data:
-        data[drift_num].append(row_dict)
-      else:
-        data[drift_num] = [row_dict]
-
-for num in data:
-  data[num] = sorted(data[num], key=lambda x: x["timestamp"])
-
-with open ("traces.json", 'w') as f:
-  json.dump(data, f)
