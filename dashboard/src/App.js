@@ -1,11 +1,11 @@
 import './App.css';
-import Map from './components/map';
+import Map from './pages/map';
 import NavBar from './components/navbar'
-import Homepage from './components/pages/homepage'
-import Info from './components/pages/info'
+import Homepage from './pages/homepage'
+import Info from './pages/info'
 import Footer from './components/footer'
-import About from './components/pages/about'
-import Team from './components/pages/team'
+import About from './pages/about'
+import Team from './pages/team'
 import {
   BrowserRouter as Router,
   Switch,

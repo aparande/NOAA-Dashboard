@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { get_oil_gas_platforms, get_visible_buoys } from '../queries';
+import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
 
 import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
-import Buoy from './buoy';
-import Labeled from './Labeled';
-import Menu from './menu';
-import OilPlatform from './oil_platform';
-import HeatLayer from './heat_layer';
-import Detection from './detection';
-import { Legend, LegendContainer } from './legend';
+import Buoy from '../buoy';
+import Slider from '../slider';
+import Menu from '../menu';
+import OilPlatform from '../oil_platform';
+import HeatLayer from '../heat_layer';
+import Detection from '../detection';
+import { Legend, LegendContainer } from '../legend';
 
-import traces from '../data/traces.json';
-import detections from '../data/detections.json';
-import ship_data from '../data/ship_density_monthly.json';
-import { SPECIES_HABITATS } from '../constants';
+import traces from '../../data/traces.json';
+import detections from '../../data/detections.json';
+import ship_data from '../../data/ship_density_monthly.json';
+import { SPECIES_HABITATS } from '../../constants';
 
 console.log(SPECIES_HABITATS);
 
@@ -158,7 +158,7 @@ const Map = () => {
     </MapContainer>
     <div id="time-slider">
         <div className="sliderwrapper">
-          <Labeled className="slider" step={ step } minTime={ minTime } maxTime={ maxTime } currTime={ currTime } setCurrTime = { setCurrTime } />
+          <Slider className="slider" step={ step } minTime={ minTime } maxTime={ maxTime } currTime={ currTime } setCurrTime = { setCurrTime } />
         </div>
         <div className="buttons">
           <button className="button" style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => setStep(HOUR)}>Hour</button>

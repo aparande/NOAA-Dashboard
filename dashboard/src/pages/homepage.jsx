@@ -1,4 +1,4 @@
-import HomeButton from '../homebutton'
+import HomeButton from '../components/homebutton'
 
 const Homepage = () => {
     return(

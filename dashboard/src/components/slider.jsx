@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 
-const Labeled = (props) => {
+const Slider = (props) => {
   const [values, setValues] = useState([ props.currTime ]);
   const STEP = props.step;
   const MIN = props.minTime;
@@ -46,4 +46,4 @@ const Labeled = (props) => {
   );
 };
 
-export default Labeled;
+export default Slider;
