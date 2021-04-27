@@ -207,3 +207,9 @@ body{
   box-shadow: 0 0 2px 1px #212428;
   border-radius: 7px;
 }
+
+.photo-credit {
+  margin-top: -30px;
+  margin-left: 7px;
+  color: rgba(255, 255, 255, 0.75);
+}
