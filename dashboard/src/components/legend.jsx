@@ -19,7 +19,6 @@ export const Legend = ({ colors, stops }) => {
     color_str += `, ${colors[i]} ${stops[i]}%`;
   }
   const gradient = `linear-gradient(0deg${color_str})`;
-  console.log(gradient);
 
   return (
     <div style={{display: "flex", marginRight: "3em"}}>

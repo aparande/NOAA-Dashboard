@@ -12,22 +12,22 @@ import pandas as pd
 def parse_csv(args):
   filename, agg, lat_res, lon_res = args
   df = pd.read_csv(filename)
-  df = df[["BaseDateTime", "LAT", "LON"]]
-  df = df[(df["LAT"] >= 32) & (df["LAT"] <= 42) & (df["LON"] >= -129) & (df["LON"] <= -117)]
+  df = df[["MMSI", "BaseDateTime", "LAT", "LON"]]
+  df = df[(df["LAT"] >= 26) & (df["LAT"] <= 48) & (df["LON"] >= -129) & (df["LON"] <= -117)]
   df["timestamp"] = (pd.to_datetime(df["BaseDateTime"]) - datetime(1970, 1, 1)).dt.total_seconds()
 
   df["timestamp"] = df["timestamp"] // agg * agg
   df["latitude"] = df["LAT"] // lat_res * lat_res 
   df["longitude"] =  df["LON"] // lon_res * lon_res
-  df = df[["timestamp", "latitude", "longitude"]]
-  return df.groupby(df.columns.tolist(), as_index=False).size()
+  df = df[["MMSI", "timestamp", "latitude", "longitude"]]
+  return df.groupby(["timestamp", "latitude", "longitude"], as_index=False).nunique()
 
 # Set up command line arguments
 parser = argparse.ArgumentParser(description="Convert AIS data")
 parser.add_argument('directory', type=str, help="directory to parse")
 parser.add_argument('--agg', type=int, default=60 * 60 * 24 * 30, help="Width of aggregation in seconds")
-parser.add_argument('--lat-res', type=int, default=0.1, help="Decimal place of latitude")
-parser.add_argument('--lon-res', type=int, default=0.1, help="Decicaml place of longitude")
+parser.add_argument('--lat-res', type=float, default=0.1, help="Decimal place of latitude")
+parser.add_argument('--lon-res', type=float, default=0.1, help="Decicaml place of longitude")
 
 args = parser.parse_args()
 
