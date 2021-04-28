@@ -73,6 +73,7 @@ def upload_data(drift_name, metric, stat, data, db, start=-1, end=-1):
         row[key] = float(row[key])
 
     db.collection("metrics").document(metric_doc_id).collection(stat).document(str(timestamp)).set(row)
+  print(f"Reached end of file for {metric}-{stat} for {drift_name}")
 
 # Set up command line arguments
 parser = argparse.ArgumentParser(description="Upload data from a Triton LTSA Analysis Directory to Firestore")
@@ -98,8 +99,14 @@ db = firestore.client()
 # Check the data directory exists
 if not os.path.isdir(args.directory):
   sys.exit(f"{args.directory} is not a directory")
-
+print(f"Loading data in {args.directory}")
+if args.directory[-1] == "/":
+  args.directory = args.directory[:-1]
 drift_name = " ".join(args.directory.split("/")[-1].split("_")[:2])
+print(f"Uploading data for {drift_name}")
+if drift_name is None or drift_name == "":
+  print("Stopping because didn't capture correct drift name")
+  sys.exit()
 
 # Get all file names in the directory
 files = glob.glob(f"{args.directory}/*.csv")
