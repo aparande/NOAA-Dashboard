@@ -11,11 +11,8 @@ import Detection from '../components/detection';
 import { Legend, LegendContainer } from '../components/legend';
 
 import traces from '../data/traces.json';
-import detections from '../data/detections.json';
 import ship_data from '../data/ship_density_monthly.json';
-import { SPECIES_HABITATS } from '../constants';
-
-console.log(SPECIES_HABITATS);
+import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../constants';
 
 const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
 const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
@@ -35,17 +32,22 @@ const Map = () => {
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1*60*60);
   const [buoyNums, setBuoyNums] = useState(Object.keys(traces));
-  const [visibleDetections, setVisibleDetections] = useState([]);
+  const [visibleDetections, setVisibleDetections] = useState({});
   const [shippingData, setShippingData] = useState(null);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
   const [showOilLayer, setShowOilLayer] = useState(false);
   const [showShippingLayer, setShippingLayer] = useState(false);
-  const [showDetections, setShowDetections] = useState(false);
   const [visibleHabitatName, setVisibileHabitatName] = useState("None");
 
   const [habitatData, setHabitatData] = useState([]);
+
+  const detectionFilter = (detection) => {
+    // TODO: This is a really strange bug. requires figuring out what types are inside buoyNums
+    if (!buoyNums.includes(detection.drift_num) && !buoyNums.includes(detection.drift_num.toString())) return false;
+    return detection.timestamp >= currTime && detection.timestamp <= currTime + step;
+  };
 
   useEffect(() => {
     if (visibleHabitatName === "None" || visibleHabitatName === null || visibleHabitatName === undefined) {
@@ -64,16 +66,13 @@ const Map = () => {
   }, [visibleHabitatName])
 
   // layers inside the dictionary should be named how the layer appears in the menu, but without spaces
-  const setLayers = {
+  const setLayersDict = {
     "Buoys": {
       "BuoyPath": setShowBuoyLayer
     },
     "Development": {
       "OilRigs": setShowOilLayer,
       "ShippingRoutes": setShippingLayer
-    },
-    "Detections": {
-      "Whales": setShowDetections
     },
     "Habitats": {
       "selectedHabitat": setVisibileHabitatName
@@ -82,7 +81,23 @@ const Map = () => {
   // handler used to change state
   const toggleLayer = (menu_item, layer_item, state) => {
     console.log("Set layers", menu_item, layer_item, state);
-    setLayers[menu_item][layer_item](state);
+    if (menu_item === "Detections") {
+      const detects = {...visibleDetections};
+      if (state) {
+        if (Object.keys(detects).includes(layer_item)) return;
+        detects[layer_item] = SPECIES_DETECTIONS[layer_item].filter(detectionFilter)
+
+        setVisibleDetections(detects);
+      } else {
+        if (!Object.keys(detects).includes(layer_item)) return;
+
+        delete detects[layer_item];
+        console.log(detects);
+        setVisibleDetections(detects);
+      }
+    } else {
+      setLayersDict[menu_item][layer_item](state);
+    }
   };
 
   useEffect(() => {
@@ -101,14 +116,16 @@ const Map = () => {
     }
     fetchData();
   }, []);
+
   useEffect(() => {
     // console.log(detections);
-    const visible = detections.filter((detection) => {
-      if (!buoyNums.includes(detection.drift_num)) return false;
-      return detection.timestamp >= currTime && detection.timestamp <= currTime + step;
+    const detects = {...visibleDetections};
+    Object.keys(detects).forEach((key) => {
+      detects[key] = SPECIES_DETECTIONS[key].filter(detectionFilter)
     })
+
     // console.log(visible);
-    setVisibleDetections(visible);
+    setVisibleDetections(detects);
   }, [currTime, step, buoyNums])
 
   useEffect(() => {
@@ -144,8 +161,10 @@ const Map = () => {
       }
       {/* SPECIES GROUP */}
       <FeatureGroup>
-        { showDetections &&
-          visibleDetections.map((b, idx) => <Detection detection={b} key={"detection" + idx} />) }
+        {
+          Object.keys(visibleDetections).map((key) => 
+            visibleDetections[key].map((b, idx) => <Detection detection={b} key={`${key} detection ${idx}`} />)).flat()
+        }
       </FeatureGroup>
       {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}

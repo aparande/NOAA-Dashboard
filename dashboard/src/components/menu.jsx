@@ -4,7 +4,7 @@ import {RiShipFill} from 'react-icons/ri';
 import {GiCrane} from 'react-icons/gi'
 import {TiTree} from 'react-icons/ti';
 import {MdCheckBoxOutlineBlank, MdCheckBox, MdRadioButtonUnchecked, MdRadioButtonChecked } from 'react-icons/md';
-import { SPECIES_HABITAT_KEYS } from '../constants';
+import { SPECIES_HABITAT_KEYS, SPECIES_DETECTION_KEYS } from '../constants';
 
 const icons = {
     Buoys: <GiPositionMarker className="icon"/>,
@@ -87,7 +87,11 @@ const Menu = (props) => {
                 <LayerItemCheckbox name="Shipping Routes" toggle={(value) => props.layers("Development", "ShippingRoutes", value)} checked={false}/>
             </MenuItem>
             <MenuItem title="Detections" toggle={props.layers}>
-                <LayerItemCheckbox name="Beaked and Sperm whales" category="Detections" toggle={(value) => props.layers("Detections", "Whales", value)} checked={false}/>
+                {
+                    Object.keys(SPECIES_DETECTION_KEYS).map((key, idx) => 
+                        <LayerItemCheckbox name={SPECIES_DETECTION_KEYS[key]} toggle={(value) => props.layers("Detections", key, value)} checked={false} key={idx}/>
+                    )
+                }
             </MenuItem>
             <RadioMenuItem title="Habitats" onChange={(value) => props.layers("Habitats", "selectedHabitat", value)}
                            values={ ["None", ...SPECIES_HABITAT_KEYS] } defaultValue="None"/>
