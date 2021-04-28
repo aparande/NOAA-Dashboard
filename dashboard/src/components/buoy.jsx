@@ -5,12 +5,15 @@ import TracePopup from './trace_popup';
 import React, { useEffect, useState } from 'react';
 import { get_tol } from '../queries';
 import { buoyIcon } from '../constants';
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
 
 const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
   const [tolData, setTOLData] = useState(null);
   const [renderMarker, setRenderMarker] = useState(false);
   const [toolTipOpen, setToolTipOpen] = useState(false);
+
+	const { promiseInProgress } = usePromiseTracker({ area: "buoy-popup-area" });
 
   useEffect(() => {
     let interval = interval_search(props.positions, (elem) => {
@@ -47,18 +50,21 @@ const Buoy = (props) => {
 
   const loadTOLData = async () => {
     console.log("Loading TOL data")
-    let data = await get_tol(props.currTime, props.step, props.drift_num);
-    if (Object.keys(data).length > 0) {
-      data = mean(data);
-      // console.log(data);
-      delete data.timestamp;
-      data = Object.keys(data).map(key => {return { x: parseInt(key), y: data[key] }});
-      data.sort((a, b) => a.x - b.x);
-      console.log(data);
-      setTOLData(data);
-    } else {
-      setTOLData(null);
-    }
+		async function fetchData() {
+			let data = await get_tol(props.currTime, props.step, props.drift_num);
+			if (Object.keys(data).length > 0) {
+				data = mean(data);
+				// console.log(data);
+				delete data.timestamp;
+				data = Object.keys(data).map(key => {return { x: parseInt(key), y: data[key] }});
+				data.sort((a, b) => a.x - b.x);
+				console.log(data);
+				setTOLData(data);
+			} else {
+				setTOLData(null);
+			}
+		}
+		trackPromise(fetchData(), "buoy-popup-area");
   }
 
   const traceEventHandlers = {
@@ -85,7 +91,7 @@ const Buoy = (props) => {
             <p className="driftPrint" >
               Drift {props.drift_num}
             </p>
-            <BuoyPopup data={ tolData }/>
+            <BuoyPopup data={ tolData } loading={promiseInProgress} />
           </Popup>
         </Marker>)
       }
