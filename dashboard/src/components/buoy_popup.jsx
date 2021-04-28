@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'react-vis/dist/style.css';
 import {XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines, HorizontalGridLines} from 'react-vis';
+import Loader from 'react-loader-spinner';
 
 const BuoyPopup = (props) => {
   const [chartType, setChartType] = useState("line");
@@ -37,9 +38,11 @@ const BuoyPopup = (props) => {
 
   const data = props.data;
   console.log(data);
-
-  if (data === null || data === undefined) {
-    return <p>No Data Found</p>
+	
+	if (props.loading) {
+		return <Loader type="ThreeDots" color="#212529" visible/>
+	} else if (data === null || data === undefined) {
+    return <p>Missing data for buoy. It will be availble soon</p>
   } else {
     return (
       <div>
