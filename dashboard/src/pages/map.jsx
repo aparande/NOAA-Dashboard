@@ -152,7 +152,7 @@ const Map = () => {
         {
           visibleHabitatName !== "None" &&
           <HeatLayer data={ habitatData }
-                    gradient={{0.1: '#4b2991', 0.2: '#782b9d', 0.3: '#A3319f', 0.4: '#ca3c97', 0.5: '#ea4f88', 0.6: '#f66d7a', 0.7: '#f89078', 0.8: '#f3b584', 0.9: '#edd9a3'}} />
+                    gradient={{0: '#4b2991', 0.375: '#782b9d', 0.75: '#A3319f', 0.91: '#ca3c97', 0.92: '#ea4f88', 0.93: '#f66d7a', 0.94: '#f89078', 0.95: '#f3b584', 1.0: '#edd9a3'}} />
         }
       <Menu layers={toggleLayer}></Menu>
     </MapContainer>
