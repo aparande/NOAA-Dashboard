@@ -2,7 +2,7 @@ import { Marker, Popup, Polyline, Tooltip } from 'react-leaflet';
 import { interval_search, dist, mean, interpolate } from '../utils';
 import BuoyPopup from './buoy_popup';
 import TracePopup from './trace_popup';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import { get_tol } from '../queries';
 import { buoyIcon } from '../constants';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
@@ -12,6 +12,10 @@ const Buoy = (props) => {
   const [tolData, setTOLData] = useState(null);
   const [renderMarker, setRenderMarker] = useState(false);
   const [toolTipOpen, setToolTipOpen] = useState(false);
+  const [hoverTime, setHoverTime] = useState(null);
+
+	const tooltipRef = createRef();
+  const traceRef = createRef();
 
 	const { promiseInProgress } = usePromiseTracker({ area: "buoy-popup-area" });
 
@@ -76,12 +80,32 @@ const Buoy = (props) => {
         return (prevDist < currDist) ? prev : curr;
       });
 
-      console.log(closest, e.latlng);
+      // console.log(closest, e.latlng);
       props.setCurrTime(closest.timestamp);
+    },
+    mouseover(e) {
+      if (traceRef.current) {
+        // TODO: there is a weird issue where it doesn't actually open up at the latlng position
+        traceRef.current.openPopup(e.latlng);
+        if (tooltipRef.current) tooltipRef.current.setLatLng(e.latlng);
+      }
+    },
+		mousemove(e) {
+      const closest = props.positions.reduce((prev, curr) => {
+        const prevDist = dist([prev.latitude, prev.longitude], [e.latlng.lat, e.latlng.lng]);
+        const currDist = dist([curr.latitude, curr.longitude], [e.latlng.lat, e.latlng.lng]);
+        return (prevDist < currDist) ? prev : curr;
+      });
 
-      return null;
+      // console.log(closest, e.latlng);
+      setHoverTime(closest.timestamp);
+
+			if (tooltipRef.current) tooltipRef.current.setLatLng(e.latlng);
+		},
+    mouseout(e) {
+      if (traceRef.current) traceRef.current.closePopup();
     }
-  }
+	}
 
   return(
     <div>
@@ -97,12 +121,11 @@ const Buoy = (props) => {
       }
       <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}
               eventHandlers={traceEventHandlers}
-              pathOptions={{ weight: 3 }}>
-        <Tooltip onOpen={() => setToolTipOpen(true)} sticky>
+              pathOptions={{ weight: 5 }} ref={traceRef}>
+        <Popup onOpen={() => { setToolTipOpen(true) } } onClose={() => { setToolTipOpen(false) }} ref={tooltipRef} closeOnClick={false} closeButton={false}>
           <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num}
-                      step={props.step} isOpen={toolTipOpen} />
-        </Tooltip>
-
+                      step={props.step} isOpen={toolTipOpen} currTime={hoverTime} />
+        </Popup>
       </Polyline>
     </div>
     );
