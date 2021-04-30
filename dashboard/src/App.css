@@ -217,3 +217,8 @@ body{
 .detection-icon {
   border-radius: 6px;
 }
+
+/* Overrides Leaflet fixed width popups */
+.leaflet-popup-content {
+  width:auto !important;
+}
