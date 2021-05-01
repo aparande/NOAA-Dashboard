@@ -9,7 +9,11 @@ const OilPlatform = (props) => {
       <Marker position={position} icon={ oilIcon }>
         <Popup>
          <p className="driftPrint">{name}</p>
-         <p className="oilDescription">{description}</p>
+         <p className="oilDescription">{description.toLowerCase()
+                                                   .split(' ')
+                                                   .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                                   .join(' ')}
+         </p>
         </Popup>
       </Marker>
     );

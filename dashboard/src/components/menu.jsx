@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {GiPositionMarker, GiWhaleTail} from 'react-icons/gi';
 import {RiShipFill} from 'react-icons/ri';
-import {GiCrane} from 'react-icons/gi'
+import {GiCrane} from 'react-icons/gi';
+import {VscPerson} from 'react-icons/vsc';
+import {FaUser} from 'react-icons/fa'
+import {GoTools} from "react-icons/go";
 import {TiTree} from 'react-icons/ti';
 import {MdCheckBoxOutlineBlank, MdCheckBox, MdRadioButtonUnchecked, MdRadioButtonChecked } from 'react-icons/md';
 import { SPECIES_HABITAT_KEYS, SPECIES_DETECTION_KEYS } from '../constants';
 
 const icons = {
     Buoys: <GiPositionMarker className="icon"/>,
-    Development: <RiShipFill className="icon"/>,
+    Anthropogenic: <VscPerson className="icon"/>,
     Detections: <GiWhaleTail className="icon"/>,
     Habitats: <TiTree className="icon"/>
   };
@@ -82,13 +85,13 @@ const Menu = (props) => {
             <MenuItem title="Buoys" toggle={props.layers}>
                 <LayerItemCheckbox name="Buoy Path" toggle={(value) => props.layers("Buoys", "BuoyPath", value)} checked={true}/>
             </MenuItem>
-            <MenuItem title="Development" toggle={props.layers}>
+            <MenuItem title="Anthropogenic" toggle={props.layers}>
                 <LayerItemCheckbox name="Oil Rigs" toggle={(value) => props.layers("Development", "OilRigs", value)} checked={false}/>
                 <LayerItemCheckbox name="Shipping Routes" toggle={(value) => props.layers("Development", "ShippingRoutes", value)} checked={false}/>
             </MenuItem>
             <MenuItem title="Detections" toggle={props.layers}>
                 {
-                    Object.keys(SPECIES_DETECTION_KEYS).map((key, idx) => 
+                    Object.keys(SPECIES_DETECTION_KEYS).map((key, idx) =>
                         <LayerItemCheckbox name={SPECIES_DETECTION_KEYS[key]} toggle={(value) => props.layers("Detections", key, value)} checked={false} key={idx}/>
                     )
                 }

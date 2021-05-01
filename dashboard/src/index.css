@@ -78,14 +78,16 @@
 
 .driftPrint {
   font-family: 'Alata', sans-serif;
-  font-size: 18px;
+  font-size: 24px;
+  margin: 10px 20px;
   text-align: center;
   color: #212428;
 }
 
 .oilDescription {
   font-family: 'Alanta', sans-serif;
-  font-size: 12px;
+  margin: 10px 20px;
+  font-size: 13px;
   color: #212428;
 }
 
@@ -186,4 +188,3 @@
 .map {
   z-index: 0;
 }
-
