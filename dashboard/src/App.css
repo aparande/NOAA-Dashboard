@@ -2,6 +2,11 @@
 body{
   margin: 0px;
 }
+.page-container{
+  position: absolute;
+  top: 0px;
+  width: 100vw;
+}
 .mapboxgl-marker {
   width: 25px;
   height: 25px;
@@ -18,17 +23,6 @@ body{
   bottom: 0;
 }
 
-/* .leaflet-control-layers-list{
-  height: 200px;
-}
-.leaflet-control-layers-base label{
-	height:60px;
-	width: 60px;
-	border-radius: 30px;
-}
-.leaflet-control-layers-base label span{
-	display: none;
-} */
 .leaflet-control-layers-base label:hover,
 .leaflet-control-layers-base label:checked,
 .leaflet-control-layers-base label:focus{
@@ -72,9 +66,9 @@ body{
 
 .menu{
   position: absolute;
-  top: 5px;
+  top: 80px;
   right: 5px;
-  z-index: 400;
+  z-index: 405;
   background-color: #212428;
   color: white;
   width: 200px;
@@ -104,6 +98,7 @@ body{
   justify-content: space-between;
   align-content: center;
   margin: 3px 0px;
+  border-bottom: solid #666 1px;
 }
 
 .layer-input{
@@ -115,7 +110,6 @@ body{
   align-items: center;
   font-size: 12px;
 }
-
 .mr-auto{
   display: flex;
   justify-content: space-between;
@@ -123,13 +117,22 @@ body{
   width: 100%;
 }
 
+.is_active{
+  background-color: whitesmoke;
+  color:rgb(1, 199, 199);
+}
 #navbar-buttons{
   display: flex;
   justify-content: space-between;
 }
 
-#navbar{
+.nav-dark{
   background-color: #212428;
+}
+
+.navbar-dark .navbar-nav .nav-link{
+  color:rgba(255,255,255,1);
+  text-shadow: 1px 1px 5px black;
 }
 
 .nav-link{
@@ -139,20 +142,30 @@ body{
   font-family: 'Alata', sans-serif;
   margin: 8px;
 }
-.navbar-dark .navbar-nav .nav-link{
+.navbar-dark .navbar-nav .nav-link .dark{
   color: rgba(255,255,255,.6);
 }
 
-.homepage, .about {
+.nav-transparent{
+  background-color: rgba(255,255,255,0);
+  position: absolute;
+  z-index: 200;
+  width: 100%;
+}
+/* #nav-transparent{
+  color: rgba(255,255,255,1);
+} */
+
+.homepage, .about, .resources {
   display: flex;
   flex-direction: column;
-  height: 92.33vh;
+  height: 100vh;
   align-items: center;
   justify-content: center;
 }
 
 .homepage {
-  background-image: url('images/homepage3.jpg');
+  background-image: url('images/home.png');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -161,6 +174,14 @@ body{
 
 .about {
   background-image: url('images/about.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+
+.resources {
+  background-image: url('images/resources.png');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -200,7 +221,7 @@ body{
   content: "--";
   font-size: 18px;
   margin-left: -30px;
-  color: #212428
+  color: #212428;
 }
 
 .legend {

@@ -2,17 +2,17 @@ import HomeButton from '../components/homebutton'
 import './info.css';
 
 const Homepage = () => {
+
     return(
-      <>
+      <div className="page-container">
       <div className="homepage">
-        <h1 className="heading">Visualize Soundscape Data</h1>
+        <h1 className="heading" >Visualize Soundscape Data</h1>
         <p className="heading-text">
           A tool for marine resource managers made in collaboration between UC Berkeley's Fung Fellowship
           program and the National Oceanic and Atmospheric Administration
         </p>
         <HomeButton
             className='btns'
-            buttonStyle='btn--outline'
             buttonSize='btn--medium'
             link='/map'>
             View Map
@@ -28,7 +28,7 @@ const Homepage = () => {
           </div>
         </div>
       </div>
-      </>
+      </div>
     );
 }
 export default Homepage;

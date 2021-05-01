@@ -1,6 +1,7 @@
+import Team from './team'
 const About = () => {
     return(
-    <div>
+    <div className="page-container">
       <div className="about">
         <h1 className="heading">About</h1>
         <p className="heading-text">
@@ -13,6 +14,7 @@ const About = () => {
         </p>
       </div>
       <p className="photo-credit">Photo by <a href="https://unsplash.com/@erastus?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Erastus McCart</a> on <a href="https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></p>
+      <Team />
     </div>
     );
 }

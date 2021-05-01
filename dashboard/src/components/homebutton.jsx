@@ -23,7 +23,8 @@ export const HomeButton = ({
   return (
     <Link to={link} className='btn-mobile'>
       <button
-        className={`btn ${checkButtonStyle} ${checkButtonSize}`}
+        id="view-map"
+        className={`btn ${checkButtonSize}`}
         onClick={onClick}
         type={type}
       >
