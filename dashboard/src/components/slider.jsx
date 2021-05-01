@@ -15,8 +15,8 @@ const Slider = (props) => {
     <div className="slider">
       <Range values={values} step={STEP} min={MIN} max={MAX}
         rtl={props.rtl}
-        onChange={(values) => setValues(values)}
-        onFinalChange={(values) => props.setCurrTime(values[0])}
+        onChange={(values) => props.setCurrTime(values[0])}
+        /* onFinalChange={(values) => props.setCurrTime(values[0])} */
         renderTrack={({ props, children }) => (
           <div className="slider-inner" onMouseDown={props.onMouseDown} onTouchStart={props.onTouchStart} style={props.style}>
             <div className="slider-track" ref={props.ref}
@@ -28,7 +28,7 @@ const Slider = (props) => {
         renderThumb={({ props, isDragged }) => (
           <div className="slider-thumb" {...props} style={{ ...props.style }} >
             {/*
-            // Can uncomment this if we want somthing to show up above the slider
+            // Can uncomment this if we want something to show up above the slider
               <div className="slider-popup">
               {Math.round((values[0].toFixed(1) - MIN) / STEP)}
             </div> */}
