@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'react-vis/dist/style.css';
-import {XYPlot, LineSeries, Crosshair, XAxis, YAxis, VerticalGridLines, HorizontalGridLines} from 'react-vis';
+import {XYPlot, LineSeries, Crosshair, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, ChartLabel} from 'react-vis';
 import Loader from 'react-loader-spinner';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
 
@@ -50,23 +50,23 @@ const TracePopup = (props) => {
     return (
       <div>
       <p className="driftPrint">
-      Soundlevel Timeseries Data (dB)
+      Soundlevel Timeseries Data
       </p>
-      <XYPlot height={300} width={500} yType="log" margin={{bottom: 60}}>
+      <XYPlot height={300} width={700} yType="log" margin={{bottom: 60, left: 60}}>
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
           orientation="bottom"
           tickFormat={function tickFormat(d){return new Date(d * 1000).toLocaleDateString()}}
           tickLabelAngle={-46} />
-        <YAxis/>
-        <LineSeries data={bbData} /> 
-			  <Crosshair style={{ line: {background: '#212428', width: '3px' }}} 
+        <YAxis
+          tickFormat={function tickFormat(d){return d.toFixed().toString().concat(" dB")}} />
+        <LineSeries data={bbData} />
+			  <Crosshair style={{ line: {background: '#212428', width: '3px' }}}
                   values={crosshairPoint} itemsFormat={(values) => values.map((pt) => {
                     return { title: "BB", value: `${pt.y.toFixed(2)} dB` }
                     })
                   } titleFormat={(values) => { return  { title: "Time", value: (new Date(values[0].x * 1000)).toLocaleString() }}} />
-				
       </XYPlot>
       </div>
     )

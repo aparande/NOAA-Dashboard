@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'react-vis/dist/style.css';
-import {XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines, HorizontalGridLines} from 'react-vis';
+import {XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, ChartLabel} from 'react-vis';
 import Loader from 'react-loader-spinner';
 
 const BuoyPopup = (props) => {
@@ -8,14 +8,17 @@ const BuoyPopup = (props) => {
 
   function lineSeries() {
     return (
-      <XYPlot height={300} width={300} yType="log">
+      <XYPlot height={300} width={800} xType="log" yType="log" margin={{bottom: 75, left: 50}}>
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
           tickFormat={function tickFormat(d){return d.toString().concat(" Hz")}}
-          tickLabelAngle={-15}
+          tickLabelAngle={-90}
+          /*tickTotal={2.9}*/ // Display only three labels
         />
-        <YAxis title="Sound Level (dB)" position="start"/>
+        <YAxis
+          tickFormat={function tickFormat(d){return d.toFixed().toString().concat(" dB")}}
+        />
         <LineSeries data={props.data} />
       </XYPlot>
     )
@@ -38,7 +41,7 @@ const BuoyPopup = (props) => {
 
   const data = props.data;
   console.log(data);
-	
+
 	if (props.loading) {
 		return <Loader type="ThreeDots" color="#212529" visible/>
 	} else if (data === null || data === undefined) {
@@ -58,5 +61,18 @@ const BuoyPopup = (props) => {
     )
   }
 }
+
+
+// Code to display y-axis label
+/* <ChartLabel
+  text="Sound Level (dB)"
+  className="alt-y-label"
+  includeMargin={false}
+  xPercent={-0.08}
+  yPercent={0.4}
+  style={{
+    transform: 'rotate(-90)',
+    textAnchor: 'end'
+  }} /> */
 
 export default BuoyPopup;
