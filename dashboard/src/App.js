@@ -4,7 +4,7 @@ import NavBar from './components/navbar'
 import Homepage from './pages/homepage'
 import Footer from './components/footer'
 import About from './pages/about'
-import Team from './pages/team'
+import Resources from './pages/resources'
 import {
   BrowserRouter as Router,
   Switch,
@@ -26,7 +26,9 @@ function App() {
           </Route>
           <Route path="/about">
               <About />
-              <Team />
+          </Route>
+          <Route path="/resources">
+              <Resources />
           </Route>
         </Switch>
       </Router>

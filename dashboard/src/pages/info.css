@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital@1&display=swap');
 .info {
   display: flex;
   flex-direction: column;
@@ -22,9 +23,25 @@
   font-weight: bold;
 }
 
+.heading{
+  text-shadow: 1px 1px 10px black;
+}
+
 .heading-text {
   width: 40vw;
   margin-bottom: 50px;
   font-size: 25px;
-  font-family: 'Trebuchet', sans-serif;
+  font-style: italic;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 10px black;
+}
+
+#view-map{
+  box-shadow: 1px 1px 10px #888;
+  background-color: white;
+  color: #229FAD;
+}
+#view-map:hover{
+  background-color: #212428;
+  color: #229FAD;
 }

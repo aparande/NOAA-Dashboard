@@ -24,6 +24,9 @@ const DAY = HOUR * 24;
 const WEEK = DAY * 7;
 const MONTH = DAY * 30;
 
+const attr_links = ["http://osm.org/copyright", "https://hifld-geoplatform.opendata.arcgis.com/datasets/geoplatform::oil-and-natural-gas-platforms/geoservice?geometry=-135.504%2C23.571%2C-72.882%2C36.815", "https://repository.library.noaa.gov/view/noaa/27826", "https://conbio.onlinelibrary.wiley.com/doi/10.1111/cobi.13417"]
+const attr = `&copy <a href=${attr_links[0]}>OpenStreetMap</a> | <a href=${attr_links[1]}>HIFL</a> | <a href=${attr_links[2]}>NOAA (Becker et al)</a> | <a href=${attr_links[3]}> NOAA (Welch & Hazen)</a>`
+
 // This is the API Key from MapBox documentation. Might as well just use it for now
 // mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
 
@@ -137,9 +140,9 @@ const Map = () => {
 
   return (
     <>
-    <MapContainer center={[36.7783, -119.4179]} zoom={7} maxZoom={8} minZoom={5} style={{ width: '100%', height: '100vh'}} >
+    <MapContainer center={[36.7783, -119.4179]} zoom={7} maxZoom={8} minZoom={5} style={{ width: '100%', height: '100vh', position:'absolute', zIndex:'-5', top:'0px'}} >
       <TileLayer
-        attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution={attr}
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
       {/* BUOY GROUP */}
       {showBuoyLayer && <FeatureGroup>
