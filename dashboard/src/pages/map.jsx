@@ -160,12 +160,12 @@ const Map = () => {
       </FeatureGroup>}
       { showShippingLayer && shippingData &&
         <HeatLayer data={ shippingData.map(x => [x.latitude, x.longitude, Math.log(x.MMSI)]) }
-                   gradient={{ 0.14 : "#CB94FF", 0.4: "#106DDB", 1: "#490092" }} />
+                   gradient={{0.0: '#aad3df', 0.3: 'rgb(166,189,219)', 0.5: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)'}} />
       }
       {/* SPECIES GROUP */}
       <FeatureGroup>
         {
-          Object.keys(visibleDetections).map((key) => 
+          Object.keys(visibleDetections).map((key) =>
             visibleDetections[key].map((b, idx) => <Detection detection={b} key={`${key} detection ${idx}`} />)).flat()
         }
       </FeatureGroup>
@@ -174,7 +174,7 @@ const Map = () => {
         {
           visibleHabitatName !== "None" &&
           <HeatLayer data={ habitatData }
-                    gradient={{0: '#4b2991', 0.375: '#782b9d', 0.75: '#A3319f', 0.91: '#ca3c97', 0.92: '#ea4f88', 0.93: '#f66d7a', 0.94: '#f89078', 0.95: '#f3b584', 1.0: '#edd9a3'}} />
+                    gradient={{0: '#aad3df', 0.375: 'rgb(254,196,79)', 0.5: 'rgb(254,153,41)', 0.8: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)'}} />
         }
       <Menu layers={toggleLayer}></Menu>
     </MapContainer>
@@ -191,9 +191,9 @@ const Map = () => {
     </div>
     <LegendContainer>
       { visibleHabitatName !== "None" &&
-        <Legend colors={["#4b2991", "#782b9d", "#A3319f", "#ca3c97", "#ea4f88", "#f66d7a", "#f89078", "#f3b584", "#edd9a3"]} stops={[13, 23, 33, 43, 53, 63, 73, 83, 93]} maxVal={1.0} /> }
+        <Legend colors={['#aad3df','rgb(254,196,79)','rgb(254,153,41)','rgb(236,112,20)','rgb(204,76,2)','rgb(153,52,4)','rgb(102,37,6)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} /> }
       { showShippingLayer && shippingData &&
-        <Legend colors={["#CB94FF", "#106DDB", "#490092"]} stops={[14, 40, 100]} maxVal={1.0} /> }
+        <Legend colors={['#aad3df','rgb(166,189,219)','rgb(116,169,207)','rgb(54,144,192)','rgb(5,112,176)','rgb(4,90,141)','rgb(2,56,88)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} /> }
     </LegendContainer>
     </>
   )};
