@@ -15,9 +15,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar />
+
         <Switch>
           <Route exact path="/">
+            <NavBar variant="transparent" />
             <Hero title="Visualize Soundscape Data"
               description="A tool for marine resource managers made in collaboration between UC Berkeley's Fung Fellowship program and the National Oceanic and Atmospheric Administration"
               button={{ link: "/map", text: "View Map" }}
@@ -28,12 +29,15 @@ function App() {
             />
           </Route>
           <Route path="/map">
+            <NavBar variant="dark" />
             <Map />
           </Route>
           <Route path="/about">
+            <NavBar variant="transparent" />
             <About />
           </Route>
           <Route path="/resources">
+            <NavBar variant="transparent" />
             <Resources />
           </Route>
         </Switch>

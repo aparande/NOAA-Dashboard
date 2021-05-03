@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { get_oil_gas_platforms, get_visible_buoys } from '../queries';
 
-import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
 import Buoy from '../components/buoy';
 import Slider from '../components/slider';
 import Menu from '../components/Menu/menu';
@@ -33,7 +33,7 @@ const attr = `&copy <a href=${attr_links[0]}>OpenStreetMap</a> | <a href=${attr_
 const Map = () => {
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
-  const [step, setStep] = useState(1*60*60);
+  const [step, setStep] = useState(1 * 60 * 60);
   const [buoyNums, setBuoyNums] = useState(Object.keys(traces));
   const [visibleDetections, setVisibleDetections] = useState({});
   const [shippingData, setShippingData] = useState(null);
@@ -62,8 +62,8 @@ const Map = () => {
     } else {
       console.log(`Showing ${visibleHabitatName}`);
       setHabitatData(SPECIES_HABITATS[visibleHabitatName].map((pt) => {
-        const [ lat, lon, val ] = pt.map(parseFloat)
-        return [ lat, lon - 360, val];
+        const [lat, lon, val] = pt.map(parseFloat)
+        return [lat, lon - 360, val];
       }));
     }
   }, [visibleHabitatName])
@@ -85,7 +85,7 @@ const Map = () => {
   const toggleLayer = (menu_item, layer_item, state) => {
     console.log("Set layers", menu_item, layer_item, state);
     if (menu_item === "Detections") {
-      const detects = {...visibleDetections};
+      const detects = { ...visibleDetections };
       if (state) {
         if (Object.keys(detects).includes(layer_item)) return;
         detects[layer_item] = SPECIES_DETECTIONS[layer_item].filter(detectionFilter)
@@ -122,7 +122,7 @@ const Map = () => {
 
   useEffect(() => {
     // console.log(detections);
-    const detects = {...visibleDetections};
+    const detects = { ...visibleDetections };
     Object.keys(detects).forEach((key) => {
       detects[key] = SPECIES_DETECTIONS[key].filter(detectionFilter)
     })
@@ -140,47 +140,50 @@ const Map = () => {
 
   return (
     <>
-    <MapContainer center={[36.7783, -119.4179]} zoom={7} maxZoom={8} minZoom={5} style={{ width: '100%', height: '100vh', position:'absolute', zIndex:'-5', top:'0px'}} >
-      <TileLayer
-        attribution={attr}
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-      {/* BUOY GROUP */}
-      {showBuoyLayer && <FeatureGroup>
-              {
-                buoyNums.map((key, idx) =>
-                  <Buoy currTime={ currTime } drift_num={ key }
-                    positions={ traces[key] } key={ idx } setCurrTime = { setCurrTime }
-                    step={step} minTime={minTime} maxTime={maxTime}
-                  />)
-              }
-      </FeatureGroup>}
-      {/* DEVELOPMENT GROUP */}
-      {showOilLayer && <FeatureGroup>
-            { platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />) }
-      </FeatureGroup>}
-      { showShippingLayer && shippingData &&
-        <HeatLayer data={ shippingData.map(x => [x.latitude, x.longitude, Math.log(x.MMSI)]) }
-                   gradient={{0.0: '#aad3df', 0.3: 'rgb(166,189,219)', 0.5: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)'}} />
-      }
-      {/* SPECIES GROUP */}
-      <FeatureGroup>
-        {
-          Object.keys(visibleDetections).map((key) =>
-            visibleDetections[key].map((b, idx) => <Detection detection={b} key={`${key} detection ${idx}`} />)).flat()
+      <MapContainer center={[36.7783, -119.4179]} zoom={7}
+        maxZoom={8} minZoom={5} zoomControl={false}
+        style={{ width: '100%', height: '100vh', position: 'absolute', zIndex: '-5', top: '0px' }} >
+        <ZoomControl position="topleft"/>
+        <TileLayer
+          attribution={attr}
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {/* BUOY GROUP */}
+        {showBuoyLayer && <FeatureGroup>
+          {
+            buoyNums.map((key, idx) =>
+              <Buoy currTime={currTime} drift_num={key}
+                positions={traces[key]} key={idx} setCurrTime={setCurrTime}
+                step={step} minTime={minTime} maxTime={maxTime}
+              />)
+          }
+        </FeatureGroup>}
+        {/* DEVELOPMENT GROUP */}
+        {showOilLayer && <FeatureGroup>
+          {platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />)}
+        </FeatureGroup>}
+        {showShippingLayer && shippingData &&
+          <HeatLayer data={shippingData.map(x => [x.latitude, x.longitude, Math.log(x.MMSI)])}
+            gradient={{ 0.0: '#aad3df', 0.3: 'rgb(166,189,219)', 0.5: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)' }} />
         }
-      </FeatureGroup>
-      {/* HABITAT GROUP */}
+        {/* SPECIES GROUP */}
+        <FeatureGroup>
+          {
+            Object.keys(visibleDetections).map((key) =>
+              visibleDetections[key].map((b, idx) => <Detection detection={b} key={`${key} detection ${idx}`} />)).flat()
+          }
+        </FeatureGroup>
+        {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
         {
           visibleHabitatName !== "None" &&
-          <HeatLayer data={ habitatData }
-                    gradient={{0: '#aad3df', 0.375: 'rgb(254,196,79)', 0.5: 'rgb(254,153,41)', 0.8: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)'}} />
+          <HeatLayer data={habitatData}
+            gradient={{ 0: '#aad3df', 0.375: 'rgb(254,196,79)', 0.5: 'rgb(254,153,41)', 0.8: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' }} />
         }
-    </MapContainer>
-    <Menu layers={toggleLayer} />
-    <div id="time-slider">
+      </MapContainer>
+      <Menu layers={toggleLayer} />
+      <div id="time-slider">
         <div className="sliderwrapper">
-          <Slider className="slider" step={ step } minTime={ minTime } maxTime={ maxTime } currTime={ currTime } setCurrTime = { setCurrTime } />
+          <Slider className="slider" step={step} minTime={minTime} maxTime={maxTime} currTime={currTime} setCurrTime={setCurrTime} />
         </div>
         <div className="buttons">
           <button className="button" style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => setStep(HOUR)}>Hour</button>
@@ -188,14 +191,15 @@ const Map = () => {
           <button className="button" style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => setStep(WEEK)}>Week</button>
           <button className="button" style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => setStep(MONTH)}>Month</button>
         </div>
-    </div>
-    <LegendContainer>
-      { visibleHabitatName !== "None" &&
-        <Legend colors={['#aad3df','rgb(254,196,79)','rgb(254,153,41)','rgb(236,112,20)','rgb(204,76,2)','rgb(153,52,4)','rgb(102,37,6)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} /> }
-      { showShippingLayer && shippingData &&
-        <Legend colors={['#aad3df','rgb(166,189,219)','rgb(116,169,207)','rgb(54,144,192)','rgb(5,112,176)','rgb(4,90,141)','rgb(2,56,88)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} /> }
-    </LegendContainer>
+      </div>
+      <LegendContainer>
+        {visibleHabitatName !== "None" &&
+          <Legend colors={['#aad3df', 'rgb(254,196,79)', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} />}
+        {showShippingLayer && shippingData &&
+          <Legend colors={['#aad3df', 'rgb(166,189,219)', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} />}
+      </LegendContainer>
     </>
-  )};
+  )
+};
 
 export default Map;

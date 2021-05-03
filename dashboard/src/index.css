@@ -192,3 +192,7 @@
 body {
   overflow-x: hidden;
 }
+
+.leaflet-top {
+  top: 80px;
+}

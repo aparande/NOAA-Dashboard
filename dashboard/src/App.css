@@ -76,11 +76,11 @@ body{
   justify-content: space-between;
 }
 
-.nav-dark{
+.navbar-dark{
   background-color: #212428;
 }
 
-.navbar-dark .navbar-nav .nav-link{
+.navbar .navbar-nav .nav-link {
   color:rgba(255,255,255,1);
   text-shadow: 1px 1px 5px black;
 }
@@ -92,11 +92,12 @@ body{
   font-family: 'Alata', sans-serif;
   margin: 8px;
 }
+
 .navbar-dark .navbar-nav .nav-link .dark{
   color: rgba(255,255,255,.6);
 }
 
-.nav-transparent{
+.navbar-transparent {
   background-color: rgba(255,255,255,0);
   position: absolute;
   z-index: 200;

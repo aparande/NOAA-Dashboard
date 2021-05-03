@@ -1,9 +1,9 @@
 import { Navbar, Nav} from 'react-bootstrap';
 import logo from '../icons/logo.png';
 
-const NavBar = () => {
+const NavBar = ({ variant }) => {
     return(
-    <Navbar className="nav-transparent" variant="dark" expand='md'>
+    <Navbar variant={variant} expand='md'>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
