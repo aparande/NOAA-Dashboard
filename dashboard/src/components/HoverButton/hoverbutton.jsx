@@ -1,18 +1,19 @@
 import React from 'react';
-import './homebutton.css';
+import './hoverbutton.css';
 import { Link } from 'react-router-dom';
 
 const STYLES = ['btn--primary', 'btn--outline', 'btn--test'];
 
 const SIZES = ['btn--medium', 'btn--large'];
 
-export const HomeButton = ({
+export const HoverButton = ({
   children,
   type,
   onClick,
   buttonStyle,
   buttonSize,
-  link
+  link,
+  className
 }) => {
   const checkButtonStyle = STYLES.includes(buttonStyle)
     ? buttonStyle
@@ -21,10 +22,9 @@ export const HomeButton = ({
   const checkButtonSize = SIZES.includes(buttonSize) ? buttonSize : SIZES[0];
 
   return (
-    <Link to={link} className='btn-mobile'>
+    <Link to={link}>
       <button
-        id="view-map"
-        className={`btn ${checkButtonSize}`}
+        className={`btn ${className}`}
         onClick={onClick}
         type={type}
       >
@@ -34,4 +34,4 @@ export const HomeButton = ({
   );
 };
 
-export default HomeButton;
+export default HoverButton;
