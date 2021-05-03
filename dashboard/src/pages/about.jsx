@@ -12,7 +12,7 @@ const About = () => {
           provides a clear way of visualizing ocean soundscapes.`}
         photo={{
           imgUrl: "/images/about.png", user_link: "https://unsplash.com/@seefromthesky?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
-          link: "https://unsplash.com/@seefromthesky?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText", name: "Ishan @seefromthesky"
+          link: "https://unsplash.com/@seefromthesky?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText", name: "Ishan @seefromthesky", website: "Unsplash"
         }}
       />
       <Team />

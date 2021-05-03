@@ -17,10 +17,7 @@ const Hero = (props) => {
       }
 
       <p className="hero-credit">
-        Photo by
-          <a href={props.photo.user_link}> {props.photo.name} </a>
-        on <a href={props.photo.link}>
-          Unsplash</a></p>
+        Photo by <a href={props.photo.user_link}>{props.photo.name}</a> on <a href={props.photo.link}>{props.photo.website}</a></p>
     </Jumbotron>
   );
 }

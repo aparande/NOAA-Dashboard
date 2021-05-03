@@ -23,8 +23,8 @@ function App() {
               description="A tool for marine resource managers made in collaboration between UC Berkeley's Fung Fellowship program and the National Oceanic and Atmospheric Administration"
               button={{ link: "/map", text: "View Map" }}
               photo={{
-                imgUrl: "/images/home.png", user_link: "https://unsplash.com/@taliacohen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
-                link: "https://unsplash.com/s/photos/dolphin-underwater?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText", name: "Talia Cohen"
+                imgUrl: "/images/home.png", user_link: "https://www.pexels.com/@earano",
+                link: "https://www.pexels.com/", name: "Emiliano Arano", website: "Pexels"
               }}
             />
           </Route>

@@ -13,7 +13,8 @@ const Homepage = () => {
           imgUrl: '/images/resources.png',
           link: 'https://unsplash.com/photos/ZaZhmR63_X8?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',
           user_link: 'https://unsplash.com/@almosbech?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
-          name: 'Almos Bechtold'
+          name: 'Almos Bechtold',
+          website: 'Unsplash'
         }}
       />
       <div className="info">
@@ -23,7 +24,7 @@ const Homepage = () => {
               <Overview />
             </Tab>
             {/* <Tab eventKey="data" title="Map Data">
-                
+
             </Tab> */}
             <Tab eventKey="links" title="Featured Links">
               <Links />
