@@ -8,7 +8,7 @@ const NavBar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
             <Navbar.Brand href="/">
-                <img src={logo} width="70" height="70" className="d-inline-block align-top"/>
+                <img src={logo} width="50" height="50" className="d-inline-block align-top"/>
             </Navbar.Brand>
             <div id="navbar-buttons">
                 <Nav.Link href="/" activeclassname='is-active' className='link-transparent'>Home</Nav.Link>

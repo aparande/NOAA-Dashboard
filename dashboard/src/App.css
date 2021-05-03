@@ -92,6 +92,10 @@ body{
   display: flex;
   align-items: center;
 }
+.menu-item-content{
+  max-height:220px;
+  overflow:auto;
+}
 .layer{
   cursor:pointer;
   display: flex;
@@ -173,7 +177,7 @@ body{
 }
 
 .about {
-  background-image: url('images/about.jpg');
+  background-image: url('images/about.png');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

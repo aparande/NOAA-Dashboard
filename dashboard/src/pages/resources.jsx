@@ -1,7 +1,6 @@
 import './resources.css';
 import { Tabs, Tab} from 'react-bootstrap';
 import Overview from '../components/overview';
-import Citations from '../components/citations';
 import Links from '../components/links';
 
 const Homepage = () => {
@@ -17,10 +16,10 @@ const Homepage = () => {
             <Tab eventKey="overview" title="Overview">
                 <Overview />
             </Tab>
-            <Tab eventKey="citations" title="Citations">
-                <Citations />
-            </Tab>
-            <Tab eventKey="links" title="Links">
+            {/* <Tab eventKey="data" title="Map Data">
+                
+            </Tab> */}
+            <Tab eventKey="links" title="Featured Links">
                 <Links />
             </Tab>
         </Tabs>
