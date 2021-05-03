@@ -10,7 +10,10 @@ const Homepage = () => {
     <>
       <Hero title="Soundscape Resources"
         photo={{
-          imgUrl: '/images/resources.png'
+          imgUrl: '/images/resources.png',
+          link: 'https://unsplash.com/photos/ZaZhmR63_X8?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',
+          user_link: 'https://unsplash.com/@almosbech?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
+          name: 'Almos Bechtold'
         }}
       />
       <div className="info">
