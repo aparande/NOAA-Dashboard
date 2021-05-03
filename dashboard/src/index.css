@@ -196,3 +196,14 @@ body {
 .leaflet-top {
   top: 80px;
 }
+
+.btn-primary:hover {
+	background-color: rgb(34, 159, 173);
+}
+.btn-primary {
+	background-color: rgb(33, 36, 40);
+}
+
+.nav-tabs .nav-link {
+	color: rgb(34, 159, 173);
+}

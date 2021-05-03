@@ -44,11 +44,11 @@ const Overview = () => {
             </Card>
             <Card>
                 <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                <Accordion.Toggle as={Button} variant="link" eventKey="2">
                     3. Citations 
                 </Accordion.Toggle>
                 </Card.Header>
-                <Accordion.Collapse eventKey="1">
+                <Accordion.Collapse eventKey="2">
                 <Card.Body>
                     <Citations />
                 </Card.Body>
