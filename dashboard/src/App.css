@@ -60,56 +60,6 @@ body{
   background-color: rgb(1, 199, 199);
 }
 
-.menu{
-  position: absolute;
-  top: 80px;
-  right: 5px;
-  z-index: 405;
-  background-color: #212428;
-  color: white;
-  width: 200px;
-  padding: 10px;
-}
-.icon{
-  font-size: 30px;
-  line-height: 10px;
-}
-.menu-item{
-  padding: 5px;
-}
-.menu-title{
-  cursor:pointer;
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-}
-.menu-item-header{
-  font-family: 'Alata', sans-serif;
-  display: flex;
-  align-items: center;
-}
-.menu-item-content{
-  max-height:220px;
-  overflow:auto;
-}
-.layer{
-  cursor:pointer;
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-  margin: 3px 0px;
-  border-bottom: solid #666 1px;
-}
-
-.layer-input{
-  padding: 7px 0px;
-}
-.layer-header{
-  font-family: 'Alata', sans-serif;
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-}
 .mr-auto{
   display: flex;
   justify-content: space-between;

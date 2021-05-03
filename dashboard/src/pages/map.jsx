@@ -4,7 +4,7 @@ import { get_oil_gas_platforms, get_visible_buoys } from '../queries';
 import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
 import Buoy from '../components/buoy';
 import Slider from '../components/slider';
-import Menu from '../components/menu';
+import Menu from '../components/Menu/menu';
 import OilPlatform from '../components/oil_platform';
 import HeatLayer from '../components/heat_layer';
 import Detection from '../components/detection';
@@ -176,8 +176,8 @@ const Map = () => {
           <HeatLayer data={ habitatData }
                     gradient={{0: '#aad3df', 0.375: 'rgb(254,196,79)', 0.5: 'rgb(254,153,41)', 0.8: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)'}} />
         }
-      <Menu layers={toggleLayer}></Menu>
     </MapContainer>
+    <Menu layers={toggleLayer} />
     <div id="time-slider">
         <div className="sliderwrapper">
           <Slider className="slider" step={ step } minTime={ minTime } maxTime={ maxTime } currTime={ currTime } setCurrTime = { setCurrTime } />
