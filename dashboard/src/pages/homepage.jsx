@@ -18,7 +18,7 @@ const Homepage = () => {
             View Map
         </HomeButton>
       </div>
-      <p className="photo-credit">Photo by <a href="https://unsplash.com/@taliacohen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Talia Cohen</a> on <a href="https://unsplash.com/s/photos/dolphin-underwater?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></p>
+      <p className="photo-credit">Photo by <a href="https://www.pexels.com/@earano">Emiliano Arano</a> from <a href="https://www.pexels.com/">Pexels</a></p>
       <div>
         <div className="info">
           <div className="fung-noaa">

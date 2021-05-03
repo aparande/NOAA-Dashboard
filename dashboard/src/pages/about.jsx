@@ -13,7 +13,7 @@ const About = () => {
           provides a clear way of visualizing ocean soundscapes.
         </p>
       </div>
-      <p className="photo-credit">Photo by <a href="https://unsplash.com/@erastus?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Erastus McCart</a> on <a href="https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></p>
+      <p className="photo-credit">Photo by <a href="https://unsplash.com/@seefromthesky?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Ishan @seefromthesky</a> on <a href="https://unsplash.com/s/photos/waves?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></p>
       <Team />
     </div>
     );
