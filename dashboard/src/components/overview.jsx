@@ -1,4 +1,5 @@
 import { Accordion, Card, Button } from 'react-bootstrap';
+import Citations from '../components/citations';
 
 const Overview = () => {
     return(
@@ -38,6 +39,18 @@ const Overview = () => {
                     <p>Another concern in anthropogenic sound is wind farms. There are three factors that influence the sound levels of a wind turbine: distance from the wind turbine, size of the wind turbine, and wind speed. In comparison to the noise produced by a single ship, an individual wind turbine has a very small impact on the marine environment. Nevertheless, wind farms have many wind turbines which collectively create an impact similar to that of a large cargo ship, with the largest impact at the center of the wind farm (Tougaard et al., 2020). This is especially alarming because, unlike ships that simply pass an area, a wind farm is a permanent infrastructure, producing a continual environmental impact on a region. It is also important to consider previous or current underwater noise disturbances within the ecosystem since introducing wind farms to regions without previous exposure to comparable noise will result in a more drastic change to the local soundscape.</p>
                     <b>2.3 Geological sounds</b>
                     <p>Various geological sounds play a significant role in the marine soundscape. Haver et. al (2020) collected data from the NOAA National Data Buoy Center database and the Bodega Ocean Observing Node to monitor wind speed and daily rainfall in order to study how those variables affect the soundscape. On top of recording distance, wind speed around the hydrophone can also influence the received sound level just as significant. Despite the complications in each individual case, the common trend is the higher the wind speed, the higher the sound pressure level (Tougaard et al., 2020). Haver et. al (2020) states, “the oceanography, density profile, bathymetry, and bottom substrate directly influence the soundscape by facilitating sound transmission from coastal and offshore sound sources”. As an addition to the soundscape data, visual observations were compiled from the Southeast Farallon Islands and the Applied California Current Ecosystem Studies’ database. The relationship between different geological sound sources, sound frequencies, and spectrum levels is summarized in the Wenz Curve (Figure.1). Although geological sounds are not of as significant conservation interest as anthropogenic and biological sounds, they are critical for understanding the background soundscape, for data correction and estimating other sounds’ impacts on the local environment. </p>
+                </Card.Body>
+                </Accordion.Collapse>
+            </Card>
+            <Card>
+                <Card.Header>
+                <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                    3. Citations 
+                </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                    <Citations />
                 </Card.Body>
                 </Accordion.Collapse>
             </Card>

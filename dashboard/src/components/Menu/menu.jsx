@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {GiPositionMarker, GiWhaleTail} from 'react-icons/gi';
-import {RiShipFill} from 'react-icons/ri';
-import {GiCrane} from 'react-icons/gi';
 import {VscPerson} from 'react-icons/vsc';
-import {FaUser} from 'react-icons/fa'
-import {GoTools} from "react-icons/go";
 import {TiTree} from 'react-icons/ti';
 import {MdCheckBoxOutlineBlank, MdCheckBox, MdRadioButtonUnchecked, MdRadioButtonChecked } from 'react-icons/md';
-import { SPECIES_HABITAT_KEYS, SPECIES_DETECTION_KEYS } from '../constants';
+import { SPECIES_HABITAT_KEYS, SPECIES_DETECTION_KEYS } from '../..//constants';
+
+import './menu.css';
 
 const icons = {
-    Buoys: <GiPositionMarker className="icon"/>,
-    Anthropogenic: <VscPerson className="icon"/>,
-    Detections: <GiWhaleTail className="icon"/>,
-    Habitats: <TiTree className="icon"/>
+    Buoys: <GiPositionMarker className="menu-icon"/>,
+    Anthropogenic: <VscPerson className="menu-icon"/>,
+    Detections: <GiWhaleTail className="menu-icon"/>,
+    Habitats: <TiTree className="menu-icon"/>
   };
 
 const LayerItemCheckbox = ({ category, toggle, name, checked }) => {
@@ -22,21 +20,22 @@ const LayerItemCheckbox = ({ category, toggle, name, checked }) => {
     useEffect(() => toggle(isActive), [ category, name, isActive, toggle ])
 
     return(
-        <div className="layer" onClick={() => setIsActive(!isActive)}>
-            <div className="layer-header">{name}</div>
-            <div className="layer-input">{isActive ?  <MdCheckBox />:<MdCheckBoxOutlineBlank />}</div>
+        <div className="menu-item-clickable" onClick={() => setIsActive(!isActive)}>
+            <div className="menu-item-title">{name}</div>
+            <div className="menu-item-input">{isActive ?  <MdCheckBox />:<MdCheckBoxOutlineBlank />}</div>
         </div>
     )
 }
 const LayerItemRadio = ({ value, onSelect, checked }) => {
     return(
-        <div className="layer" onClick={() => onSelect(value)}>
-            <div className="layer-header">{value}</div>
-            <div className="layer-input">{checked ?  <MdRadioButtonChecked />:<MdRadioButtonUnchecked />}</div>
+        <div className="menu-item-clickable" onClick={() => onSelect(value)}>
+            <div className="menu-item-title">{value}</div>
+            <div className="menu-item-input">{checked ?  <MdRadioButtonChecked />:<MdRadioButtonUnchecked />}</div>
         </div>
     )
 }
 
+// TODO: Make RadioMenuItem and MenuItem the same
 const RadioMenuItem = ({ title, onChange, values, defaultValue }) => {
     const [isActive, setIsActive] = useState(false);
     const [value, setValue] = useState(null);
@@ -67,7 +66,7 @@ const MenuItem = (props) => {
         <div className="menu-item">
             <div className="menu-title" onClick={() => setIsActive(!isActive)} >
                 {icons[props.title]}
-                <div className="menu-item-header">{props.title}</div>
+                <div className="menu-item-title">{props.title}</div>
                 <div style={{lineHeight: '30px'}}>{isActive ? '-' : '+'}</div>
             </div>
             {isActive &&

@@ -113,7 +113,7 @@ const Buoy = (props) => {
         <Marker position={ position } icon={ buoyIcon }>
           <Popup onOpen = {loadTOLData} >
             <p className="driftPrint" >
-              Drift {props.drift_num}
+              Drift {props.drift_num} TOL
             </p>
             <BuoyPopup data={ tolData } loading={promiseInProgress} />
           </Popup>
@@ -122,7 +122,7 @@ const Buoy = (props) => {
       <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}
               eventHandlers={traceEventHandlers}
               pathOptions={{ weight: 5 }} ref={traceRef}>
-        <Popup onOpen={() => { setToolTipOpen(true) } } onClose={() => { setToolTipOpen(false) }} ref={tooltipRef} closeOnClick={false} closeButton={false}>
+        <Popup onOpen={() => { setToolTipOpen(true) } } onClose={() => { setToolTipOpen(false) }} ref={tooltipRef} closeOnClick={false}>
           <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num}
                       step={props.step} isOpen={toolTipOpen} currTime={hoverTime} />
         </Popup>

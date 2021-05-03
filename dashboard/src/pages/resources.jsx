@@ -1,32 +1,37 @@
 import './resources.css';
-import { Tabs, Tab} from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import Overview from '../components/overview';
-import Citations from '../components/citations';
 import Links from '../components/links';
+import Hero from '../components/Hero/hero';
 
 const Homepage = () => {
 
-    return(
-      <div className="page-container">
-      <div className="resources">
-        <h1 className="heading" >Soundscape Resources</h1>
-      </div>
+  return (
+    <>
+      <Hero title="Soundscape Resources"
+        photo={{
+          imgUrl: '/images/resources.png',
+          link: 'https://unsplash.com/photos/ZaZhmR63_X8?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',
+          user_link: 'https://unsplash.com/@almosbech?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
+          name: 'Almos Bechtold'
+        }}
+      />
       <div className="info">
         <div id="container">
-        <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example">
+          <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example">
             <Tab eventKey="overview" title="Overview">
-                <Overview />
+              <Overview />
             </Tab>
-            <Tab eventKey="citations" title="Citations">
-                <Citations />
+            {/* <Tab eventKey="data" title="Map Data">
+                
+            </Tab> */}
+            <Tab eventKey="links" title="Featured Links">
+              <Links />
             </Tab>
-            <Tab eventKey="links" title="Links">
-                <Links />
-            </Tab>
-        </Tabs>
+          </Tabs>
         </div>
       </div>
-      </div>
-    );
+    </>
+  );
 }
 export default Homepage;

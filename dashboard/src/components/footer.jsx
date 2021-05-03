@@ -1,6 +1,6 @@
 import React from 'react';
 import './footer.css';
-import { HomeButton } from './homebutton';
+import { HoverButton } from './HoverButton/hoverbutton';
 import { Link } from 'react-router-dom';
 
 function Footer() {
@@ -18,7 +18,7 @@ function Footer() {
               type='email'
               placeholder='Your Email'
             />
-            <HomeButton buttonStyle='btn--outline'>Subscribe</HomeButton>
+            <HoverButton buttonStyle='btn--outline'>Subscribe</HoverButton>
           </form>
         </div>
       </section>

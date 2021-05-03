@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'react-vis/dist/style.css';
-import {XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, ChartLabel} from 'react-vis';
+import { XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, ChartLabel } from 'react-vis';
 import Loader from 'react-loader-spinner';
 
 const BuoyPopup = (props) => {
@@ -8,16 +8,16 @@ const BuoyPopup = (props) => {
 
   function lineSeries() {
     return (
-      <XYPlot height={300} width={800} xType="log" yType="log" margin={{bottom: 75, left: 50}}>
+      <XYPlot height={300} width={800} xType="log" margin={{ bottom: 75, left: 50 }}>
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
-          tickFormat={function tickFormat(d){return d.toString().concat(" Hz")}}
+          tickFormat={function tickFormat(d) { return d.toString().concat(" Hz") }}
           tickLabelAngle={-90}
-          /*tickTotal={2.9}*/ // Display only three labels
+        /*tickTotal={2.9}*/ // Display only three labels
         />
         <YAxis
-          tickFormat={function tickFormat(d){return d.toFixed().toString().concat(" dB")}}
+          tickFormat={function tickFormat(d) { return d.toFixed().toString().concat(" dB") }}
         />
         <LineSeries data={props.data} />
       </XYPlot>
@@ -26,14 +26,14 @@ const BuoyPopup = (props) => {
 
   function barchart() {
     return (
-      <XYPlot height={300} width={300}>
+      <XYPlot height={300} width={800} xType="log" margin={{ bottom: 75, left: 50 }}>
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
-          tickFormat={function tickFormat(d){return d.toString().concat(" Hz")}}
-          tickLabelAngle={-15}
+          tickFormat={function tickFormat(d) { return d.toString().concat(" Hz") }}
+          tickLabelAngle={-75}
         />
-        <YAxis title="Sound Level (dB)" position="start"/>
+        <YAxis tickFormat={function tickFormat(d) { return d.toFixed().toString().concat(" dB") }} />
         <VerticalBarSeries data={props.data} />
       </XYPlot>
     )
@@ -42,15 +42,15 @@ const BuoyPopup = (props) => {
   const data = props.data;
   console.log(data);
 
-	if (props.loading) {
-		return <Loader type="ThreeDots" color="#212529" visible/>
-	} else if (data === null || data === undefined) {
-    return <p>Missing data for buoy. It will be availble soon</p>
+  if (props.loading) {
+    return <Loader type="ThreeDots" color="#212529" visible />
+  } else if (data === null || data === undefined) {
+    return <p>Missing data for buoy. It will be available soon</p>
   } else {
     return (
       <div>
-        { chartType === "line" && lineSeries() }
-        { chartType === "bar"  && barchart() }
+        { chartType === "line" && lineSeries()}
+        { chartType === "bar" && barchart()}
         <span className="custom-dropdown custom-dropdown--white">
           <select className="custom-dropdown__select custom-dropdown__select--white" onChange={(event) => setChartType(event.target.value)}>
             <option value="line">Line Chart</option>

@@ -1,8 +1,6 @@
 import './App.css';
 import Map from './pages/map';
 import NavBar from './components/navbar'
-import Homepage from './pages/homepage'
-import Footer from './components/footer'
 import About from './pages/about'
 import Resources from './pages/resources'
 import {
@@ -11,24 +9,36 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import Hero from './components/Hero/hero';
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar/>
+
         <Switch>
           <Route exact path="/">
-            <Homepage />
-          </Route>  
+            <NavBar variant="transparent" />
+            <Hero title="Visualize Soundscape Data"
+              description="A tool for marine resource managers made in collaboration between UC Berkeley's Fung Fellowship program and the National Oceanic and Atmospheric Administration"
+              button={{ link: "/map", text: "View Map" }}
+              photo={{
+                imgUrl: "/images/home.png", user_link: "https://unsplash.com/@taliacohen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                link: "https://unsplash.com/s/photos/dolphin-underwater?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText", name: "Talia Cohen"
+              }}
+            />
+          </Route>
           <Route path="/map">
-              <Map />
+            <NavBar variant="dark" />
+            <Map />
           </Route>
           <Route path="/about">
-              <About />
+            <NavBar variant="transparent" />
+            <About />
           </Route>
           <Route path="/resources">
-              <Resources />
+            <NavBar variant="transparent" />
+            <Resources />
           </Route>
         </Switch>
       </Router>
