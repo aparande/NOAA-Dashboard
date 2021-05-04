@@ -83,7 +83,7 @@ const Team = () => {
         <div className="team-member">
           <img src="/team-members/cp.jpg" width="250" height="250" alt="Image of Edgar" className="profile-pic"></img>
           <div className="name-major">
-            <p className="name">CHOYAN PONSAR</p>
+            <p className="name">CHOYANG PONSAR</p>
             <p className="major">
               Design and New Media
             </p>
