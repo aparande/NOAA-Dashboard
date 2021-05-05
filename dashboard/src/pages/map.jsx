@@ -163,7 +163,7 @@ const Map = () => {
         </FeatureGroup>}
         {showShippingLayer && shippingData &&
           <HeatLayer data={shippingData.map(x => [x.latitude, x.longitude, Math.log(x.MMSI)])}
-            gradient={{ 0.0: '#aad3df', 0.3: 'rgb(166,189,219)', 0.5: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)' }} />
+            gradient={{ 0.0: '#aad3df', 0.3: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)' }} />
         }
         {/* SPECIES GROUP */}
         <FeatureGroup>
@@ -177,7 +177,7 @@ const Map = () => {
         {
           visibleHabitatName !== "None" &&
           <HeatLayer data={habitatData}
-            gradient={{ 0: '#aad3df', 0.375: 'rgb(254,196,79)', 0.5: 'rgb(254,153,41)', 0.8: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' }} />
+            gradient={{ 0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' }} />
         }
       </MapContainer>
       <Menu layers={toggleLayer} />
@@ -194,9 +194,9 @@ const Map = () => {
       </div>
       <LegendContainer>
         {visibleHabitatName !== "None" &&
-          <Legend colors={['#aad3df', 'rgb(254,196,79)', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} />}
+          <Legend colors={['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
         {showShippingLayer && shippingData &&
-          <Legend colors={['#aad3df', 'rgb(166,189,219)', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)']} stops={[11, 25, 39, 53, 67, 81, 95]} maxVal={1.0} />}
+          <Legend colors={['#aad3df', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
       </LegendContainer>
     </>
   )
