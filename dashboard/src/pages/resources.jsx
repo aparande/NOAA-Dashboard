@@ -9,6 +9,8 @@ const Resources = () => {
   return (
     <>
       <Hero title="Soundscape Resources"
+        description={
+          `The following resources provide more background information and research on soundscapes from an ecology, policy and technical perspective. The Literature Review was written by the CalSound team with support from Anne Simonis by summarizing all the sources linked below.`}
         photo={{
           imgUrl: '/images/resources.png',
           link: 'https://unsplash.com/photos/ZaZhmR63_X8?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',

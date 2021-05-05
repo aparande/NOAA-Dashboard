@@ -142,3 +142,23 @@ body{
 .leaflet-popup-content {
   width:auto !important;
 }
+
+.subtitle{
+  color: #229FAD;
+  font-family: 'Alata', sans-serif;
+  margin: 30px 100px;
+  font-size: 45px;
+}
+
+#partner{
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+  margin: 20px 100px;
+}
+
+.important-body{
+  font-family: Alata, sans-serif;
+  color: #625E5E;
+  padding: 30px;  
+}
