@@ -177,7 +177,7 @@ const Map = () => {
         {
           visibleHabitatName !== "None" &&
           <HeatLayer data={habitatData}
-            gradient={{ 0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' }} />
+            gradient={{ 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' }} />
         }
       </MapContainer>
       <Menu layers={toggleLayer} />

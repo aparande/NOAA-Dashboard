@@ -121,7 +121,8 @@ const Buoy = (props) => {
       }
       <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}
               eventHandlers={traceEventHandlers}
-              pathOptions={{ weight: 5 }} ref={traceRef}>
+              pathOptions={{ weight: 5 }} ref={traceRef}
+              color='#212428'>
         <Popup onOpen={() => { setToolTipOpen(true) } } onClose={() => { setToolTipOpen(false) }} ref={tooltipRef} closeOnClick={false}>
           <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num}
                       step={props.step} isOpen={toolTipOpen} currTime={hoverTime} />
