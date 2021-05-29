@@ -1,0 +1,32 @@
+[
+  {
+    "title": "N.O.A.A CCES",
+    "description": "In 2018, the National Oceanic Atmospheric Association (N.O.A.A) conducted the California Current Ecosystem Survey (C.C.E.S). They attached microphones to drifting buoys and set them in the California currrent. The buoys recorded 2 minutes of sound at a time. From these recordings, reseachers computed various metrics such as Third Octave Levels and the Broadband measurement. They also searched the data for beaked and sperm whale sounds.",
+    "link": "https://repository.library.noaa.gov/view/noaa/27223",
+    "link_text": "Read Report"
+  },
+  {
+    "title": "Cetacean Density",
+    "description": "Becker et. al (2020) estimated the density of cetaceans in the California Current Ecosystem using survey data from 1991-2018. The density is measured in animals per square kilometer.",
+    "link": "https://repository.library.noaa.gov/view/noaa/27826",
+    "link_text": "Read Report"
+  },
+  {
+    "title": "Sea Lion Density",
+    "description": "Welch and Hazen et. al. (2019) generated a density map of Sea Lions in the California Current Ecosystem using Boosted Regression Tree Models.",
+    "link": "https://conbio.onlinelibrary.wiley.com/doi/10.1111/cobi.13417",
+    "link_text": "Read Report"
+  },
+  {
+    "title": "Shipping Density",
+    "description": "N.O.A.A and B.O.E.M maintain a dataset of vessel traffic data, also known as Automatic Identification System (AIS) data. The shipping density is measured by counting the number of unique ships passing through 0.1 latitude by 0.1 longitude square over the course of the month.",
+    "link": "https://marinecadastre.gov/ais/",
+    "link_text": "View Data"
+  },
+  {
+    "title": "Oil and Natural Gas Platforms",
+    "description": "The Department of Homeland Security maintains a dataset of Oil and Natural Gas platforms off the coast of the United States.",
+    "link": "https://hifld-geoplatform.opendata.arcgis.com/datasets/oil-and-natural-gas-platforms/geoservice?geometry=-132.124%2C30.121%2C-100.812%2C36.541",
+    "link_text": "View Data"
+  }
+]

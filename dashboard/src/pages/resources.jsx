@@ -1,7 +1,7 @@
 import './resources.css';
 import { Tabs, Tab, Accordion, Card, Button } from 'react-bootstrap';
-import Overview from '../components/overview';
-import Links from '../components/links';
+import data_descriptions from '../data/data-descriptions.json';
+import LitReview from '../components/lit_review';
 import Hero from '../components/Hero/hero';
 
 const Resources = () => {
@@ -23,59 +23,46 @@ const Resources = () => {
         <div id="container">
           <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example">
             <Tab eventKey="overview" title="Overview">
-              <Overview />
+              <LitReview />
             </Tab>
             <Tab eventKey="data" title="Map Data">
               <div className="info-container">
-                <Card>
-                  <Card.Header>N.O.A.A CCES</Card.Header>
-                  <Card.Body>
-                    <Card.Text>
-                      In 2018, the National Oceanic Atmospheric Association (N.O.A.A) conducted the California Current Ecosystem Survey (C.C.E.S). They attached microphones to drifting buoys and set them in the California currrent. The buoys recorded 2 minutes of sound at a time. From these recordings, reseachers computed various metrics such as Third Octave Levels and the Broadband measurement. They also searched the data for beaked and sperm whale sounds.
-                    </Card.Text>
-                    <Button variant="primary" href="https://repository.library.noaa.gov/view/noaa/27223">Read Report</Button>
-                  </Card.Body>
-                </Card>
-                <Card>
-                  <Card.Header>Cetacean Density</Card.Header>
-                  <Card.Body>
-                    <Card.Text>
-											Becker et. al (2020) estimated the density of cetaceans in the California Current Ecosystem using survey data from 1991-2018. The density is measured in animals per square kilometer.
-                    </Card.Text>
-                    <Button variant="primary" href="https://repository.library.noaa.gov/view/noaa/27826">Read Report</Button>
-                  </Card.Body>
-                </Card>
-                <Card>
-                  <Card.Header>Sea Lion Density</Card.Header>
-                  <Card.Body>
-                    <Card.Text>
-											Welch and Hazen et. al. (2019) generated a density map of Sea Lions in the California Current Ecosystem using Boosted Regression Tree Models.
-                    </Card.Text>
-                    <Button variant="primary" href="https://conbio.onlinelibrary.wiley.com/doi/10.1111/cobi.13417">Read Report</Button>
-                  </Card.Body>
-                </Card>
-                <Card>
-                  <Card.Header>Shipping Density</Card.Header>
-                  <Card.Body>
-                    <Card.Text>
-											N.O.A.A and B.O.E.M maintain a dataset of vessel traffic data, also known as Automatic Identification System (AIS) data. The shipping density is measured by counting the number of unique ships passing through 0.1 latitude by 0.1 longitude square over the course of the month.
-                    </Card.Text>
-                    <Button variant="primary" href="https://marinecadastre.gov/ais/">View Data</Button>
-                  </Card.Body>
-                </Card>
-                <Card>
-                  <Card.Header>Oil and Natural Gas Platforms</Card.Header>
-                  <Card.Body>
-                    <Card.Text>
-											The Department of Homeland Security maintains a dataset of Oil and Natural Gas platforms off the coast of the United States.
-                    </Card.Text>
-                    <Button variant="primary" href="https://hifld-geoplatform.opendata.arcgis.com/datasets/oil-and-natural-gas-platforms/geoservice?geometry=-132.124%2C30.121%2C-100.812%2C36.541">View Data</Button>
-                  </Card.Body>
-                </Card>
+                {
+                  data_descriptions.map((dd) => (
+                    <Card>
+                      <Card.Header>{dd.title}</Card.Header>
+                      <Card.Body>
+                        <Card.Text>
+                          {dd.description}
+                        </Card.Text>
+                        <Button variant="primary" href="{dd.link}">{dd.link_text}</Button>
+                      </Card.Body>
+                    </Card>
+                  ))
+                }
               </div>
             </Tab>
             <Tab eventKey="links" title="Featured Links">
-              <Links />
+              <div className="info-container">
+                <Card>
+                  <Card.Header>NOAA</Card.Header>
+                  <Card.Body>
+                    <Card.Text>
+                      The National Oceanic and Atmospheric Administration is an American scientific agency within the United States Department of Commerce that focuses on the conditions of the oceans, major waterways, and the atmosphere. NOAA’s mission to better understand our natural world and help protect its precious resources extends beyond national borders to monitor global weather and climate, and work with partners around the world.
+            </Card.Text>
+                    <Button variant="primary" href="https://www.noaa.gov/">Explore more</Button>
+                  </Card.Body>
+                </Card>
+                <Card>
+                  <Card.Header>ADRIFT</Card.Header>
+                  <Card.Body>
+                    <Card.Text>
+                      Passive acoustic monitoring (listening!) is an effective way to study marine mammals. Towing hydrophones behind a ship gives good geographic resolution, while seafloor hydrophones give good temporal resolution. ADRIFT's passive acoustic drifting buoys record ~30 days and their low cost allows us to deploy more buoys so that we can improve our study area (in both time and space).
+            </Card.Text>
+                    <Button variant="primary" href="https://www.fisheries.noaa.gov/west-coast/science-data/adrift-california-current">Explore more</Button>
+                  </Card.Body>
+                </Card>
+              </div>
             </Tab>
           </Tabs>
         </div>
