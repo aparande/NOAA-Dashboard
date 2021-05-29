@@ -217,7 +217,7 @@ const LitReview = () => {
                 {
                   citations.map((citation, idx) => (
                     <>
-                      <a href="{citation.link}">{citation.text}</a>
+                      <a href={citation.link}>{citation.text}</a>
                       {idx !== citations.length - 1 && <hr />}
                     </>
                   ))

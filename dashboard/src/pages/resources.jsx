@@ -35,7 +35,7 @@ const Resources = () => {
                         <Card.Text>
                           {dd.description}
                         </Card.Text>
-                        <Button variant="primary" href="{dd.link}">{dd.link_text}</Button>
+                        <Button variant="primary" href={dd.link}>{dd.link_text}</Button>
                       </Card.Body>
                     </Card>
                   ))
