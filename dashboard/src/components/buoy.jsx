@@ -55,14 +55,10 @@ const Buoy = (props) => {
   const loadTOLData = async () => {
     console.log("Loading TOL data")
 		async function fetchData() {
-			let data = await get_tol(props.currTime, props.step, props.drift_num);
-			if (Object.keys(data).length > 0) {
-				data = mean(data);
-				// console.log(data);
-				delete data.timestamp;
-				data = Object.keys(data).map(key => {return { x: parseInt(key), y: data[key] }});
+			let data = await get_tol(props.currTime, props.step, props.drift_id);
+			if (data.length > 0) {
+        data = data.map(a => { return { x: parseInt(a.xlabel), y: a.avg }});
 				data.sort((a, b) => a.x - b.x);
-				console.log(data);
 				setTOLData(data);
 			} else {
 				setTOLData(null);
@@ -113,7 +109,7 @@ const Buoy = (props) => {
         <Marker position={ position } icon={ buoyIcon }>
           <Popup onOpen = {loadTOLData} >
             <p className="driftPrint" >
-              Drift {props.drift_num} TOL
+              {props.drift_name} TOL
             </p>
             <BuoyPopup data={ tolData } loading={promiseInProgress} />
           </Popup>
@@ -124,7 +120,7 @@ const Buoy = (props) => {
               pathOptions={{ weight: 5 }} ref={traceRef}
               color='#212428'>
         <Popup onOpen={() => { setToolTipOpen(true) } } onClose={() => { setToolTipOpen(false) }} ref={tooltipRef} closeOnClick={false}>
-          <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num}
+          <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_name={props.drift_name} drift_id={ props.drift_id }
                       step={props.step} isOpen={toolTipOpen} currTime={hoverTime} />
         </Popup>
       </Polyline>

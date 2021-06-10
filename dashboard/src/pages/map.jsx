@@ -34,7 +34,7 @@ const Map = () => {
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1 * 60 * 60);
-  const [buoyNums, setBuoyNums] = useState(Object.keys(traces));
+  const [buoys, setBuoys] = useState([]);
   const [visibleDetections, setVisibleDetections] = useState({});
   const [shippingData, setShippingData] = useState(null);
 
@@ -47,10 +47,12 @@ const Map = () => {
   const [habitatData, setHabitatData] = useState([]);
 
   const detectionFilter = (detection) => {
-    // TODO: This is a really strange bug. requires figuring out what types are inside buoyNums
-    if (!buoyNums.includes(detection.drift_num) && !buoyNums.includes(detection.drift_num.toString())) return false;
+    const buoy_nums = buoys.map( b => b.name );
+    if (!buoy_nums.includes(`Drift ${detection.drift_num}`)) return false;
     return detection.timestamp >= currTime && detection.timestamp <= currTime + step;
   };
+
+  console.log(buoys);
 
   useEffect(() => {
     if (visibleHabitatName === "None" || visibleHabitatName === null || visibleHabitatName === undefined) {
@@ -88,7 +90,7 @@ const Map = () => {
       const detects = { ...visibleDetections };
       if (state) {
         if (Object.keys(detects).includes(layer_item)) return;
-        detects[layer_item] = SPECIES_DETECTIONS[layer_item].filter(detectionFilter)
+        detects[layer_item] = SPECIES_DETECTIONS[layer_item].filter(detectionFilter);
 
         setVisibleDetections(detects);
       } else {
@@ -115,7 +117,7 @@ const Map = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await get_visible_buoys(minTime);
-      setBuoyNums(data);
+      setBuoys(data);
     }
     fetchData();
   }, []);
@@ -129,7 +131,7 @@ const Map = () => {
 
     // console.log(visible);
     setVisibleDetections(detects);
-  }, [currTime, step, buoyNums])
+  }, [currTime, step, buoys])
 
   useEffect(() => {
     let time = "" + (Math.floor(currTime / MONTH) * MONTH) + ".0";
@@ -150,9 +152,9 @@ const Map = () => {
         {/* BUOY GROUP */}
         {showBuoyLayer && <FeatureGroup>
           {
-            buoyNums.map((key, idx) =>
-              <Buoy currTime={currTime} drift_num={key}
-                positions={traces[key]} key={idx} setCurrTime={setCurrTime}
+            buoys.map((buoy) => 
+              <Buoy currTime={currTime} drift_name={ buoy.name } drift_id={ buoy.id }
+                positions={ traces[buoy.name.replace("Drift ", "")] } key={ buoy.id } setCurrTime={setCurrTime}
                 step={step} minTime={minTime} maxTime={maxTime}
               />)
           }

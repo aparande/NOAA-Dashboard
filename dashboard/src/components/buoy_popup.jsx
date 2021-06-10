@@ -39,14 +39,12 @@ const BuoyPopup = (props) => {
     )
   }
 
-  const data = props.data;
-  console.log(data);
-
   if (props.loading) {
     return <Loader type="ThreeDots" color="#212529" visible />
-  } else if (data === null || data === undefined) {
+  } else if (props.data === null || props.data === undefined) {
     return <p>Missing data for buoy. It will be available soon</p>
   } else {
+    console.log("Showing buoy popup");
     return (
       <div>
         { chartType === "line" && lineSeries()}

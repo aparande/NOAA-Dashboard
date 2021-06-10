@@ -5,10 +5,9 @@ import argparse
 import sys
 import glob
 from datetime import datetime
-
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+import psycopg2
+from dotenv import load_dotenv
+from pathlib import Path
 
 def parse_csv(filename):
   with open(filename, 'r') as f:
@@ -37,64 +36,66 @@ def parse_header(header):
   else:
     return header.split("_")[-1]+ "Hz"
 
-def get_drift_metric(db, drift_name, metric):
-  query = db.collection("metrics").where("drift_name", "==", drift_name).where("metric_name", "==", metric).limit(1)
-  return query.get()
+def write_tmpfile(drift_id, metric, stat, data, start=-1, end=-1):
+  with open('tmp.csv', 'w') as tmpfile:
+    writer = csv.writer(tmpfile)
 
-def create_drift_metric(db, drift_name, metric):
-  doc_ref = db.collection("metrics").document()
-  doc_ref.set({
-    "drift_name": drift_name,
-    "metric_name": metric
-  })
-  return doc_ref
+    for i, row in enumerate(data):
+      if i < start:
+        continue
+      if end != -1 and i >= end:
+        print(f"Finished uploading {metric}-{stat} for {drift_name}")
+        return
 
-def upload_data(drift_name, metric, stat, data, db, start=-1, end=-1):
-  metric_doc = get_drift_metric(db, drift_name, metric)
-  if len(metric_doc) == 0:
-    metric_doc_id = create_drift_metric(db, drift_name, metric).id
-  else:
-    metric_doc_id = metric_doc[0].id
+      for key in row:
+        if key != "timestamp":
+          row[key] = float(row[key])
+          writer.writerow([drift_id, metric, stat, row['timestamp'], key, row[key], datetime.now().isoformat(), datetime.now().isoformat()])
 
-  for i, row in enumerate(data):
-    if i < start:
-      continue
-    if i > end:
-      print(f"Finished uploading {metric}-{stat} for {drift_name}")
-      return
+    print(f"Reached end of file for {metric}-{stat} for {drift_name}")
 
-    timestamp = row["timestamp"]
-    date = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.000Z")
-    timestamp = date.timestamp()
-    row["timestamp"] = timestamp
+def get_drift_id(cursor, drift_name):
+  cursor.execute("SELECT id from buoys WHERE name = %s", (drift_name,))
+  drift_id = cursor.fetchone()
+  print("Fetching Buoy")
+  if drift_id is None:
+    cursor.execute("INSERT INTO buoys (name, created_at, updated_at) VALUES (%s, NOW(), NOW()) RETURNING id", (drift_name,))
+    drift_id = cursor.fetchone()
+    print("Created Buoy in table")
+  return drift_id[0]
 
-    for key in row:
-      if key != "timestamp":
-        row[key] = float(row[key])
+def upload_data(drift_name, metric, stat, data, start=-1, end=-1):
+  parent_dir = Path(__file__).parents[1].absolute()
 
-    db.collection("metrics").document(metric_doc_id).collection(stat).document(str(timestamp)).set(row)
-  print(f"Reached end of file for {metric}-{stat} for {drift_name}")
+  conn = psycopg2.connect(
+    dbname=os.getenv('PG_DB'), user=os.getenv('PG_USER'), password=os.getenv('PG_PASS'), 
+    host=os.getenv('PG_HOST'), port=os.getenv('PG_PORT'), sslmode='verify-ca', 
+    sslcert=f"{parent_dir}/certs/dev/client-cert.crt", sslkey=f"{parent_dir}/certs/dev/client-key.key", sslrootcert=f"{parent_dir}/certs/dev/server-ca.crt"
+  )
+  cursor = conn.cursor()
 
+  drift_id = get_drift_id(cursor, drift_name)
+  write_tmpfile(drift_id, metric, stat, data, start=start, end=end)
+  try:
+    with open("tmp.csv", "r") as csv:
+      cursor.copy_from(csv, "datapoints", sep=",", columns=["buoy_id", "metric", "statistic", "timestamp", "xlabel", "value", "created_at", "updated_at"])
+  finally:
+    conn.commit()
+    cursor.close()
+    conn.close()
+    os.remove("tmp.csv")
+
+load_dotenv(f"{Path(__file__).parents[1].absolute()}/.env")
 # Set up command line arguments
-parser = argparse.ArgumentParser(description="Upload data from a Triton LTSA Analysis Directory to Firestore")
+parser = argparse.ArgumentParser(description="Upload data from a Triton LTSA Analysis Directory to CloudSQL")
 
 parser.add_argument('directory', type=str, help="Directory to parse")
-parser.add_argument('--creds', type=str, dest="creds", default="serviceAccountKey.json", help="Path to Firebase Credentials")
 parser.add_argument('--skip-stats', type=str, nargs='+', dest="skip_stats", help="Stats to Skip")
 parser.add_argument('--skip-metrics', type=str, nargs='+', dest="skip_metrics", help="Metrics to Skip")
-parser.add_argument('--start', type=int, default=-1, dest="start", help="Row num to start metric upload")
-parser.add_argument('--end', type=int, default=-1, dest="end", help="Row num to end metric upload")
+parser.add_argument('--start', type=int, default=-1, dest="start", help="Row num to start metric upload (Inclusive)")
+parser.add_argument('--end', type=int, default=-1, dest="end", help="Row num to end metric upload (Exclusive)")
 
 args = parser.parse_args()
-
-# Load Firebase Credentials
-# Follow the instructions at https://firebase.google.com/docs/firestore/quickstart#python
-# DO NOT COMMIT serviceAccountKey.json to git
-cred = credentials.Certificate(args.creds)
-firebase_admin.initialize_app(cred)
-
-# Initialize Database Client
-db = firestore.client()
 
 # Check the data directory exists
 if not os.path.isdir(args.directory):
@@ -117,9 +118,9 @@ for path in files:
   filename = path.split("/")[-1][:-4]
   metric, stat = filename.split("_")[4:6]
   if stat == "2min":
-    stat = "raw"
+    stat = "median"
   if metric not in args.skip_metrics and stat not in args.skip_stats:
     print(f"Found metric file: {metric}-{stat}")
     data = parse_csv(path)
-    upload_data(drift_name, metric, stat, data, db, start=args.start, end=args.end)
+    upload_data(drift_name, metric, stat, data, start=args.start, end=args.end)
 

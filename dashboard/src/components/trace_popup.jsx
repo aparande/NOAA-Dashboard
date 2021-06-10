@@ -15,9 +15,9 @@ const TracePopup = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       console.log("Loading BB data");
-      let data = await get_bb(props.minTime, props.maxTime, props.drift_num, props.step);
-      if (Object.keys(data).length > 0) {
-        data = Object.keys(data).map(timestamp => {return { x: timestamp, y: data[timestamp]["20-24000 Hz"] }});
+      let data = await get_bb(props.minTime, props.maxTime, props.drift_id, props.step);
+      if (data.length > 0) {
+        data = data.map(pt => {return { x: pt.timestamp, y: pt.avg }});
         data.sort((a, b) => a.x - b.x);
         setBBData(data);
       } else {
