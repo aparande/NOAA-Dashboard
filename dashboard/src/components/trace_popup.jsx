@@ -45,7 +45,7 @@ const TracePopup = (props) => {
   if (promiseInProgress) {
     return <Loader type="ThreeDots" color="#212529" visible/>
   } else if (bbData === null || bbData === undefined) {
-    return <p>Missing data for buoy. It will be availble soon</p>
+    return <p>Missing data for buoy. It will be available soon</p>
   } else {
     return (
       <div>

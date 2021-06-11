@@ -23,11 +23,11 @@ app.get('/api/get_tol', async (req, res, next) => {
   }
   const queryStr = `
     SELECT xlabel, AVG(value) from datapoints 
-    WHERE metric='TOL' AND statistic='median' AND (timestamp BETWEEN to_timestamp(:start) AND to_timestamp(:end)) AND buoy_id=:id
+    WHERE metric='TOL' AND statistic=:stat AND (timestamp BETWEEN to_timestamp(:start) AND to_timestamp(:end)) AND buoy_id=:id
     GROUP BY xlabel;
   `
   const tol = await sequelize.query(queryStr, {
-    replacements: { start: req.query.start, end: req.query.end, id: req.query.buoyId },
+    replacements: { start: req.query.start, end: req.query.end, id: req.query.buoyId, stat: req.query.statistic },
     logging: console.log, 
     type: QueryTypes.SELECT,
     raw: true 

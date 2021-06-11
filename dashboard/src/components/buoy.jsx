@@ -3,21 +3,17 @@ import { interval_search, dist, mean, interpolate } from '../utils';
 import BuoyPopup from './buoy_popup';
 import TracePopup from './trace_popup';
 import React, { useEffect, useState, createRef } from 'react';
-import { get_tol } from '../queries';
 import { buoyIcon } from '../constants';
-import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
 
 const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
-  const [tolData, setTOLData] = useState(null);
   const [renderMarker, setRenderMarker] = useState(false);
   const [toolTipOpen, setToolTipOpen] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [hoverTime, setHoverTime] = useState(null);
 
 	const tooltipRef = createRef();
   const traceRef = createRef();
-
-	const { promiseInProgress } = usePromiseTracker({ area: "buoy-popup-area" });
 
   useEffect(() => {
     let interval = interval_search(props.positions, (elem) => {
@@ -51,21 +47,6 @@ const Buoy = (props) => {
     }
 
   }, [props.positions, props.currTime, props.step]);
-
-  const loadTOLData = async () => {
-    console.log("Loading TOL data")
-		async function fetchData() {
-			let data = await get_tol(props.currTime, props.step, props.drift_id);
-			if (data.length > 0) {
-        data = data.map(a => { return { x: parseInt(a.xlabel), y: a.avg }});
-				data.sort((a, b) => a.x - b.x);
-				setTOLData(data);
-			} else {
-				setTOLData(null);
-			}
-		}
-		trackPromise(fetchData(), "buoy-popup-area");
-  }
 
   const traceEventHandlers = {
     click(e) {
@@ -107,11 +88,11 @@ const Buoy = (props) => {
     <div>
       { renderMarker && (
         <Marker position={ position } icon={ buoyIcon }>
-          <Popup onOpen = {loadTOLData} >
+          <Popup onOpen = { () => setPopupOpen(true) } onClose={ () => setToolTipOpen(false) } >
             <p className="driftPrint" >
               {props.drift_name} TOL
             </p>
-            <BuoyPopup data={ tolData } loading={promiseInProgress} />
+            <BuoyPopup isOpen={popupOpen} currTime={props.currTime} step={props.step} drift_id={props.drift_id}/>
           </Popup>
         </Marker>)
       }

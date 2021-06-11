@@ -1,10 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'react-vis/dist/style.css';
 import { XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, ChartLabel } from 'react-vis';
 import Loader from 'react-loader-spinner';
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
+import { get_tol } from '../queries';
 
 const BuoyPopup = (props) => {
   const [chartType, setChartType] = useState("line");
+  const [statistic, setStatistic] = useState("median");
+  const [tolData, setTOLData] = useState(null);
+  
+  const { promiseInProgress } = usePromiseTracker({ area: "buoy-popup-area" });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("Loading TOL data")
+      let data = await get_tol(props.currTime, props.step, props.drift_id, statistic);
+      if (data.length > 0) {
+        data = data.map(a => { return { x: parseInt(a.xlabel), y: a.avg }});
+        data.sort((a, b) => a.x - b.x);
+        setTOLData(data);
+      } else {
+        setTOLData(null);
+      }
+    }
+    if (props.isOpen) trackPromise(fetchData(), "buoy-popup-area");
+  }, [props.currTime, props.step, props.drift_id, props.isOpen, statistic])
+  
 
   function lineSeries() {
     return (
@@ -19,7 +41,7 @@ const BuoyPopup = (props) => {
         <YAxis
           tickFormat={function tickFormat(d) { return d.toFixed().toString().concat(" dB") }}
         />
-        <LineSeries data={props.data} />
+        <LineSeries data={tolData} />
       </XYPlot>
     )
   }
@@ -34,14 +56,14 @@ const BuoyPopup = (props) => {
           tickLabelAngle={-75}
         />
         <YAxis tickFormat={function tickFormat(d) { return d.toFixed().toString().concat(" dB") }} />
-        <VerticalBarSeries data={props.data} />
+        <VerticalBarSeries data={tolData} />
       </XYPlot>
     )
   }
 
-  if (props.loading) {
+  if (promiseInProgress) {
     return <Loader type="ThreeDots" color="#212529" visible />
-  } else if (props.data === null || props.data === undefined) {
+  } else if (tolData === null || tolData === undefined) {
     return <p>Missing data for buoy. It will be available soon</p>
   } else {
     console.log("Showing buoy popup");
@@ -55,22 +77,15 @@ const BuoyPopup = (props) => {
             <option value="bar">Bar Chart</option>
           </select>
         </span>
+        <span className="custom-dropdown custom-dropdown--white ml-2">
+          <select className="custom-dropdown__select custom-dropdown__select--white" onChange={(event) => setStatistic(event.target.value)}>
+            <option value="median">Median</option>
+            <option value="mean">Mean</option>
+          </select>
+        </span>
       </div>
     )
   }
 }
-
-
-// Code to display y-axis label
-/* <ChartLabel
-  text="Sound Level (dB)"
-  className="alt-y-label"
-  includeMargin={false}
-  xPercent={-0.08}
-  yPercent={0.4}
-  style={{
-    transform: 'rotate(-90)',
-    textAnchor: 'end'
-  }} /> */
 
 export default BuoyPopup;

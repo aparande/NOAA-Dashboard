@@ -14,7 +14,7 @@ export const get_oil_gas_platforms = async () => {
   return res.data.features.map((feat) => feat.attributes);
 } 
 
-export const get_tol = async (start_date, step, buoy_num) => {
+export const get_tol = async (start_date, step, buoy_num, statistic) => {
   const URL = "/api/get_tol";
   const end_date = start_date + step;
   const res = await axios.get(URL,
@@ -22,7 +22,8 @@ export const get_tol = async (start_date, step, buoy_num) => {
       params: {
         start: start_date,
         end: end_date,
-        buoyId: buoy_num
+        buoyId: buoy_num,
+        statistic: statistic
       }
     })
   console.log(res);
