@@ -142,8 +142,9 @@ const Map = () => {
 
   return (
     <>
+    {/* tap=false is required for Safari for some reason https://github.com/PaulLeCam/react-leaflet/issues/822 */}
       <MapContainer center={[36.7783, -119.4179]} zoom={7}
-        maxZoom={8} minZoom={5} zoomControl={false}
+        maxZoom={8} minZoom={5} zoomControl={false} tap = {false}
         style={{ width: '100%', height: '100vh', position: 'absolute', zIndex: '-5', top: '0px' }} >
         <ZoomControl position="topleft"/>
         <TileLayer
