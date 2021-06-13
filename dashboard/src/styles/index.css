@@ -1,0 +1,28 @@
+/*
+Global Styles
+
+Any styles specific to a component or page should be put in a CSS Module
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alata&display=swap');
+
+body {
+  overflow-x: hidden;
+  margin: 0px;
+}
+
+.driftPrint {
+  font-family: 'Alata', sans-serif;
+  font-size: 24px;
+  margin: 10px 20px;
+  text-align: center;
+  color: #212428;
+}
+
+.oilDescription {
+  font-family: 'Alanta', sans-serif;
+  margin: 10px 20px;
+  font-size: 13px;
+  color: #212428;
+}

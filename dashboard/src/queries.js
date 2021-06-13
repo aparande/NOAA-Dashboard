@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { group_by, mean } from './utils';
 
 // https://hifld-geoplatform.opendata.arcgis.com/datasets/geoplatform::oil-and-natural-gas-platforms/geoservice?geometry=-135.504%2C23.571%2C-72.882%2C36.815
 export const get_oil_gas_platforms = async () => {

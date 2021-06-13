@@ -1,5 +1,6 @@
 import { Accordion, Card, Button, Table } from 'react-bootstrap';
-import citations from '../data/citations.json';
+import citations from '../../data/citations.json';
+import styles from './resources.module.css';
 
 const MetricTable = () => {
   return (
@@ -87,7 +88,7 @@ const MetricTable = () => {
 
 const LitReview = () => {
   return (
-    <div className="info-container">
+    <div className={styles.info}>
       <h1>Overview of Marine Soundscape Technology and its Implications</h1>
       <p><b>Authors:</b> Audrey Kuptz, Yueyi Che, Anmol Parande, Sara Kopunova, Justin Hogenauer, Choyang Ponsar, Edgar Hildebrandt Rojo, Leena Elzeiny, Sindhu Goli</p>
       <br />
@@ -213,7 +214,7 @@ const LitReview = () => {
           </Card.Header>
           <Accordion.Collapse eventKey="6">
             <Card.Body>
-              <div className="info-container">
+              <div className={styles.info}>
                 {
                   citations.map((citation, idx) => (
                     <>

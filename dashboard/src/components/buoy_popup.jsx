@@ -4,6 +4,7 @@ import { XYPlot, LineSeries, VerticalBarSeries, XAxis, YAxis, VerticalGridLines,
 import Loader from 'react-loader-spinner';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
 import { get_tol } from '../queries';
+import Dropdown from "./Dropdown";
 
 const BuoyPopup = (props) => {
   const [chartType, setChartType] = useState("line");
@@ -71,18 +72,8 @@ const BuoyPopup = (props) => {
       <div>
         { chartType === "line" && lineSeries()}
         { chartType === "bar" && barchart()}
-        <span className="custom-dropdown custom-dropdown--white">
-          <select className="custom-dropdown__select custom-dropdown__select--white" onChange={(event) => setChartType(event.target.value)}>
-            <option value="line">Line Chart</option>
-            <option value="bar">Bar Chart</option>
-          </select>
-        </span>
-        <span className="custom-dropdown custom-dropdown--white ml-2">
-          <select className="custom-dropdown__select custom-dropdown__select--white" onChange={(event) => setStatistic(event.target.value)}>
-            <option value="median">Median</option>
-            <option value="mean">Mean</option>
-          </select>
-        </span>
+        <Dropdown onSelect={setChartType} options={{ line: "Line Chart", bar: "Bar Chart" }}/>
+        <Dropdown onSelect={setStatistic} options={{ median: "Median", mean: "Mean" }} className="ml-2"/>
       </div>
     )
   }

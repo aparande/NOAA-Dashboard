@@ -1,4 +1,4 @@
-.menu{
+.container {
   position: absolute;
   top: 90px;
   right: 5px;
@@ -12,23 +12,24 @@
   overflow-y: scroll;
 }
 
-.menu-item{
+.item{
   padding: 5px;
 }
-.menu-title{
+
+.title{
   cursor:pointer;
   display: flex;
   justify-content: space-between;
   align-content: center;
 }
-.menu-item-header{
+.itemHeader{
   font-family: 'Alata', sans-serif;
   display: flex;
   align-items: center;
   font-size: 12px;
 }
 
-.menu-item-clickable {
+.itemClickable {
   cursor:pointer;
   display: flex;
   justify-content: space-between;
@@ -37,15 +38,16 @@
   border-bottom: solid #666 1px;
 }
 
-.menu-icon{
+.icon{
   font-size: 30px;
   line-height: 10px;
 }
 
-.menu-item-input {
+.itemInput {
   padding: 7px 0px;
 }
-.menu-item-title {
+
+.itemTitle {
   font-family: 'Alata', sans-serif;
   display: flex;
   align-items: center;

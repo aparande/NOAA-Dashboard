@@ -1,7 +1,8 @@
 import L from 'leaflet';
 import "leaflet.heat";
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
+import { LegendContainer, Legend } from './Legend';
 
 const HeatLayer = (props) => {
   const map = useMap();
@@ -32,8 +33,6 @@ const HeatLayer = (props) => {
   useEffect(() => {
     console.log("Updating heatmap")
     const maxHeat = Math.max(...props.data.map(x => x[2]));
-    // console.log(maxHeat);
-    // console.log(props.data);
     if (heatLayer !== null && heatLayer !== undefined) {
       heatLayer.setLatLngs(props.data);
       heatLayer.setOptions({ max: maxHeat });
@@ -44,5 +43,8 @@ const HeatLayer = (props) => {
     <div />
   )
 }
+
+HeatLayer.LegendContainer = LegendContainer;
+HeatLayer.Legend = Legend;
 
 export default HeatLayer

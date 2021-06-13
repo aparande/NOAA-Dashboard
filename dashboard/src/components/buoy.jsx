@@ -1,5 +1,5 @@
 import { Marker, Popup, Polyline, Tooltip } from 'react-leaflet';
-import { interval_search, dist, mean, interpolate } from '../utils';
+import { interval_search, dist, interpolate } from '../utils';
 import BuoyPopup from './buoy_popup';
 import TracePopup from './trace_popup';
 import React, { useEffect, useState, createRef } from 'react';

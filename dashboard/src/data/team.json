@@ -1,0 +1,66 @@
+{
+  "members": [
+    {
+      "name": "Yueyi Che",
+      "major": "Geology",
+      "picture": "yc"
+    },
+    {
+      "name": "Leena Elzeiny",
+      "major": "Electrical Engineering and Computer Science",
+      "picture": "le"
+    },
+    {
+      "name": "Sindhu Goli",
+      "major": "Data Science",
+      "picture": "sg"
+    },
+    {
+      "name": "Edgar Hildebrandt Rojo",
+      "major": "Electrical Engineering and Computer Science & Applied Mathematics & Economics",
+      "picture": "ehr"
+    },
+    {
+      "name": "Justin Hogenaur",
+      "major": "Society and Environment & Business Administration",
+      "picture": "jh"
+    },
+    {
+      "name": "Sara Kopunova",
+      "major": "Industrial Engineering and Operations Research & Business Administration",
+      "picture": "sk"
+    },
+    {
+      "name": "Audrey Kuptz",
+      "major": "Marine Science & Integrative Biology",
+      "picture": "ak"
+    },
+    {
+      "name": "Anmol Parande",
+      "major": "Electrical Engineering and Computer Science",
+      "picture": "ap"
+    },
+    {
+      "name": "Choyang Ponsar",
+      "major": "Design and New Media",
+      "picture": "cp"
+    }
+  ],
+  "advisors": [
+    {
+      "name": "Dan Zevin",
+      "major": "Conservation Track Advisor",
+      "picture": "dz"
+    },
+    {
+      "name": "Aakash Desai",
+      "major": "Conservation Track Advisor",
+      "picture": "ad"
+    },
+    {
+      "name": "David Kurtz",
+      "major": "Graduate Student Instructor, Conservation Track",
+      "picture": "dk"
+    }
+  ]
+}

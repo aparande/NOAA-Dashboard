@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { get_oil_gas_platforms, get_visible_buoys } from '../queries';
+import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
 
 import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
-import Buoy from '../components/buoy';
-import Slider from '../components/slider';
-import Menu from '../components/Menu/menu';
-import OilPlatform from '../components/oil_platform';
-import HeatLayer from '../components/heat_layer';
-import Detection from '../components/detection';
-import { Legend, LegendContainer } from '../components/legend';
+import Buoy from '../../components/buoy';
+import Slider from '../../components/Slider';
+import Menu from '../../components/Menu';
+import OilPlatform from '../../components/oil_platform';
+import HeatLayer from '../../components/HeatLayer';
+import Detection from '../../components/Detection';
+import traces from '../../data/traces.json';
+import ship_data from '../../data/ship_density_monthly.json';
+import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../../constants';
 
-import traces from '../data/traces.json';
-import ship_data from '../data/ship_density_monthly.json';
-import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../constants';
+import styles from "./map.module.css";
+import "../../styles/leaflet.css";
 
 const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
 const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
@@ -184,23 +185,23 @@ const Map = () => {
         }
       </MapContainer>
       <Menu layers={toggleLayer} />
-      <div id="time-slider">
-        <div className="sliderwrapper">
-          <Slider className="slider" step={step} minTime={minTime} maxTime={maxTime} currTime={currTime} setCurrTime={setCurrTime} />
+      <div className={styles.timeSlider}>
+        <div className={styles.sliderWrapper}>
+          <Slider step={step} minTime={minTime} maxTime={maxTime} currTime={currTime} setCurrTime={setCurrTime} />
         </div>
-        <div className="buttons">
-          <button className="button" style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => setStep(HOUR)}>Hour</button>
-          <button className="button" style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#212428' }} onClick={() => setStep(DAY)}>Day</button>
-          <button className="button" style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => setStep(WEEK)}>Week</button>
-          <button className="button" style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => setStep(MONTH)}>Month</button>
+        <div className={styles.buttonRow}>
+          <button style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => setStep(HOUR)}>Hour</button>
+          <button style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#212428' }} onClick={() => setStep(DAY)}>Day</button>
+          <button style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => setStep(WEEK)}>Week</button>
+          <button style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => setStep(MONTH)}>Month</button>
         </div>
       </div>
-      <LegendContainer>
+      <HeatLayer.LegendContainer className={styles.legendContainer} height="50vh">
         {visibleHabitatName !== "None" &&
-          <Legend colors={['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
+          <HeatLayer.Legend colors={['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
         {showShippingLayer && shippingData &&
-          <Legend colors={['#aad3df', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
-      </LegendContainer>
+          <HeatLayer.Legend colors={['#aad3df', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
+      </HeatLayer.LegendContainer>
     </>
   )
 };

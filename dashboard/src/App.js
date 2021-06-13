@@ -1,21 +1,14 @@
-import './App.css';
-import Map from './pages/map';
+import Map from './pages/Map';
 import NavBar from './components/navbar'
-import About from './pages/about'
-import Resources from './pages/resources'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
-import Hero from './components/Hero/hero';
+import About from './pages/About'
+import Resources from './pages/Resources'
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Hero from './components/Hero';
 
 function App() {
   return (
     <div className="App">
       <Router>
-
         <Switch>
           <Route exact path="/">
             <NavBar variant="transparent" />

@@ -6,15 +6,15 @@ const NavBar = ({ variant }) => {
     <Navbar variant={variant} expand='md'>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
+        <Nav className="d-flex justify-content-between align-items-center w-100">
             <Navbar.Brand href="/">
-                <img src={logo} width="50" height="50" className="d-inline-block align-top"/>
+                <img src={logo} alt="CalSound Logo" width="50" height="50" className="d-inline-block align-top"/>
             </Navbar.Brand>
-            <div id="navbar-buttons">
-                <Nav.Link href="/" activeclassname='is-active' className='link-transparent'>Home</Nav.Link>
-                <Nav.Link href="/map" activeclassname='is-active' className='link-transparent'>Map</Nav.Link>
-                <Nav.Link href="/about" activeclassname='is-active' className='link-transparent'>About</Nav.Link>
-                <Nav.Link href="/resources" activeclassname='is-active' className='link-transparent'>Resources</Nav.Link>
+            <div className="d-flex justify-content-between">
+                <Nav.Link href="/">Home</Nav.Link>
+                <Nav.Link href="/map">Map</Nav.Link>
+                <Nav.Link href="/about">About</Nav.Link>
+                <Nav.Link href="/resources">Resources</Nav.Link>
             </div>
         </Nav>
         </Navbar.Collapse>
