@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
 
+import Tour from 'reactour';
 import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
 import Buoy from '../../components/buoy';
 import Slider from '../../components/Slider';
@@ -11,6 +12,7 @@ import Detection from '../../components/Detection';
 import traces from '../../data/traces.json';
 import ship_data from '../../data/ship_density_monthly.json';
 import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../../constants';
+import {step_var} from './onboarding_steps.jsx';
 
 import styles from "./map.module.css";
 import "../../styles/leaflet.css";
@@ -38,6 +40,7 @@ const Map = () => {
   const [buoys, setBuoys] = useState([]);
   const [visibleDetections, setVisibleDetections] = useState({});
   const [shippingData, setShippingData] = useState(null);
+  const [isTourOpen, setIsTourOpen] = useState(true);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
@@ -141,6 +144,10 @@ const Map = () => {
     }
   }, [currTime])
 
+  const closeTour = () => {
+    setIsTourOpen(false);
+  }
+
   return (
     <>
     {/* tap=false is required for Safari for some reason https://github.com/PaulLeCam/react-leaflet/issues/822 */}
@@ -184,8 +191,17 @@ const Map = () => {
             gradient={{ 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' }} />
         }
       </MapContainer>
-      <Menu layers={toggleLayer} />
-      <div className={styles.timeSlider}>
+      <Tour
+        steps={step_var}
+        isOpen={isTourOpen}
+        onRequestClose={closeTour}
+        styles={{
+          options: {
+            zIndex: 10000,
+          }
+        }}/>
+      <Menu layers={toggleLayer} id="menu"/>
+      <div id="slider" className={styles.timeSlider}>
         <div className={styles.sliderWrapper}>
           <Slider step={step} minTime={minTime} maxTime={maxTime} currTime={currTime} setCurrTime={setCurrTime} />
         </div>

@@ -80,7 +80,7 @@ const MenuItem = (props) => {
 
 const Menu = (props) => {
     return(
-        <div className={styles.container}>
+        <div className={styles.container} id="menu">
             <MenuItem title="Buoys" toggle={props.layers}>
                 <LayerItemCheckbox name="Buoy Path" toggle={(value) => props.layers("Buoys", "BuoyPath", value)} checked={true}/>
             </MenuItem>
