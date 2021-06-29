@@ -46,3 +46,8 @@
   left: 10px;
   top: 25vh;
  }
+
+
+ .stepContent {
+   display: flex;
+ }
