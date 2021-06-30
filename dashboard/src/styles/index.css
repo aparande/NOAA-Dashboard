@@ -10,6 +10,7 @@ Any styles specific to a component or page should be put in a CSS Module
 body {
   overflow-x: hidden;
   margin: 0px;
+  font-family: 'Alanta', sans-serif;
 }
 
 .driftPrint {
