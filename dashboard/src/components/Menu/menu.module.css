@@ -5,15 +5,21 @@
   z-index: 405;
   background-color: #212428;
   color: white;
-  width: 200px;
+  width: 250px;
   padding: 10px;
 
   max-height: 60vh;
   overflow-y: scroll;
 }
 
-.item{
+.item {
   padding: 5px;
+}
+
+.infoButton {
+  background-color: transparent;
+  color: white;
+  border: none;
 }
 
 .title{
@@ -35,12 +41,21 @@
   justify-content: space-between;
   align-content: center;
   margin: 3px 0px;
+  margin-left: 10px;
+  flex-grow: 1;
+}
+
+.itemRow {
   border-bottom: solid #666 1px;
 }
 
-.icon{
+.icon {
   font-size: 30px;
   line-height: 10px;
+}
+
+.iconSmall {
+  font-size: 20px;
 }
 
 .itemInput {
