@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
 
-import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, ZoomControl } from 'react-leaflet';
 import Buoy from '../../components/buoy';
 import Slider from '../../components/Slider';
 import Menu from '../../components/Menu';
@@ -11,6 +11,7 @@ import Detection from '../../components/Detection';
 import traces from '../../data/traces.json';
 import ship_data from '../../data/ship_density_monthly.json';
 import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../../constants';
+import menu_config from '../../configs/menu_config.js';
 
 import ReactGA from 'react-ga';
 import analytics from '../../analytics';
@@ -35,71 +36,31 @@ const attr = `&copy <a href=${attr_links[0]}>OpenStreetMap</a> | <a href=${attr_
 // mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
 
 const Map = () => {
+  // Base Map State
   const [currTime, setCurrTime] = useState(1535623127);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1 * 60 * 60);
+
+  // Layer Data State
   const [buoys, setBuoys] = useState([]);
   const [visibleDetections, setVisibleDetections] = useState({});
   const [heatLayers, setHeatLayers] = useState(null);
 
-  // to add a value in the menu, create a state and place its setter into the setLayers dictionary
+  // Menu state
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
   const [showOilLayer, setShowOilLayer] = useState(false);
   const [showShippingLayer, setShippingLayer] = useState(false);
   const [visibleHabitatName, setVisibileHabitatName] = useState("None");
 
   const detectionFilter = (detection) => {
-    const buoy_nums = buoys.map( b => b.name );
+    const buoy_nums = buoys.map(b => b.name);
     if (!buoy_nums.includes(`Drift ${detection.drift_num}`)) return false;
     return detection.timestamp >= currTime && detection.timestamp <= currTime + step;
   };
 
-  console.log(buoys);
-
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
   }, [])
-
-  useEffect(() => {
-    if (visibleHabitatName === "None" || visibleHabitatName === null || visibleHabitatName === undefined) {
-      console.log("Not showing habitats");
-      setHeatLayers(h => {
-        const newLayers = {...h};
-        delete newLayers.habitat;
-        return newLayers;
-      })
-    } else if (visibleHabitatName === "Sea Lion") {
-      console.log("Sea Lion Habitat :)");
-
-      setHeatLayers(h => { 
-        return {
-          ...h, 
-          habitat: { 
-            data: SPECIES_HABITATS[visibleHabitatName].map((pt) => [pt.latitude, pt.longitude, pt.val]),
-            gradient: { 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' },
-            priority: 1
-          }
-        } 
-      });
-    } else {
-      console.log(`Showing ${visibleHabitatName}`);
-
-      setHeatLayers(h => {
-        return {  
-          ...h, 
-          habitat: { 
-            data: SPECIES_HABITATS[visibleHabitatName].map((pt) => {
-              const [lat, lon, val] = pt.map(parseFloat)
-              return [lat, lon - 360, val];
-            }),
-            gradient: { 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' },
-            priority: 1,
-            legend: { colors: ['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)'] }
-          }
-        }
-      });
-    }
-  }, [visibleHabitatName]);
 
   useEffect(() => {
     if (showShippingLayer) {
@@ -118,47 +79,78 @@ const Map = () => {
       }
     } else {
       setHeatLayers(h => {
-        const newLayers = {...h};
+        const newLayers = { ...h };
         delete newLayers.shipping;
         return newLayers;
       })
     }
   }, [showShippingLayer, currTime]);
 
-  // layers inside the dictionary should be named how the layer appears in the menu, but without spaces
-  const setLayersDict = {
-    "Buoys": {
-      "BuoyPath": setShowBuoyLayer
-    },
-    "Development": {
-      "OilRigs": setShowOilLayer,
-      "ShippingRoutes": setShippingLayer
-    },
-    "Habitats": {
-      "selectedHabitat": setVisibileHabitatName
+  const selectHabitat = (habitat_key) => {
+    // Only set habitat data if the data changes, preventing a render loop
+    if ((heatLayers.habitat !== undefined && habitat_key === "none") || (heatLayers.habitat && heatLayers.habitat.meta === habitat_key)) return;
+
+    if (habitat_key === "none" || habitat_key === null || habitat_key === undefined) {
+      console.log("Not showing habitats");
+      setHeatLayers(h => {
+        const newLayers = { ...h };
+        delete newLayers.habitat;
+        return newLayers;
+      })
+    } else if (habitat_key === "SL") {
+      console.log("Sea Lion Habitat :)");
+
+      setHeatLayers(h => {
+        return {
+          ...h,
+          habitat: {
+            meta: habitat_key,
+            data: SPECIES_HABITATS[habitat_key].map((pt) => [pt.latitude, pt.longitude, pt.val]),
+            gradient: { 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' },
+            priority: 1
+          }
+        }
+      });
+    } else {
+      console.log(`Showing ${habitat_key}`);
+
+      setHeatLayers(h => {
+        return {
+          ...h,
+          habitat: {
+            meta: habitat_key,
+            data: SPECIES_HABITATS[habitat_key].map((pt) => {
+              const [lat, lon, val] = pt.map(parseFloat)
+              return [lat, lon - 360, val];
+            }),
+            gradient: { 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' },
+            priority: 1,
+            legend: { colors: ['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)'] }
+          }
+        }
+      });
     }
   }
-  // handler used to change state
-  const toggleLayer = (menu_item, layer_item, state) => {
-    console.log("Set layers", menu_item, layer_item, state);
-    if (menu_item === "Detections") {
-      const detects = { ...visibleDetections };
-      if (state) {
-        if (Object.keys(detects).includes(layer_item)) return;
-        detects[layer_item] = SPECIES_DETECTIONS[layer_item].filter(detectionFilter);
 
-        setVisibleDetections(detects);
-      } else {
-        if (!Object.keys(detects).includes(layer_item)) return;
-
-        delete detects[layer_item];
-        console.log(detects);
-        setVisibleDetections(detects);
-      }
+  const selectDetections = (value, detection_name) => {
+    const detects = { ...visibleDetections };
+    if (value) {
+      if (Object.keys(detects).includes(detection_name)) return;
+      detects[detection_name] = SPECIES_DETECTIONS[detection_name].filter(detectionFilter);
     } else {
-      setLayersDict[menu_item][layer_item](state);
+      if (!Object.keys(detects).includes(detection_name)) return;
+      delete detects[detection_name];
     }
-  };
+    setVisibleDetections(detects);
+  }
+
+  const menuStateSetters = {
+    "buoy_path": (value, item_name) => setShowBuoyLayer(value),
+    "oil_rig": (value, item_name) => setShowOilLayer(value),
+    "shipping_route": (value, item_name) => setShippingLayer(value),
+    "habitat": selectHabitat,
+    "detection": selectDetections
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -186,24 +178,24 @@ const Map = () => {
 
     // console.log(visible);
     setVisibleDetections(detects);
-  }, [currTime, step, buoys])
+  }, [currTime, step, buoys]);
 
   return (
     <>
-    {/* tap=false is required for Safari for some reason https://github.com/PaulLeCam/react-leaflet/issues/822 */}
+      {/* tap=false is required for Safari for some reason https://github.com/PaulLeCam/react-leaflet/issues/822 */}
       <MapContainer center={[36.7783, -119.4179]} zoom={7}
-        maxZoom={8} minZoom={5} zoomControl={false} tap = {false}
+        maxZoom={8} minZoom={5} zoomControl={false} tap={false}
         style={{ width: '100%', height: '100vh', position: 'absolute', zIndex: '-5', top: '0px' }} >
-        <ZoomControl position="topleft"/>
+        <ZoomControl position="topleft" />
         <TileLayer
           attribution={attr}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {/* BUOY GROUP */}
         {showBuoyLayer && <FeatureGroup>
           {
-            buoys.map((buoy) => 
-              <Buoy currTime={currTime} drift_name={ buoy.name } drift_id={ buoy.id }
-                positions={ traces[buoy.name.replace("Drift ", "")] } key={ buoy.id } setCurrTime={setCurrTime}
+            buoys.map((buoy) =>
+              <Buoy currTime={currTime} drift_name={buoy.name} drift_id={buoy.id}
+                positions={traces[buoy.name.replace("Drift ", "")]} key={buoy.id} setCurrTime={setCurrTime}
                 step={step} minTime={minTime} maxTime={maxTime}
               />)
           }
@@ -212,7 +204,7 @@ const Map = () => {
         {showOilLayer && <FeatureGroup>
           {platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />)}
         </FeatureGroup>}
-        
+
         {/* SPECIES GROUP */}
         <FeatureGroup>
           {
@@ -222,18 +214,18 @@ const Map = () => {
         </FeatureGroup>
         {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
-        <HeatLayer layers={heatLayers} legendClassName={styles.legendContainer}/>
+        <HeatLayer layers={heatLayers} legendClassName={styles.legendContainer} />
       </MapContainer>
-      <Menu layers={toggleLayer} />
+      <Menu setters={menuStateSetters} config={menu_config} />
       <div className={styles.timeSlider}>
         <div className={styles.sliderWrapper}>
           <Slider step={step} minTime={minTime} maxTime={maxTime} currTime={currTime} setCurrTime={setCurrTime} />
         </div>
         <div className={styles.buttonRow}>
-          <button style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => {setStep(HOUR); analytics.TimeScaleChange(HOUR)} }>Hour</button>
-          <button style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#212428' }} onClick={() => {setStep(DAY); analytics.TimeScaleChange(DAY)} }>Day</button>
-          <button style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => {setStep(WEEK); analytics.TimeScaleChange(WEEK)} }>Week</button>
-          <button style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => {setStep(MONTH); analytics.TimeScaleChange(MONTH)} }>Month</button>
+          <button style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => { setStep(HOUR); analytics.TimeScaleChange(HOUR) }}>Hour</button>
+          <button style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#212428' }} onClick={() => { setStep(DAY); analytics.TimeScaleChange(DAY) }}>Day</button>
+          <button style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => { setStep(WEEK); analytics.TimeScaleChange(WEEK) }}>Week</button>
+          <button style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => { setStep(MONTH); analytics.TimeScaleChange(MONTH) }}>Month</button>
         </div>
       </div>
     </>
