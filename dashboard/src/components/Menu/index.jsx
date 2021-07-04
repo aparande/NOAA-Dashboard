@@ -69,11 +69,9 @@ const MenuItem = (props) => {
 				<div className={styles.itemTitle}>{props.title}</div>
 				<div style={{ lineHeight: '30px' }}>{isActive ? '-' : '+'}</div>
 			</div>
-			{isActive &&
-				<div>
-					{props.children}
-				</div>
-			}
+			<div className={ isActive ? "" : "d-none"}>
+				{props.children}
+			</div>
 		</div>
 	);
 }
@@ -81,7 +79,7 @@ const MenuItem = (props) => {
 const RadioGroup = ({ setter, default_val, items }) => {
 	const [value, setValue] = useState(default_val);
 	useEffect(() => setter(value), [value, setter]);
-	console.log("rednigner!")
+
 	return (
 		<>
 			{
