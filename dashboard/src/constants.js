@@ -69,20 +69,20 @@ export const SPECIES_DETECTION_COLORS = {
 }
 
 export const SPECIES_HABITATS = {
-  "Minke Whale" : ba_habitat,
-  "Baird's Beaked Whale": bb_habitat,
-  "Blue Whale": bm_habitat,
-  "Fin Whale": bp_habitat,
-  "Long-Beaked Common Dolphin": dc_habitat,
-  "Short-Beaked Common Dolphin": dd_habitat,
-  "Risso's Dolphin": gg_habitat,
-  "Northern Right Whale Dolphin": lb_habitat,
-  "Pacific White-Sided Dolphin": lo_habitat,
-  "Humpback Whale": mn_habitat,
-  "Dall's Porpoise": pd_habitat,
-  "Striped Dolphin": sc_habitat,
-  "Sea Lion": sl_habitat,
-  "Common Bottlenose Dolphin": tt_habitat
+  "MW": ba_habitat,
+  "BBW": bb_habitat,
+  "BW": bm_habitat,
+  "FW": bp_habitat,
+  "LBCD": dc_habitat,
+  "SBCD": dd_habitat,
+  "RD": gg_habitat,
+  "NRWD": lb_habitat,
+  "PWSD": lo_habitat,
+  "HW": mn_habitat,
+  "DP": pd_habitat,
+  "SD": sc_habitat,
+  "SL": sl_habitat,
+  "CBD": tt_habitat
 }
 
 export const SPECIES_HABITAT_KEYS = Object.keys(SPECIES_HABITATS);
