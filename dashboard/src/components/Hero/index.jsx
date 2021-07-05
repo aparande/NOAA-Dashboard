@@ -1,6 +1,7 @@
 import { Jumbotron } from 'react-bootstrap';
 import styles from './hero.module.css';
 import { Link } from 'react-router-dom';
+import analytics from '../../analytics';
 
 const Hero = (props) => {
   return (
@@ -8,7 +9,7 @@ const Hero = (props) => {
       <h1 className={styles.heading} >{props.title} </h1>
       <p className={styles.description}> {props.description} </p>
       {props.button && (
-        <Link to={props.button.link}>
+        <Link to={ (location) => { analytics.HeroButton(props.button.text); return { ...location, pathname: props.button.link} } }>
           <button
             className={styles.button}
           >

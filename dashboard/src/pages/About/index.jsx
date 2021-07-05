@@ -1,6 +1,8 @@
 import Hero from '../../components/Hero';
 import styles from './about.module.css';
 import team from "../../data/team.json";
+import ReactGA from 'react-ga';
+import { useEffect } from 'react';
 
 const TeamMember = ({ picture, memberName, major }) => {
   return (
@@ -15,6 +17,10 @@ const TeamMember = ({ picture, memberName, major }) => {
 }
 
 const About = () => {
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, [])
+
   return (
     <>
       <Hero title="About"

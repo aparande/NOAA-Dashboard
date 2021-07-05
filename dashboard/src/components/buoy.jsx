@@ -1,9 +1,11 @@
-import { Marker, Popup, Polyline, Tooltip } from 'react-leaflet';
+import { Marker, Popup, Polyline } from 'react-leaflet';
 import { interval_search, dist, interpolate } from '../utils';
 import BuoyPopup from './buoy_popup';
 import TracePopup from './trace_popup';
 import React, { useEffect, useState, createRef } from 'react';
 import { buoyIcon } from '../constants';
+
+import analytics from '../analytics';
 
 const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
@@ -65,6 +67,8 @@ const Buoy = (props) => {
         // TODO: there is a weird issue where it doesn't actually open up at the latlng position
         traceRef.current.openPopup(e.latlng);
         if (tooltipRef.current) tooltipRef.current.setLatLng(e.latlng);
+          
+        analytics.BBPopup(props.drift_name);
       }
     },
 		mousemove(e) {
@@ -88,7 +92,7 @@ const Buoy = (props) => {
     <div>
       { renderMarker && (
         <Marker position={ position } icon={ buoyIcon }>
-          <Popup onOpen = { () => setPopupOpen(true) } onClose={ () => setToolTipOpen(false) } >
+          <Popup onOpen = { () => {setPopupOpen(true); analytics.TOLPopup(props.drift_name)} } onClose={ () => setToolTipOpen(false) } >
             <p className="driftPrint" >
               {props.drift_name} TOL
             </p>

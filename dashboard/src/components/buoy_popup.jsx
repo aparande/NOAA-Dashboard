@@ -73,7 +73,7 @@ const BuoyPopup = (props) => {
         { chartType === "line" && lineSeries()}
         { chartType === "bar" && barchart()}
         <Dropdown onSelect={setChartType} options={{ line: "Line Chart", bar: "Bar Chart" }}/>
-        <Dropdown onSelect={setStatistic} options={{ median: "Median", mean: "Mean" }} className="ml-2"/>
+        <Dropdown onSelect={setStatistic} options={{ median: "Median", mean: "Mean" }} className="ml-2" />
       </div>
     )
   }

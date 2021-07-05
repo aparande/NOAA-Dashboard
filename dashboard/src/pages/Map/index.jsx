@@ -12,6 +12,9 @@ import traces from '../../data/traces.json';
 import ship_data from '../../data/ship_density_monthly.json';
 import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../../constants';
 
+import ReactGA from 'react-ga';
+import analytics from '../../analytics';
+
 import styles from "./map.module.css";
 import "../../styles/leaflet.css";
 
@@ -54,6 +57,10 @@ const Map = () => {
   };
 
   console.log(buoys);
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, [])
 
   useEffect(() => {
     if (visibleHabitatName === "None" || visibleHabitatName === null || visibleHabitatName === undefined) {
@@ -139,7 +146,7 @@ const Map = () => {
     if (ship_data[time] !== undefined && ship_data[time] !== null) {
       setShippingData(ship_data[time]);
     }
-  }, [currTime])
+  }, [currTime]);
 
   return (
     <>
@@ -190,10 +197,10 @@ const Map = () => {
           <Slider step={step} minTime={minTime} maxTime={maxTime} currTime={currTime} setCurrTime={setCurrTime} />
         </div>
         <div className={styles.buttonRow}>
-          <button style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => setStep(HOUR)}>Hour</button>
-          <button style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#212428' }} onClick={() => setStep(DAY)}>Day</button>
-          <button style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => setStep(WEEK)}>Week</button>
-          <button style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => setStep(MONTH)}>Month</button>
+          <button style={{ backgroundColor: (step === HOUR) ? '#229FAD' : '#212428' }} onClick={() => {setStep(HOUR); analytics.TimeScaleChange(HOUR)} }>Hour</button>
+          <button style={{ backgroundColor: (step === DAY) ? '#229FAD' : '#212428' }} onClick={() => {setStep(DAY); analytics.TimeScaleChange(DAY)} }>Day</button>
+          <button style={{ backgroundColor: (step === WEEK) ? '#229FAD' : '#212428' }} onClick={() => {setStep(WEEK); analytics.TimeScaleChange(WEEK)} }>Week</button>
+          <button style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => {setStep(MONTH); analytics.TimeScaleChange(MONTH)} }>Month</button>
         </div>
       </div>
       <HeatLayer.LegendContainer className={styles.legendContainer} height="50vh">

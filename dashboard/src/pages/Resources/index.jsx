@@ -3,8 +3,13 @@ import data_descriptions from '../../data/data-descriptions.json';
 import LitReview from './lit_review';
 import Hero from '../../components/Hero';
 import styles from './resources.module.css';
+import ReactGA from 'react-ga';
+import { useEffect } from 'react'; 
 
 const Resources = () => {
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, [])
 
   return (
     <>
