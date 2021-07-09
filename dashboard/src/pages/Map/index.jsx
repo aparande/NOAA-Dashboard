@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
 
 import Tour from 'reactour';
+import { useCookies } from "react-cookie";
+import {AiFillQuestionCircle} from 'react-icons/ai';
+
 import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
 import Buoy from '../../components/buoy';
 import Slider from '../../components/Slider';
@@ -40,7 +43,8 @@ const Map = () => {
   const [buoys, setBuoys] = useState([]);
   const [visibleDetections, setVisibleDetections] = useState({});
   const [shippingData, setShippingData] = useState(null);
-  const [isTourOpen, setIsTourOpen] = useState(true);
+  const [cookies, setCookie] = useCookies(["new_user"]);
+  const [isTourOpen, setIsTourOpen] = useState(false);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
@@ -144,7 +148,15 @@ const Map = () => {
     }
   }, [currTime])
 
+  useEffect(() => {
+    console.log(cookies.new_user);
+    setIsTourOpen(cookies.new_user == undefined);
+  }, [])
+
   const closeTour = () => {
+    setCookie("new_user", "false", {
+      path: "/map"
+    });
     setIsTourOpen(false);
   }
 
@@ -200,6 +212,9 @@ const Map = () => {
             zIndex: 10000,
           }
         }}/>
+      <div onClick={() => setIsTourOpen(true)}>
+        <AiFillQuestionCircle className={styles.onboardingTrigger}/>
+      </div>
       <Menu layers={toggleLayer} id="menu"/>
       <div id="slider" className={styles.timeSlider}>
         <div className={styles.sliderWrapper}>
