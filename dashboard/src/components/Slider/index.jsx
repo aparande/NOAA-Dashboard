@@ -40,7 +40,6 @@ const Slider = (props) => {
         )}
       />
       <div className={styles.date}>
-        { /* TODO: There is a weird flickering effect with the slider */ }
         { new Date(values[0].toFixed(1) * 1000).toLocaleString() }
       </div>
     </div>

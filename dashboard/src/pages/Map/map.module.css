@@ -1,16 +1,13 @@
 .sliderWrapper {
   width: 70%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   margin-left: 10px;
-
   border-radius: 15px;
   background-color: #212428;
-
   z-index: 1;
 }
 
-.timeSlider{
+.timeSlider {
   z-index: 400;
   position: fixed;
   bottom: 25px;

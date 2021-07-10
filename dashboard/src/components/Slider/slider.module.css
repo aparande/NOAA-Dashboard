@@ -7,7 +7,7 @@
 }
 
 .date {
-  padding-left: 2.5%;
+  margin-left: 2.5%;
   font-size: 15px;
   white-space: nowrap;
   font-family: 'Alata', sans-serif;
@@ -16,11 +16,14 @@
   align-content: center;
   color: #ffffff;
   flex-direction: column;
+  width: 14em;
+  text-align:right;
 }
 
 .inner {
   height: 36px;
   display: flex;
+  flex-grow: 1;
   width: 100%;
 }
 
