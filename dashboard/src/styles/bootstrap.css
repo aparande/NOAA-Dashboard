@@ -34,6 +34,23 @@ Overrides for built in Bootstrap classes
 	color: rgb(34, 159, 173);
 }
 
+.btn-link {
+  color: rgb(34, 159, 173);
+}
+
+.btn-link:hover {
+  color: rgb(34, 159, 173);
+}
+
+.btn-primary {
+  background-color: rgb(34, 159, 173);
+  border-color: rgb(34, 159, 173);
+}
+
+.btn-primary:hover {
+  background-color: #18717A;
+  border-color: #18717A;
+}
 .card {
   margin: 20px 10px;
   font-family: 'Open Sans', sans-serif;
