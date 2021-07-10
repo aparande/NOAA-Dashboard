@@ -40,15 +40,13 @@ const Map = () => {
   const [step, setStep] = useState(1 * 60 * 60);
   const [buoys, setBuoys] = useState([]);
   const [visibleDetections, setVisibleDetections] = useState({});
-  const [shippingData, setShippingData] = useState(null);
+  const [heatLayers, setHeatLayers] = useState(null);
 
   // to add a value in the menu, create a state and place its setter into the setLayers dictionary
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
   const [showOilLayer, setShowOilLayer] = useState(false);
   const [showShippingLayer, setShippingLayer] = useState(false);
   const [visibleHabitatName, setVisibileHabitatName] = useState("None");
-
-  const [habitatData, setHabitatData] = useState([]);
 
   const detectionFilter = (detection) => {
     const buoy_nums = buoys.map( b => b.name );
@@ -65,18 +63,67 @@ const Map = () => {
   useEffect(() => {
     if (visibleHabitatName === "None" || visibleHabitatName === null || visibleHabitatName === undefined) {
       console.log("Not showing habitats");
-      setHabitatData([]);
+      setHeatLayers(h => {
+        const newLayers = {...h};
+        delete newLayers.habitat;
+        return newLayers;
+      })
     } else if (visibleHabitatName === "Sea Lion") {
       console.log("Sea Lion Habitat :)");
-      setHabitatData(SPECIES_HABITATS[visibleHabitatName].map((pt) => [pt.latitude, pt.longitude, pt.val]));
+
+      setHeatLayers(h => { 
+        return {
+          ...h, 
+          habitat: { 
+            data: SPECIES_HABITATS[visibleHabitatName].map((pt) => [pt.latitude, pt.longitude, pt.val]),
+            gradient: { 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' },
+            priority: 1
+          }
+        } 
+      });
     } else {
       console.log(`Showing ${visibleHabitatName}`);
-      setHabitatData(SPECIES_HABITATS[visibleHabitatName].map((pt) => {
-        const [lat, lon, val] = pt.map(parseFloat)
-        return [lat, lon - 360, val];
-      }));
+
+      setHeatLayers(h => {
+        return {  
+          ...h, 
+          habitat: { 
+            data: SPECIES_HABITATS[visibleHabitatName].map((pt) => {
+              const [lat, lon, val] = pt.map(parseFloat)
+              return [lat, lon - 360, val];
+            }),
+            gradient: { 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' },
+            priority: 1,
+            legend: { colors: ['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)'] }
+          }
+        }
+      });
     }
-  }, [visibleHabitatName])
+  }, [visibleHabitatName]);
+
+  useEffect(() => {
+    if (showShippingLayer) {
+      let time = "" + (Math.floor(currTime / MONTH) * MONTH) + ".0";
+      if (ship_data[time] !== undefined && ship_data[time] !== null) {
+        setHeatLayers(h => {
+          return {
+            ...h, shipping: {
+              data: ship_data[time].map(x => [x.latitude, x.longitude, Math.log(x.MMSI)]),
+              gradient: { 0.0: '#aad3df', 0.3: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)' },
+              priority: 2,
+              legend: { colors: ['#aad3df', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)'] }
+            }
+          }
+        })
+      }
+    } else {
+      setHeatLayers(h => {
+        const newLayers = {...h};
+        delete newLayers.shipping;
+        return newLayers;
+      })
+    }
+  }, [showShippingLayer, currTime]);
 
   // layers inside the dictionary should be named how the layer appears in the menu, but without spaces
   const setLayersDict = {
@@ -141,13 +188,6 @@ const Map = () => {
     setVisibleDetections(detects);
   }, [currTime, step, buoys])
 
-  useEffect(() => {
-    let time = "" + (Math.floor(currTime / MONTH) * MONTH) + ".0";
-    if (ship_data[time] !== undefined && ship_data[time] !== null) {
-      setShippingData(ship_data[time]);
-    }
-  }, [currTime]);
-
   return (
     <>
     {/* tap=false is required for Safari for some reason https://github.com/PaulLeCam/react-leaflet/issues/822 */}
@@ -172,10 +212,7 @@ const Map = () => {
         {showOilLayer && <FeatureGroup>
           {platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />)}
         </FeatureGroup>}
-        {showShippingLayer && shippingData &&
-          <HeatLayer data={shippingData.map(x => [x.latitude, x.longitude, Math.log(x.MMSI)])}
-            gradient={{ 0.0: '#aad3df', 0.3: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)' }} />
-        }
+        
         {/* SPECIES GROUP */}
         <FeatureGroup>
           {
@@ -185,11 +222,7 @@ const Map = () => {
         </FeatureGroup>
         {/* HABITAT GROUP */}
         {/* Can tweak the coordinates to make it overlap better */}
-        {
-          visibleHabitatName !== "None" &&
-          <HeatLayer data={habitatData}
-            gradient={{ 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' }} />
-        }
+        <HeatLayer layers={heatLayers} legendClassName={styles.legendContainer}/>
       </MapContainer>
       <Menu layers={toggleLayer} />
       <div className={styles.timeSlider}>
@@ -203,12 +236,6 @@ const Map = () => {
           <button style={{ backgroundColor: (step === MONTH) ? '#229FAD' : '#212428' }} onClick={() => {setStep(MONTH); analytics.TimeScaleChange(MONTH)} }>Month</button>
         </div>
       </div>
-      <HeatLayer.LegendContainer className={styles.legendContainer} height="50vh">
-        {visibleHabitatName !== "None" &&
-          <HeatLayer.Legend colors={['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
-        {showShippingLayer && shippingData &&
-          <HeatLayer.Legend colors={['#aad3df', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)']} stops={[3.5, 23.5, 43.5, 63.5, 83.5, 103.5]} maxVal={1.0} />}
-      </HeatLayer.LegendContainer>
     </>
   )
 };

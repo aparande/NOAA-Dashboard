@@ -1,48 +1,30 @@
-import L from 'leaflet';
-import "leaflet.heat";
-import React, { useEffect, useState } from 'react';
-import { useMap } from 'react-leaflet';
 import { LegendContainer, Legend } from './Legend';
+import Layer from './layer';
 
-const HeatLayer = (props) => {
-  const map = useMap();
-  const [heatLayer, setHeatLayer] = useState(null);
+/**
+ * 
+ * @param {layers} layers A dictionary whose entries are {data, priority, gradient, legend: {colors: Arra}}
+ */
+const HeatLayer = ({ layers, legendClassName }) => {
+  const keys = Object.keys(layers);
+  keys.sort((a, b) => layers[a].priority < layers[b].priority);
 
-  useEffect(() => {
-    console.log("Creating Heat Map")
-    const maxHeat = Math.max(...props.data.map(x => x[2]));
-    const heat = L.heatLayer([], {
-      minOpacity: 0,
-      max: maxHeat,
-      maxZoom: 8,
-      blur: 20,
-      radius: 15,
-      gradient: props.gradient || {0.1: 'blue', 0.3: 'lime', 0.75: 'red'}
-    }).addTo(map);
-    setHeatLayer(heat);
-
-    // When the component dismouts, remove the heatmap from the map
-    return () => {
-      console.log("Cleaning up heatmap");
-      heat.removeFrom(map);
-      setHeatLayer(null);
-    }
-  }, [])
-
-  // Update heatmap
-  useEffect(() => {
-    console.log("Updating heatmap")
-    const maxHeat = Math.max(...props.data.map(x => x[2]));
-    if (heatLayer !== null && heatLayer !== undefined) {
-      heatLayer.setLatLngs(props.data);
-      heatLayer.setOptions({ max: maxHeat });
-    }
-  }, [props.data, heatLayer]);
-
+  const stops = [3.5, 23.5, 43.5, 63.5, 83.5, 103.5];
   return (
-    <div />
-  )
-}
+    <>
+      { keys.map((key, index) => 
+        <Layer data={layers[key].data} gradient={layers[key].gradient} key={index} />
+      )}
+      <LegendContainer className={legendClassName} height="50vh">
+        {
+          keys.map((key) => {
+            <Legend colors={layers[key].legend.colors} stops={stops} maxVal={1.0}/>
+          })
+        }
+      </LegendContainer>
+    </>
+  );
+};
 
 HeatLayer.LegendContainer = LegendContainer;
 HeatLayer.Legend = Legend;
