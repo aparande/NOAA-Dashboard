@@ -68,3 +68,7 @@
   align-items: center;
   font-size: 12px;
 }
+
+.infoDescription h1 {
+  font-size: 1.5rem;
+}

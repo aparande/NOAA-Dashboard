@@ -10,7 +10,7 @@ Any styles specific to a component or page should be put in a CSS Module
 body {
   overflow-x: hidden;
   margin: 0px;
-  font-family: 'Alanta', sans-serif;
+  font-family: 'Alata', sans-serif;
 }
 
 .driftPrint {
@@ -22,7 +22,7 @@ body {
 }
 
 .oilDescription {
-  font-family: 'Alanta', sans-serif;
+  font-family: 'Alata', sans-serif;
   margin: 10px 20px;
   font-size: 13px;
   color: #212428;

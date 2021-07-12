@@ -55,3 +55,9 @@ Overrides for built in Bootstrap classes
   margin: 20px 10px;
   font-family: 'Open Sans', sans-serif;
 }
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 750px;
+  }
+}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { MdCheckBoxOutlineBlank, MdCheckBox, MdRadioButtonUnchecked, MdRadioButtonChecked } from 'react-icons/md';
-
 import { Modal } from 'react-bootstrap';
 import styles from './menu.module.css';
+import ReactMarkdown from 'react-markdown';
 
 const LayerItemCheckbox = ({ category, toggle, name, checked, hasModal, info }) => {
 	const [isActive, setIsActive] = useState(checked);
@@ -15,9 +15,11 @@ const LayerItemCheckbox = ({ category, toggle, name, checked, hasModal, info }) 
 		<>
 			<Modal show={showInfo} onHide={() => setShowInfo(false)} centered>
 				<Modal.Header closeButton>
-					<Modal.Title>{name}</Modal.Title>
+					<Modal.Title><b>{name}</b></Modal.Title>
 				</Modal.Header>
-				<Modal.Body>{info}</Modal.Body>
+				<Modal.Body>
+					<ReactMarkdown className={styles.infoDescription}>{info}</ReactMarkdown>
+				</Modal.Body>
 			</Modal>
 			<div className={`d-flex align-items-center ${styles.itemRow}`}>
 				{hasModal &&
@@ -39,9 +41,11 @@ const LayerItemRadio = ({ value, onSelect, checked, hasModal, info }) => {
 		<>
 			<Modal show={showInfo} onHide={() => setShowInfo(false)} centered>
 				<Modal.Header closeButton>
-					<Modal.Title>{value}</Modal.Title>
+					<Modal.Title><b>{value}</b></Modal.Title>
 				</Modal.Header>
-				<Modal.Body>{info}</Modal.Body>
+				<Modal.Body>
+					<ReactMarkdown className={styles.infoDescription}>{info}</ReactMarkdown>
+				</Modal.Body>
 			</Modal>
 			<div className={`d-flex align-items-center ${styles.itemRow}`}>
 				{hasModal &&
