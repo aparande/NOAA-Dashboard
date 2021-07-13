@@ -44,13 +44,12 @@ const Map = () => {
   // Layer Data State
   const [buoys, setBuoys] = useState([]);
   const [visibleDetections, setVisibleDetections] = useState({});
-  const [heatLayers, setHeatLayers] = useState(null);
+  const [heatLayers, setHeatLayers] = useState({});
 
   // Menu state
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
   const [showOilLayer, setShowOilLayer] = useState(false);
   const [showShippingLayer, setShippingLayer] = useState(false);
-  const [visibleHabitatName, setVisibileHabitatName] = useState("None");
 
   const detectionFilter = (detection) => {
     const buoy_nums = buoys.map(b => b.name);
@@ -107,7 +106,8 @@ const Map = () => {
             meta: habitat_key,
             data: SPECIES_HABITATS[habitat_key].map((pt) => [pt.latitude, pt.longitude, pt.val]),
             gradient: { 0.0: '#aad3df', 0.3: 'rgb(254,153,41)', 0.7: 'rgb(236,112,20)', 0.9: 'rgb(204,76,2)', 0.95: 'rgb(153,52,4)', 1.0: 'rgb(102,37,6)' },
-            priority: 1
+            priority: 1,
+            legend: { colors: ['#aad3df', 'rgb(254,153,41)', 'rgb(236,112,20)', 'rgb(204,76,2)', 'rgb(153,52,4)', 'rgb(102,37,6)'] }
           }
         }
       });
