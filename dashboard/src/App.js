@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Hero from './components/Hero';
 import ReactGA from 'react-ga';
 import {useEffect} from 'react';
-import { CookiesProvider } from "react-cookie";
 
 ReactGA.initialize("UA-201396402-1", { debug: process.env.NODE_ENV !== "production" });
 
@@ -31,29 +30,27 @@ const Index = () => {
 }
 function App() {
   return (
-    <CookiesProvider>
-      <div className="App">
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <Index />
-            </Route>
-            <Route path="/map">
-              <NavBar variant="dark" />
-              <Map />
-            </Route>
-            <Route path="/about">
-              <NavBar variant="transparent" />
-              <About />
-            </Route>
-            <Route path="/resources">
-              <NavBar variant="transparent" />
-              <Resources />
-            </Route>
-          </Switch>
-        </Router>
-      </div>
-    </CookiesProvider>
+    <div className="App">
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Index />
+          </Route>
+          <Route path="/map">
+            <NavBar variant="dark" />
+            <Map />
+          </Route>
+          <Route path="/about">
+            <NavBar variant="transparent" />
+            <About />
+          </Route>
+          <Route path="/resources">
+            <NavBar variant="transparent" />
+            <Resources />
+          </Route>
+        </Switch>
+      </Router>
+    </div>
   );
 }
 
