@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
 
-import { MapContainer, TileLayer, FeatureGroup, ZoomControl } from 'react-leaflet';
+import Tour from 'reactour';
+import { useCookies } from "react-cookie";
+import {AiFillQuestionCircle} from 'react-icons/ai';
+
+// Custom Components
+import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
 import Buoy from '../../components/buoy';
 import Slider from '../../components/Slider';
 import Menu from '../../components/Menu';
 import OilPlatform from '../../components/oil_platform';
 import HeatLayer from '../../components/HeatLayer';
 import Detection from '../../components/Detection';
+import OnboardingStep from '../../components/onboarding_step';
+
+// Data
 import traces from '../../data/traces.json';
 import ship_data from '../../data/ship_density_monthly.json';
-import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../../constants';
-import menu_config from '../../configs/menu_config.js';
 
+// Configurations
+import menu_config from '../../configs/menu_config.js';
+import onboarding_config from '../../configs/onboarding_config.json';
+import { SPECIES_HABITATS, SPECIES_DETECTIONS } from '../../constants';
+
+// Analytics
 import ReactGA from 'react-ga';
 import analytics from '../../analytics';
 
+// Styles
 import styles from "./map.module.css";
 import "../../styles/leaflet.css";
 
@@ -45,6 +58,8 @@ const Map = () => {
   const [buoys, setBuoys] = useState([]);
   const [visibleDetections, setVisibleDetections] = useState({});
   const [heatLayers, setHeatLayers] = useState({});
+  const [cookies, setCookie] = useCookies(["new_user"]);
+  const [isTourOpen, setIsTourOpen] = useState(false);
 
   // Menu state
   const [showBuoyLayer, setShowBuoyLayer] = useState(true);
@@ -178,7 +193,20 @@ const Map = () => {
 
     // console.log(visible);
     setVisibleDetections(detects);
+
   }, [currTime, step, buoys]);
+
+  useEffect(() => {
+    console.log(cookies.new_user);
+    setIsTourOpen(cookies.new_user === undefined);
+  }, [cookies.new_user])
+
+  const closeTour = () => {
+    setCookie("new_user", "false", {
+      path: "/map"
+    });
+    setIsTourOpen(false);
+  }
 
   return (
     <>
@@ -216,8 +244,20 @@ const Map = () => {
         {/* Can tweak the coordinates to make it overlap better */}
         <HeatLayer layers={heatLayers} legendClassName={styles.legendContainer} />
       </MapContainer>
-      <Menu setters={menuStateSetters} config={menu_config} />
-      <div className={styles.timeSlider}>
+      <Menu setters={menuStateSetters} config={menu_config} id="menu" />
+      <Tour
+        steps={onboarding_config.map((item) => { return { ...item, content: <OnboardingStep {...item.content}/> } })}
+        isOpen={isTourOpen}
+        onRequestClose={closeTour}
+        styles={{
+          options: {
+            zIndex: 10000,
+          }
+        }}/>
+      <div onClick={() => setIsTourOpen(true)}>
+        <AiFillQuestionCircle className={styles.onboardingTrigger}/>
+      </div>
+      <div id="slider" className={styles.timeSlider}>
         <div className={styles.sliderWrapper}>
           <Slider step={step} minTime={minTime} maxTime={maxTime} currTime={currTime} setCurrTime={setCurrTime} />
         </div>

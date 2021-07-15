@@ -9,7 +9,7 @@ const LayerItemCheckbox = ({ category, toggle, name, checked, hasModal, info }) 
 	const [isActive, setIsActive] = useState(checked);
 	const [showInfo, setShowInfo] = useState(false);
 
-	useEffect(() => toggle(isActive), [category, name, isActive, toggle])
+	useEffect(() => toggle(isActive), [category, name, isActive, toggle]);
 
 	return (
 		<>
@@ -96,17 +96,17 @@ const RadioGroup = ({ setter, default_val, items }) => {
 	)
 }
 
-const Menu = ({ setters, config }) => {
+const Menu = ({ setters, config, id}) => {
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} id={id}>
 			{
 				config.map((section) =>
 					<MenuItem title={section.display_name} icon={section.icon}>
 						{
 							(section.type === "multiple-select") ?
-								section.items.map((item) => 
+								section.items.map((item, index) => 
 									<LayerItemCheckbox name={item.display_name} toggle={(value) => setters[item.key](value, item.item_name)}
-										checked={item.default} info={item.info} hasModal={item.info !== undefined} />)
+										checked={item.default} info={item.info} hasModal={item.info !== undefined} key={`${item.key}-${item.item_name}`}/>)
 
 								: <RadioGroup default_val={section.default} setter={setters[section.key]} items={section.items}/>
 						}
