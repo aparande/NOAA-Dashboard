@@ -1,0 +1,48 @@
+.member {
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 50px 0px 50px 0px;
+}
+
+.profilePic {
+  border-radius: 100%;
+  filter: grayscale(100%);
+  margin: 25px auto;
+}
+
+.major, .name {
+  text-align: center;
+  color: rgba(0,0,0,0.6)
+}
+
+.major {
+  font-size: 15px;
+  font-style: italic;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.subtitle{
+  color: #229FAD;
+  font-family: 'Alata', sans-serif;
+  margin: 30px 100px;
+  font-size: 45px;
+}
+
+.partner{
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+  margin: 20px 100px;
+}
+
+.description {
+  font-family: Alata, sans-serif;
+  color: #625E5E;
+  padding: 30px;
+}

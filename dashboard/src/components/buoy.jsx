@@ -1,23 +1,21 @@
-import { Marker, Popup, Polyline, Tooltip } from 'react-leaflet';
-import { interval_search, dist, mean, interpolate } from '../utils';
+import { Marker, Popup, Polyline } from 'react-leaflet';
+import { interval_search, dist, interpolate } from '../utils';
 import BuoyPopup from './buoy_popup';
 import TracePopup from './trace_popup';
 import React, { useEffect, useState, createRef } from 'react';
-import { get_tol } from '../queries';
 import { buoyIcon } from '../constants';
-import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
+
+import analytics from '../analytics';
 
 const Buoy = (props) => {
   const [position, setPosition] = useState([ 0, 0 ]);
-  const [tolData, setTOLData] = useState(null);
   const [renderMarker, setRenderMarker] = useState(false);
   const [toolTipOpen, setToolTipOpen] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [hoverTime, setHoverTime] = useState(null);
 
 	const tooltipRef = createRef();
   const traceRef = createRef();
-
-	const { promiseInProgress } = usePromiseTracker({ area: "buoy-popup-area" });
 
   useEffect(() => {
     let interval = interval_search(props.positions, (elem) => {
@@ -52,25 +50,6 @@ const Buoy = (props) => {
 
   }, [props.positions, props.currTime, props.step]);
 
-  const loadTOLData = async () => {
-    console.log("Loading TOL data")
-		async function fetchData() {
-			let data = await get_tol(props.currTime, props.step, props.drift_num);
-			if (Object.keys(data).length > 0) {
-				data = mean(data);
-				// console.log(data);
-				delete data.timestamp;
-				data = Object.keys(data).map(key => {return { x: parseInt(key), y: data[key] }});
-				data.sort((a, b) => a.x - b.x);
-				console.log(data);
-				setTOLData(data);
-			} else {
-				setTOLData(null);
-			}
-		}
-		trackPromise(fetchData(), "buoy-popup-area");
-  }
-
   const traceEventHandlers = {
     click(e) {
       // TODO: this doesn't cover interpolated points, but its good enough for now.
@@ -88,6 +67,8 @@ const Buoy = (props) => {
         // TODO: there is a weird issue where it doesn't actually open up at the latlng position
         traceRef.current.openPopup(e.latlng);
         if (tooltipRef.current) tooltipRef.current.setLatLng(e.latlng);
+
+        analytics.BBPopup(props.drift_name);
       }
     },
 		mousemove(e) {
@@ -110,12 +91,12 @@ const Buoy = (props) => {
   return(
     <div>
       { renderMarker && (
-        <Marker position={ position } icon={ buoyIcon } color='#229fad'>
-          <Popup onOpen = {loadTOLData} >
+        <Marker position={ position } icon={ buoyIcon }>
+          <Popup onOpen = { () => {setPopupOpen(true); analytics.TOLPopup(props.drift_name)} } onClose={ () => setToolTipOpen(false) } >
             <p className="driftPrint" >
-              Drift {props.drift_num} TOL
+              {props.drift_name} TOL
             </p>
-            <BuoyPopup data={ tolData } loading={promiseInProgress} />
+            <BuoyPopup isOpen={popupOpen} currTime={props.currTime} step={props.step} drift_id={props.drift_id}/>
           </Popup>
         </Marker>)
       }
@@ -124,7 +105,7 @@ const Buoy = (props) => {
               pathOptions={{ weight: 5 }} ref={traceRef}
               color='#212428'>
         <Popup onOpen={() => { setToolTipOpen(true) } } onClose={() => { setToolTipOpen(false) }} ref={tooltipRef} closeOnClick={false}>
-          <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_num={props.drift_num}
+          <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_name={props.drift_name} drift_id={ props.drift_id }
                       step={props.step} isOpen={toolTipOpen} currTime={hoverTime} />
         </Popup>
       </Polyline>

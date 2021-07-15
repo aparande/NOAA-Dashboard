@@ -1,0 +1,74 @@
+.container {
+  position: absolute;
+  top: 90px;
+  right: 5px;
+  z-index: 405;
+  background-color: #212428;
+  color: white;
+  width: 250px;
+  padding: 10px;
+
+  max-height: 60vh;
+  overflow-y: scroll;
+}
+
+.item {
+  padding: 5px;
+}
+
+.infoButton {
+  background-color: transparent;
+  color: white;
+  border: none;
+}
+
+.title{
+  cursor:pointer;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+.itemHeader{
+  font-family: 'Alata', sans-serif;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.itemClickable {
+  cursor:pointer;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  margin: 3px 0px;
+  margin-left: 10px;
+  flex-grow: 1;
+}
+
+.itemRow {
+  border-bottom: solid #666 1px;
+}
+
+.icon {
+  font-size: 30px;
+  line-height: 10px;
+}
+
+.iconSmall {
+  font-size: 20px;
+}
+
+.itemInput {
+  padding: 7px 0px;
+}
+
+.itemTitle {
+  font-family: 'Alata', sans-serif;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.infoDescription h1 {
+  font-size: 1.5rem;
+}

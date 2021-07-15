@@ -1,5 +1,6 @@
 serviceAccountKey.json
 *.swp
+certs/
 
 # Logs
 logs

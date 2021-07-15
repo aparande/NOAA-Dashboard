@@ -1,0 +1,45 @@
+.sliderWrapper {
+  width: 70%;
+  padding: 10px;
+  margin-left: 10px;
+  border-radius: 15px;
+  background-color: #212428;
+  z-index: 1;
+}
+
+.timeSlider {
+  z-index: 400;
+  position: fixed;
+  bottom: 25px;
+  display: flex;
+  justify-content: space-around;
+  width: 100vw;
+  margin: auto;
+}
+
+.buttonRow {
+  width: 30%;
+  display: flex;
+  white-space: nowrap;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 1;
+}
+
+.buttonRow > button {
+  padding: 2% 4%;
+  height: 90%;
+  margin-left: 16px;
+  border-radius: 10px;
+  font-family: 'Alata', sans-serif;
+  border: none;
+  font-size: 18px;
+  color: #ffffff;
+  z-index: 1;
+ }
+
+ .legendContainer {
+  position: fixed;
+  left: 10px;
+  top: 25vh;
+ }

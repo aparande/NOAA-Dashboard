@@ -1,0 +1,63 @@
+/*
+Overrides for built in Bootstrap classes
+*/
+
+.navbar-dark{
+  background-color: #212428;
+}
+
+.navbar .navbar-nav .nav-link {
+  color:rgba(255,255,255,1);
+  text-shadow: 1px 1px 5px black;
+}
+
+.nav-link{
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-family: 'Alata', sans-serif;
+  margin: 8px;
+}
+
+.navbar-dark .navbar-nav .nav-link .dark{
+  color: rgba(255,255,255,.6);
+}
+
+.navbar-transparent {
+  background-color: rgba(255,255,255,0);
+  position: absolute;
+  z-index: 200;
+  width: 100%;
+}
+
+.nav-tabs .nav-link {
+	color: rgb(34, 159, 173);
+}
+
+.btn-link {
+  color: rgb(34, 159, 173);
+}
+
+.btn-link:hover {
+  color: rgb(34, 159, 173);
+}
+
+.btn-primary {
+  background-color: rgb(34, 159, 173);
+  border-color: rgb(34, 159, 173);
+}
+
+.btn-primary:hover {
+  background-color: #18717A;
+  border-color: #18717A;
+}
+.card {
+  margin: 20px 10px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 750px;
+  }
+}

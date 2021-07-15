@@ -1,19 +1,4 @@
 import axios from 'axios';
-import { group_by, mean } from './utils';
-
-export const get_all_traces = async (start_date, end_date=undefined, limit=10) => {
-  const URL = "/api/get_traces"
-  const res = await axios.get(URL,
-    { 
-      params: {
-        start: start_date,
-        end: end_date,
-        limit: limit
-      }
-    })
-  // console.log(res);
-  return res.data;
-} 
 
 // https://hifld-geoplatform.opendata.arcgis.com/datasets/geoplatform::oil-and-natural-gas-platforms/geoservice?geometry=-135.504%2C23.571%2C-72.882%2C36.815
 export const get_oil_gas_platforms = async () => {
@@ -28,7 +13,7 @@ export const get_oil_gas_platforms = async () => {
   return res.data.features.map((feat) => feat.attributes);
 } 
 
-export const get_tol = async (start_date, step, buoy_num) => {
+export const get_tol = async (start_date, step, buoy_num, statistic) => {
   const URL = "/api/get_tol";
   const end_date = start_date + step;
   const res = await axios.get(URL,
@@ -36,7 +21,8 @@ export const get_tol = async (start_date, step, buoy_num) => {
       params: {
         start: start_date,
         end: end_date,
-        buoy_num: buoy_num
+        buoyId: buoy_num,
+        statistic: statistic
       }
     })
   console.log(res);
@@ -50,14 +36,12 @@ export const get_bb = async (start_date, end_date, buoy_num, agg) => {
       params: {
         start: start_date,
         end: end_date,
-        buoy_num: buoy_num
+        buoyId: buoy_num,
+        agg: agg
       }
     })
   console.log(res);
-
-  let data = group_by(res.data, agg);
-  Object.keys(data).forEach( key => data[key] = mean(data[key]));
-  return data;
+  return res.data;
 }
 
 export const get_visible_buoys = async (start_date) => {

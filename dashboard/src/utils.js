@@ -41,31 +41,6 @@ export const dist = (x, y) => {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-export const mean = (data) => {
-  let out = data.reduce((accum, curr) => {
-    let vals = {...accum};
-    Object.keys(curr).forEach(key => vals[key] = parseFloat(vals[key]) + parseFloat(curr[key]));
-    return vals;
-  })
-  Object.keys(out).forEach(key => out[key] /= data.length);
-  return out;
-}
-
-export const group_by = (data, agg) => {
-  let agg_data = {};
-
-  data.forEach((pt) => {
-    let timestamp = Math.floor(pt.timestamp / agg) * agg;
-    if (agg_data[timestamp] === null || agg_data[timestamp] === undefined) {
-      agg_data[timestamp] = [ pt ]
-    } else {
-      agg_data[timestamp].push(pt)
-    }
-  })
-
-  return agg_data;
-}
-
 export const interpolate = (start, end, percent) => {
   return (1 - percent) * start + percent * end;
 }
