@@ -87,7 +87,7 @@ const Map = () => {
 
   const selectHabitat = (habitat_key) => {
     // Only set habitat data if the data changes, preventing a render loop
-    if ((heatLayers.habitat !== undefined && habitat_key === "none") || (heatLayers.habitat && heatLayers.habitat.meta === habitat_key)) return;
+    if ((heatLayers.habitat === undefined && habitat_key === "none") || (heatLayers.habitat && heatLayers.habitat.meta === habitat_key)) return;
 
     if (habitat_key === "none" || habitat_key === null || habitat_key === undefined) {
       console.log("Not showing habitats");
