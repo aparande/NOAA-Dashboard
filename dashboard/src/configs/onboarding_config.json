@@ -1,0 +1,78 @@
+[
+  {
+    "content": {
+      "header": "Welcome to CalSound!",
+      "text": "This tool is meant to help visualize the impacts of manmade noise pollution in the ocean and provide a clear way of visualizing ocean soundscapes."
+    },
+    "position": "center"
+  },
+  {
+    "content": {
+      "text": "The markers in the ocean are buoys placed by NOAA to collect data on sound, and the grey lines are the paths the buoys have taken over time.",
+      "photo": {
+        "src": "/images/buoy_path.jpg",
+        "alt_text": "Line representing the buoy"
+      }
+    },
+    "floaterProps": {
+      "disableAnimation": true
+    },
+    "spotlightPadding": 20
+  },
+  {
+    "content": {
+      "text": "Hover over the path to find out see the Broadband 20Hz - 20kHz measurement over the lifecycle of the buoy.",
+      "photo": {
+        "src": "/images/hover_path.jpg",
+        "alt_text": "Hover over buoy paths"
+      }
+    },
+    "floaterProps": {
+      "disableAnimation": true
+    },
+    "spotlightPadding": 20
+  },
+  {
+    "content": {
+      "text": "Click on the buoy itself to see third octave level measurements, which show how much noise energy exists in different frequency bands.",
+      "photo": {
+        "src": "/images/click_buoy.jpg",
+        "alt_text": "Click Buoy"
+      }
+    },
+    "floaterProps": {
+      "disableAnimation": true
+    },
+    "spotlightPadding": 20
+  },
+  {
+    "content": {
+      "text": "See how the sound data changes over time by scrubbing through the timeline. The window of time for which you are seeing the data is changed via the different buttons."
+    },
+    "floaterProps": {
+      "disableAnimation": true
+    },
+    "spotlightPadding": 20,
+    "selector": "#slider"
+  },
+  {
+    "content": {
+      "text": "Discover the impact of these noise levels by enabling different layers such as habitats or species detections."
+    },
+    "floaterProps": {
+      "disableAnimation": true
+    },
+    "spotlightPadding": 20,
+    "selector": "#menu",
+    "resizeObservables": [
+      "#menu"
+    ]
+  },
+  {
+    "content": {
+      "header": "Start Exploring!",
+      "text": "Check out the Resources tab for information on the source of the data on this map or for relevant links on soundscapes."
+    },
+    "position": "center"
+  }
+]
