@@ -110,7 +110,7 @@ const Buoy = (props) => {
   return(
     <div>
       { renderMarker && (
-        <Marker position={ position } icon={ buoyIcon }>
+        <Marker position={ position } icon={ buoyIcon } color='#229fad'>
           <Popup onOpen = {loadTOLData} >
             <p className="driftPrint" >
               Drift {props.drift_num} TOL
