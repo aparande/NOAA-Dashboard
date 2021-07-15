@@ -17,9 +17,7 @@ const HeatLayer = ({ layers, legendClassName }) => {
       )}
       <LegendContainer className={legendClassName} height="50vh">
         {
-          keys.map((key) => {
-            <Legend colors={layers[key].legend.colors} stops={stops} maxVal={1.0}/>
-          })
+          keys.map((key, index) => <Legend colors={layers[key].legend.colors} stops={stops} maxVal={1.0} key={index}/>)
         }
       </LegendContainer>
     </>
