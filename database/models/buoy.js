@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Buoy.init({
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    study_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Buoy',
