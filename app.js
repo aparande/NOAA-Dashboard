@@ -2,12 +2,27 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const path = require('path');
 const { Op, QueryTypes } = require('sequelize');
+const Multer = require('multer');
+const { uploadToGCS } = require('./middlewares/google-cloud-storage');
+
+const multer = Multer({
+  storage: Multer.MemoryStorage,
+  limits: { fileSize: 1024 * 1024 * 200 } // 200 MB Limit
+})
 
 const app = express();
 
 const { sequelize, Buoy } = require('./database/models');
 
 app.use(express.static(path.join(__dirname, 'dashboard', 'build')));
+
+app.post('/api/upload_metric', multer.single('file'), uploadToGCS, (req, res, next) => {
+  if (req.file && req.file.gcsObject) {
+    return res.send({ status: "success" });
+  }
+
+  return res.status(500).send('Could not upload metric file');
+});
 
 app.get('/api/get_tol', async (req, res, next) => {
   const buoy = await Buoy.findByPk(req.query.buoyId);
