@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Control } from 'leaflet';
 import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
 
 import Tour from 'reactour';
@@ -6,7 +7,7 @@ import { useCookies } from "react-cookie";
 import {AiFillQuestionCircle} from 'react-icons/ai';
 
 // Custom Components
-import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, ZoomControl, ScaleControl} from 'react-leaflet';
 import Buoy from '../../components/buoy';
 import Slider from '../../components/Slider';
 import Menu from '../../components/Menu';
@@ -84,9 +85,9 @@ const Map = () => {
           return {
             ...h, shipping: {
               data: ship_data[time].map(x => [x.latitude, x.longitude, Math.log(x.MMSI)]),
-              gradient: { 0.0: '#aad3df', 0.3: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)' },
+              gradient: { 0.0: '#aad3df', 0.3: 'rgb(158,154,200)', 0.7: 'rgb(128,125,186)', 0.9: 'rgb(106,81,163)', 0.95: 'rgb(84,39,143)', 1.0: 'rgb(63,0,125)' },
               priority: 2,
-              legend: { colors: ['#aad3df', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)'] }
+              legend: { colors: ['#aad3df', 'rgb(158,154,200)', 'rgb(128,125,186)', 'rgb(106,81,163)', 'rgb(84,39,143)', 'rgb(63,0,125)'] }
             }
           }
         })
@@ -215,6 +216,7 @@ const Map = () => {
         maxZoom={8} minZoom={5} zoomControl={false} tap={false}
         style={{ width: '100%', height: '100vh', position: 'absolute', zIndex: '-5', top: '0px' }} >
         <ZoomControl position="topleft" />
+        <ScaleControl position="bottomleft" />
         <TileLayer
           attribution={attr}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -232,7 +234,6 @@ const Map = () => {
         {showOilLayer && <FeatureGroup>
           {platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />)}
         </FeatureGroup>}
-
         {/* SPECIES GROUP */}
         <FeatureGroup>
           {
@@ -244,6 +245,7 @@ const Map = () => {
         {/* Can tweak the coordinates to make it overlap better */}
         <HeatLayer layers={heatLayers} legendClassName={styles.legendContainer} />
       </MapContainer>
+      <img src={`/north-arrow-2.svg`} width="40" height="40" alt="North Arrow" className="north-arrow"></img>
       <Menu setters={menuStateSetters} config={menu_config} id="menu" />
       <Tour
         steps={onboarding_config.map((item) => { return { ...item, content: <OnboardingStep {...item.content}/> } })}
