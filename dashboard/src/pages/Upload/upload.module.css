@@ -1,0 +1,40 @@
+.bgNav{
+    width: 100vw;
+    height: 90px;
+    overflow: hidden;
+}
+
+.container{
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    /* display: flex;
+    justify-content: center; */
+
+    background-color: #fff;
+}
+
+.description{
+    font-size: 14px;
+    color: #777;
+}
+
+.dataUpload{
+    padding: 30px;
+    display: flex;
+    
+}
+
+.dataUpload .uploadBox{
+    width: 45vw;
+    justify-content:center;
+}
+
+Label{
+    margin-top: 20px;
+}
+
+.nameInput{
+    width: 90vw;
+    margin: auto;
+}

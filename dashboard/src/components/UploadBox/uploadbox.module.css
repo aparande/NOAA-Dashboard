@@ -1,0 +1,23 @@
+
+.uploadBox{
+    margin: auto;
+    padding: 10px;
+    width: 90vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: #6C757D dashed 2px;
+    background-color: #E5E5E5;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.uploadIcon{
+    font-size: 150px;
+}
+
+.description{
+    font-style: italic;
+    color: #333;
+}
