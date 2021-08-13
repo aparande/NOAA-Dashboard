@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   GPSPoint.init({
     buoy_id: DataTypes.INTEGER,
-		timestamp: DataTypes.DATE
+		timestamp: DataTypes.DATE,
     latitude: DataTypes.DECIMAL,
     longitude: DataTypes.DECIMAL,
 		spot_id: DataTypes.STRING,
@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'GPSPoint',
-		underscored: true
+		underscored: true,
+		tableName: 'GPSPoints'
   });
   return GPSPoint;
 };
