@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Buoy extends Model {
+  class GPSPoint extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,21 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Buoy.hasMany(models.Datapoint);
-      Buoy.hasMany(models.GPSPoint);
+			GPSPoint.belongsTo(models.Buoy, { foreignKey: "buoy_id" });
     }
   };
-  Buoy.init({
-    name: DataTypes.STRING,
-    study_name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
+  GPSPoint.init({
+    buoy_id: DataTypes.INTEGER,
+		timestamp: DataTypes.DATE
+    latitude: DataTypes.DECIMAL,
+    longitude: DataTypes.DECIMAL,
+		spot_id: DataTypes.STRING,
+		reading_type: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Buoy',
-    underscored: true
+    modelName: 'GPSPoint',
+		underscored: true
   });
-  return Buoy;
+  return GPSPoint;
 };
-
