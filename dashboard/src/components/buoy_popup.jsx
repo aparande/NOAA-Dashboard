@@ -10,7 +10,7 @@ const BuoyPopup = (props) => {
   const [chartType, setChartType] = useState("line");
   const [statistic, setStatistic] = useState("median");
   const [tolData, setTOLData] = useState(null);
-  
+
   const { promiseInProgress } = usePromiseTracker({ area: "buoy-popup-area" });
 
   useEffect(() => {
@@ -27,11 +27,11 @@ const BuoyPopup = (props) => {
     }
     if (props.isOpen) trackPromise(fetchData(), "buoy-popup-area");
   }, [props.currTime, props.step, props.drift_id, props.isOpen, statistic])
-  
+
 
   function lineSeries() {
     return (
-      <XYPlot height={300} width={800} xType="log" margin={{ bottom: 75, left: 50 }}>
+      <XYPlot height={window.innerHeight / 2} width={window.innerWidth / 2.5} xType="log" margin={{ bottom: 75, left: 50 }}>
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
@@ -49,7 +49,7 @@ const BuoyPopup = (props) => {
 
   function barchart() {
     return (
-      <XYPlot height={300} width={800} xType="log" margin={{ bottom: 75, left: 50 }}>
+      <XYPlot height={window.innerHeight / 2} width={window.innerWidth / 2.5} xType="log" margin={{ bottom: 75, left: 50 }}>
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis

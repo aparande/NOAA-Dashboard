@@ -4,6 +4,7 @@ import BuoyPopup from './buoy_popup';
 import TracePopup from './trace_popup';
 import React, { useEffect, useState, createRef } from 'react';
 import { buoyIcon } from '../constants';
+import { get_buoy_trace } from '../queries.js';
 
 import analytics from '../analytics';
 
@@ -12,13 +13,32 @@ const Buoy = (props) => {
   const [renderMarker, setRenderMarker] = useState(false);
   const [toolTipOpen, setToolTipOpen] = useState(false);
   const [popupOpen, setPopupOpen] = useState(false);
+	const [renderTrace, setRenderTrace] = useState(false);
   const [hoverTime, setHoverTime] = useState(null);
+	const [positions, setPositions] = useState([]);
 
 	const tooltipRef = createRef();
   const traceRef = createRef();
 
   useEffect(() => {
-    let interval = interval_search(props.positions, (elem) => {
+    async function fetchData() {
+      const data = await get_buoy_trace(props.drift_id);
+			console.log(data);
+			data.forEach((pt) => {
+				pt.timestamp = Date.parse(pt.timestamp) / 1000;
+			  pt.longitude = parseFloat(pt.longitude);
+				pt.latitude = parseFloat(pt.latitude);
+			});
+      setPositions(data);
+			setRenderTrace(true);
+    }
+    fetchData();
+  }, [props.drift_id])
+
+
+  useEffect(() => {
+		if (positions.length === 0) { return; }
+    let interval = interval_search(positions, (elem) => {
       if (elem.timestamp === props.currTime) return 0;
       else if (elem.timestamp < props.currTime) return 1;
       else if (elem.timestamp > props.currTime) return -1;
@@ -48,12 +68,12 @@ const Buoy = (props) => {
       setRenderMarker( props.currTime <= interval[0] + props.step )
     }
 
-  }, [props.positions, props.currTime, props.step]);
+  }, [positions, props.currTime, props.step]);
 
   const traceEventHandlers = {
     click(e) {
       // TODO: this doesn't cover interpolated points, but its good enough for now.
-      const closest = props.positions.reduce((prev, curr) => {
+      const closest = positions.reduce((prev, curr) => {
         const prevDist = dist([prev.latitude, prev.longitude], [e.latlng.lat, e.latlng.lng]);
         const currDist = dist([curr.latitude, curr.longitude], [e.latlng.lat, e.latlng.lng]);
         return (prevDist < currDist) ? prev : curr;
@@ -72,7 +92,7 @@ const Buoy = (props) => {
       }
     },
 		mousemove(e) {
-      const closest = props.positions.reduce((prev, curr) => {
+      const closest = positions.reduce((prev, curr) => {
         const prevDist = dist([prev.latitude, prev.longitude], [e.latlng.lat, e.latlng.lng]);
         const currDist = dist([curr.latitude, curr.longitude], [e.latlng.lat, e.latlng.lng]);
         return (prevDist < currDist) ? prev : curr;
@@ -100,7 +120,7 @@ const Buoy = (props) => {
           </Popup>
         </Marker>)
       }
-      <Polyline positions={props.positions.map((pt) => [ pt.latitude, pt.longitude ])}
+		{ renderTrace && (<Polyline positions={positions.map((pt) => [ pt.latitude, pt.longitude ])}
               eventHandlers={traceEventHandlers}
               pathOptions={{ weight: 5 }} ref={traceRef}
               color='#212428'>
@@ -108,7 +128,8 @@ const Buoy = (props) => {
           <TracePopup minTime={props.minTime} maxTime={props.maxTime} drift_name={props.drift_name} drift_id={ props.drift_id }
                       step={props.step} isOpen={toolTipOpen} currTime={hoverTime} />
         </Popup>
-      </Polyline>
+      </Polyline>)
+		}
     </div>
     );
 }

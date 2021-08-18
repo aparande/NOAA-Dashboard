@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const { Op, QueryTypes } = require('sequelize');
 const Multer = require('multer');
-const { uploadToGCS } = require('./middlewares/google-cloud-storage');
+const { uploadMetrics, uploadGPS } = require('./middlewares/google-cloud-storage');
 
 const multer = Multer({
   storage: Multer.MemoryStorage,
@@ -12,11 +12,19 @@ const multer = Multer({
 
 const app = express();
 
-const { sequelize, Buoy } = require('./database/models');
+const { sequelize, Buoy, GPSPoint } = require('./database/models');
 
 app.use(express.static(path.join(__dirname, 'dashboard', 'build')));
 
-app.post('/api/upload_metric', multer.single('file'), uploadToGCS, (req, res, next) => {
+app.post('/api/upload_metric', multer.single('file'), uploadMetrics, (req, res, next) => {
+  if (req.file && req.file.gcsObject) {
+    return res.send({ status: "success" });
+  }
+
+  return res.status(500).send('Could not upload metric file');
+});
+
+app.post('/api/upload_gps', multer.single('file'), uploadGPS, (req, res, next) => {
   if (req.file && req.file.gcsObject) {
     return res.send({ status: "success" });
   }
@@ -82,9 +90,31 @@ app.get('/api/get_bb', async (req, res) => {
 
 app.get('/api/visible_buoys', async (req, res) => {
   const buoys = await Buoy.findAll({ raw: true, attributes: ["id", "name"] });
-  console.log(buoys);
   res.send(buoys);
-})
+});
+
+app.get('/api/buoy_trace', async (req, res) => {
+  const trace = await GPSPoint.findAll({ 
+		raw: true, 
+		attributes: ["latitude", "longitude", "timestamp"], 
+		where: { buoy_id: req.query.buoyId }
+	});
+
+  if (trace === null || trace === undefined) {
+    return res.status(400).send({
+      message: "Buoy not found"
+    });
+  }
+	res.send({ "trace": trace });
+});
+
+app.get('/api/get_time_bounds', async (req, res) => {
+	const maxTime = await GPSPoint.max("timestamp");
+	const minTime = await GPSPoint.min("timestamp");
+
+	res.send({ "max": Date.parse(maxTime) / 1000, "min": Date.parse(minTime) / 1000 })
+});
+
 
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'dashboard', 'build', 'index.html'));

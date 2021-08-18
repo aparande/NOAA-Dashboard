@@ -30,3 +30,60 @@
 .leaflet-top {
   top: 80px;
 }
+
+.leaflet-control-scale {
+	position: absolute;
+  left: 70px;
+	top: -130px;
+}
+
+/* Scale */
+
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid rgb(33, 36, 40, 1);
+}
+
+.leaflet-control-scale-line {
+	background: rgb(0, 0, 0, 0);
+	padding: 3px 5px 3px;
+	font-family: 'Alata', sans-serif;
+	color: rgb(33, 36, 40, 1);
+	
+	border-bottom: 2px solid rgb(33, 36, 40, 1);
+	border-left: 2px solid rgb(33, 36, 40, 1);
+	border-right: 2px solid rgb(33, 36, 40, 1);
+}
+
+/* Zoom in/out */
+
+.leaflet-bar a.leaflet-disabled {
+	background-color: rgb(33, 36, 40, 1);
+	color: white;
+}
+
+.leaflet-bar a, .leaflet-bar a:hover {
+	background-color: rgb(33, 36, 40, 1);
+	color: white;
+}
+
+.leaflet-bar a:hover {
+	background-color: rgb(33, 36, 40, 1);
+	color: white;
+}
+
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+	border-left: none; /* 2px solid white; */
+	border-right: none; /* 2px solid white; */
+	border-bottom: none; /* 2px solid white; */
+	border-top: none; /* 1px solid white; */
+}
+
+.leaflet-bar a, .leaflet-bar a:hover {
+	border-bottom: 1px solid white;
+}
+
+.north-arrow {
+  position: absolute;
+  left: 50px;
+  top: 105px;
+}

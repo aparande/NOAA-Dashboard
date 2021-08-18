@@ -4,56 +4,60 @@ import csv
 import argparse
 import sys
 import glob
+import pandas as pd
+import psycopg2
 from datetime import datetime
+from dotenv import load_dotenv
+from pathlib import Path
 
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+
+def get_drift_ids(cursor):
+  cursor.execute("SELECT id, name from buoys")
+  drifts = cursor.fetchall()
+  return { int(drift[1].split(' ')[1]) : drift[0] for drift in drifts }
+
+load_dotenv(f"{Path(__file__).parents[1].absolute()}/.env")
 
 # Set up command line arguments
 parser = argparse.ArgumentParser(description="Upload data from GPS tracks")
 parser.add_argument('file', type=str, help="file to parse")
-parser.add_argument('--limit', type=int, default=-1, dest="limit", help="Maximum number of documents per metric to upload")
-parser.add_argument('--creds', type=str, dest="creds", default="serviceAccountKey.json", help="Path to Firebase Credentials")
 
 args = parser.parse_args()
 
-# Load Firebase Credentials
-# Follow the instructions at https://firebase.google.com/docs/firestore/quickstart#python
-# DO NOT COMMIT serviceAccountKey.json to git
-cred = credentials.Certificate(args.creds)
-firebase_admin.initialize_app(cred)
-
-# Initialize Database Client
-db = firestore.client()
-
 # Check the data directory exists
 if not os.path.isfile(args.file):
-  sys.exit(f"{args.file} is not a directory")
+  sys.exit(f"{args.file} is not a file")
 
-with open(args.file, 'r') as f:
-  reader = csv.reader(f)
-  header = True
-  headers = ["timestamp", "spot_id", "latitude", "longitude", "drift_num"]
-  data = []
-  i = 0
-  for row in reader:
-    if header:
-      header = False
-    else:
-      row_dict = {headers[i]: pt for i, pt in enumerate(row)}
+parent_dir = Path(__file__).parents[1].absolute()
 
-      date = datetime.strptime(row_dict["timestamp"], "%Y-%m-%d %H:%M:%S")
-      timestamp = date.timestamp()
-      row_dict["timestamp"] = timestamp
-      row_dict["longitude"] = float(row_dict["longitude"])
-      row_dict["latitude"] = float(row_dict["latitude"])
-      row_dict["drift_num"] = int(row_dict["drift_num"])
+# Create the Postgres Connection
+conn = psycopg2.connect(
+  dbname=os.getenv('PG_DB'), user=os.getenv('PG_USER'), password=os.getenv('PG_PASS'), 
+  host=os.getenv('PG_HOST'), port=os.getenv('PG_PORT'), sslmode='verify-ca', 
+  sslcert=f"{parent_dir}/certs/dev/client-cert.crt", sslkey=f"{parent_dir}/certs/dev/client-key.key", sslrootcert=f"{parent_dir}/certs/dev/server-ca.crt"
+)
+cursor = conn.cursor()
+drifts = get_drift_ids(cursor)
+# Read and transform the data
+df = pd.read_csv(args.file)
+df[["longitude", "latitude", "spot_id", "reading_type"]] = df[["long", "lat", "spotID", "readingType"]]
+df["timestamp"] = pd.to_datetime(df["dateTime"])
+df = df[df["station"].isin(drifts.keys())]
+df["buoy_id"] = df["station"].replace(drifts)
 
-      if args.limit != -1 and i >= args.limit:
-        break
+df = df[["timestamp", "longitude", "latitude", "spot_id", "reading_type", "buoy_id"]]
+df["created_at"] = datetime.now().isoformat()
+df["updated_at"] = datetime.now().isoformat()
+df.drop_duplicates(inplace=True)
+print(df.head())
+df.to_csv("tmp.csv", index=False, header=False)
 
-      doc_name = "-".join([str(timestamp), str(row_dict["drift_num"])])
-      db.collection("buoy_gps").document(doc_name).set(row_dict)
-      i += 1
+try:
+  with open("tmp.csv", "r") as csv:
+    cursor.copy_from(csv, "GPSPoints", sep=",", columns=["timestamp", "longitude", "latitude", "spot_id", "reading_type", "buoy_id", "created_at", "updated_at"])
+finally:
+  conn.commit()
+  cursor.close()
+  conn.close()
 
+os.remove("tmp.csv")

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
+import { get_oil_gas_platforms, get_time_bounds, get_visible_buoys } from '../../queries';
 
 import Tour from 'reactour';
 import { useCookies } from "react-cookie";
 import {AiFillQuestionCircle} from 'react-icons/ai';
 
 // Custom Components
-import { MapContainer, TileLayer, FeatureGroup, ZoomControl} from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, ZoomControl, ScaleControl} from 'react-leaflet';
 import Buoy from '../../components/buoy';
 import Slider from '../../components/Slider';
 import Menu from '../../components/Menu';
@@ -16,7 +16,6 @@ import Detection from '../../components/Detection';
 import OnboardingStep from '../../components/onboarding_step';
 
 // Data
-import traces from '../../data/traces.json';
 import ship_data from '../../data/ship_density_monthly.json';
 
 // Configurations
@@ -32,11 +31,6 @@ import analytics from '../../analytics';
 import styles from "./map.module.css";
 import "../../styles/leaflet.css";
 
-const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
-const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
-
-console.log(minTime, maxTime);
-
 const HOUR = 1 * 60 * 60;
 const DAY = HOUR * 24;
 const WEEK = DAY * 7;
@@ -50,9 +44,11 @@ const attr = `&copy <a href=${attr_links[0]}>OpenStreetMap</a> | <a href=${attr_
 
 const Map = () => {
   // Base Map State
-  const [currTime, setCurrTime] = useState(1535623127);
+  const [currTime, setCurrTime] = useState((new Date()).getTime() / 1000 - 2500);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1 * 60 * 60);
+	const [minTime, setMinTime] = useState((new Date()).getTime() / 1000 - 5000)
+	const [maxTime, setMaxTime] = useState((new Date()).getTime() / 1000)
 
   // Layer Data State
   const [buoys, setBuoys] = useState([]);
@@ -84,9 +80,9 @@ const Map = () => {
           return {
             ...h, shipping: {
               data: ship_data[time].map(x => [x.latitude, x.longitude, Math.log(x.MMSI)]),
-              gradient: { 0.0: '#aad3df', 0.3: 'rgb(116,169,207)', 0.7: 'rgb(54,144,192)', 0.9: 'rgb(5,112,176)', 0.95: 'rgb(4,90,141)', 1.0: 'rgb(2,56,88)' },
+              gradient: { 0.0: '#aad3df', 0.3: 'rgb(158,154,200)', 0.7: 'rgb(128,125,186)', 0.9: 'rgb(106,81,163)', 0.95: 'rgb(84,39,143)', 1.0: 'rgb(63,0,125)' },
               priority: 2,
-              legend: { colors: ['#aad3df', 'rgb(116,169,207)', 'rgb(54,144,192)', 'rgb(5,112,176)', 'rgb(4,90,141)', 'rgb(2,56,88)'] }
+              legend: { colors: ['#aad3df', 'rgb(158,154,200)', 'rgb(128,125,186)', 'rgb(106,81,163)', 'rgb(84,39,143)', 'rgb(63,0,125)'] }
             }
           }
         })
@@ -185,6 +181,17 @@ const Map = () => {
   }, []);
 
   useEffect(() => {
+    async function fetchData() {
+      const data = await get_time_bounds();
+			console.log(data);
+			setMinTime(data.min);
+			setMaxTime(data.max);
+			setCurrTime((data.min + data.max) / 2);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     // console.log(detections);
     const detects = { ...visibleDetections };
     Object.keys(detects).forEach((key) => {
@@ -215,6 +222,7 @@ const Map = () => {
         maxZoom={8} minZoom={5} zoomControl={false} tap={false}
         style={{ width: '100%', height: '100vh', position: 'absolute', zIndex: '-5', top: '0px' }} >
         <ZoomControl position="topleft" />
+        <ScaleControl position="bottomleft" />
         <TileLayer
           attribution={attr}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -223,7 +231,7 @@ const Map = () => {
           {
             buoys.map((buoy) =>
               <Buoy currTime={currTime} drift_name={buoy.name} drift_id={buoy.id}
-                positions={traces[buoy.name.replace("Drift ", "")]} key={buoy.id} setCurrTime={setCurrTime}
+                key={buoy.id} setCurrTime={setCurrTime}
                 step={step} minTime={minTime} maxTime={maxTime}
               />)
           }
@@ -232,7 +240,6 @@ const Map = () => {
         {showOilLayer && <FeatureGroup>
           {platformLocs.map((b, idx) => <OilPlatform platform={b} key={"platform" + idx} />)}
         </FeatureGroup>}
-
         {/* SPECIES GROUP */}
         <FeatureGroup>
           {
@@ -244,6 +251,7 @@ const Map = () => {
         {/* Can tweak the coordinates to make it overlap better */}
         <HeatLayer layers={heatLayers} legendClassName={styles.legendContainer} />
       </MapContainer>
+      <img src={`/north-arrow-2.svg`} width="40" height="40" alt="North Arrow" className="north-arrow"></img>
       <Menu setters={menuStateSetters} config={menu_config} id="menu" />
       <Tour
         steps={onboarding_config.map((item) => { return { ...item, content: <OnboardingStep {...item.content}/> } })}
