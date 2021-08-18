@@ -55,3 +55,20 @@ export const get_visible_buoys = async (start_date) => {
   console.log(res);
   return res.data;
 }
+
+export const get_buoy_trace = async (buoy_id) => {
+  const URL = "/api/buoy_trace";
+  const res = await axios.get(URL,
+    { 
+      params: {
+        buoyId: buoy_id,
+      }
+    })
+  return res.data.trace;
+}
+
+export const get_time_bounds = async () => {
+  const URL = "/api/get_time_bounds";
+  const res = await axios.get(URL)
+  return res.data;
+}

@@ -1,6 +1,7 @@
 import Map from './pages/Map';
 import NavBar from './components/navbar'
 import About from './pages/About'
+import Upload from './pages/Upload'
 import Resources from './pages/Resources'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Hero from './components/Hero';
@@ -49,6 +50,10 @@ function App() {
             <Route path="/resources">
               <NavBar variant="transparent" />
               <Resources />
+            </Route>
+            <Route path="/upload">
+              <NavBar variant="transparent" />
+              <Upload />
             </Route>
           </Switch>
         </Router>

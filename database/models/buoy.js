@@ -12,10 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Buoy.hasMany(models.Datapoint);
+      Buoy.hasMany(models.GPSPoint);
     }
   };
   Buoy.init({
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    study_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Buoy',
@@ -23,3 +28,4 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Buoy;
 };
+

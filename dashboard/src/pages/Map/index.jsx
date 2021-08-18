@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Control } from 'leaflet';
-import { get_oil_gas_platforms, get_visible_buoys } from '../../queries';
+import { get_oil_gas_platforms, get_time_bounds, get_visible_buoys } from '../../queries';
 
 import Tour from 'reactour';
 import { useCookies } from "react-cookie";
@@ -17,7 +16,6 @@ import Detection from '../../components/Detection';
 import OnboardingStep from '../../components/onboarding_step';
 
 // Data
-import traces from '../../data/traces.json';
 import ship_data from '../../data/ship_density_monthly.json';
 
 // Configurations
@@ -33,11 +31,6 @@ import analytics from '../../analytics';
 import styles from "./map.module.css";
 import "../../styles/leaflet.css";
 
-const minTime = Math.min(...Object.values(traces).map((timesteps) => Math.min(...timesteps.map((pt) => pt.timestamp))));
-const maxTime = Math.max(...Object.values(traces).map((timesteps) => Math.max(...timesteps.map((pt) => pt.timestamp))));
-
-console.log(minTime, maxTime);
-
 const HOUR = 1 * 60 * 60;
 const DAY = HOUR * 24;
 const WEEK = DAY * 7;
@@ -51,9 +44,11 @@ const attr = `&copy <a href=${attr_links[0]}>OpenStreetMap</a> | <a href=${attr_
 
 const Map = () => {
   // Base Map State
-  const [currTime, setCurrTime] = useState(1535623127);
+  const [currTime, setCurrTime] = useState((new Date()).getTime() / 1000 - 2500);
   const [platformLocs, setPlatformLocs] = useState([]);
   const [step, setStep] = useState(1 * 60 * 60);
+	const [minTime, setMinTime] = useState((new Date()).getTime() / 1000 - 5000)
+	const [maxTime, setMaxTime] = useState((new Date()).getTime() / 1000)
 
   // Layer Data State
   const [buoys, setBuoys] = useState([]);
@@ -186,6 +181,17 @@ const Map = () => {
   }, []);
 
   useEffect(() => {
+    async function fetchData() {
+      const data = await get_time_bounds();
+			console.log(data);
+			setMinTime(data.min);
+			setMaxTime(data.max);
+			setCurrTime((data.min + data.max) / 2);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     // console.log(detections);
     const detects = { ...visibleDetections };
     Object.keys(detects).forEach((key) => {
@@ -225,7 +231,7 @@ const Map = () => {
           {
             buoys.map((buoy) =>
               <Buoy currTime={currTime} drift_name={buoy.name} drift_id={buoy.id}
-                positions={traces[buoy.name.replace("Drift ", "")]} key={buoy.id} setCurrTime={setCurrTime}
+                key={buoy.id} setCurrTime={setCurrTime}
                 step={step} minTime={minTime} maxTime={maxTime}
               />)
           }
