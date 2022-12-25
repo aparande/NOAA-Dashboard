@@ -75,6 +75,7 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'dashboard', 'build', 'index.html'));
 });
 
+console.log("Starting server in mode: " + process.env.NODE_ENV);
 app.listen(process.env.PORT || 8080);
 
 

@@ -1,6 +1,15 @@
 require('dotenv').config();
 
 module.exports = {
+	"local": {
+		"username": "AnmolParande",
+		"password": null,
+		"database": "calsound",
+		"host": "localhost",
+		"port": 5432,
+		"dialect": "postgres",
+		"dialectOptions": {}
+	},
   "development": {
     "username": process.env.PG_USER,
     "password": process.env.PG_PASS,

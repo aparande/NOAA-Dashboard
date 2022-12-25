@@ -67,11 +67,17 @@ def get_drift_id(cursor, drift_name):
 def upload_data(drift_name, metric, stat, data, start=-1, end=-1):
   parent_dir = Path(__file__).parents[1].absolute()
 
-  conn = psycopg2.connect(
-    dbname=os.getenv('PG_DB'), user=os.getenv('PG_USER'), password=os.getenv('PG_PASS'), 
-    host=os.getenv('PG_HOST'), port=os.getenv('PG_PORT'), sslmode='verify-ca', 
-    sslcert=f"{parent_dir}/certs/dev/client-cert.crt", sslkey=f"{parent_dir}/certs/dev/client-key.key", sslrootcert=f"{parent_dir}/certs/dev/server-ca.crt"
-  )
+  if os.getenv("NODE_ENV") == "local":
+    conn = psycopg2.connect(
+      dbname=os.getenv('PG_DB'), user=os.getenv('PG_USER'), password=os.getenv('PG_PASS'), 
+      host=os.getenv('PG_HOST'), port=os.getenv('PG_PORT') 
+    )
+  else:
+    conn = psycopg2.connect(
+      dbname=os.getenv('PG_DB'), user=os.getenv('PG_USER'), password=os.getenv('PG_PASS'), 
+      host=os.getenv('PG_HOST'), port=os.getenv('PG_PORT'), sslmode='verify-ca', 
+      sslcert=f"{parent_dir}/certs/dev/client-cert.crt", sslkey=f"{parent_dir}/certs/dev/client-key.key", sslrootcert=f"{parent_dir}/certs/dev/server-ca.crt"
+    )
   cursor = conn.cursor()
 
   drift_id = get_drift_id(cursor, drift_name)
