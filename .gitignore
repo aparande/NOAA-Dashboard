@@ -1,6 +1,11 @@
+.env*
 serviceAccountKey.json
 *.swp
 certs/
+dashboard/src/data/*-habitat.json
+dashboard/src/data/detections.json
+dashboard/src/data/traces.json
+
 
 # Logs
 logs
